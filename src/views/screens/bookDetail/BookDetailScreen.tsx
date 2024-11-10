@@ -1,18 +1,17 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useMemo, useState} from 'react';
-import {AnyIcon, Header, IconType, LoginButton, MainContainer} from '../../../components';
-import {FONT, FONT_SIZE, OTHER_COLORS} from '../../../enums';
-import {useResponsiveDimensions} from '../../../hooks';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import React, { useMemo, useState } from 'react';
+import { AnyIcon, Header, IconType, LoginButton, MainContainer } from '../../../components';
+import { FONT, FONT_SIZE, OTHER_COLORS } from '../../../enums';
+import { useResponsiveDimensions } from '../../../hooks';
 
-export const BookDetail = ({route}: any) => {
+export const BookDetailScreen = ({ route }: any) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleText = () => setIsExpanded(!isExpanded);
 
-  const {hp, wp} = useResponsiveDimensions();
+  const { hp, wp } = useResponsiveDimensions();
   const data = route?.params?.book;
   const shouldShowReadMore = data.description.length > 100;
-  console.log('BOOK_DATA====>', data);
   const fullStars = Math.floor(data.rating);
   const halfStars = data.rating - fullStars >= 0.5 ? 1 : 0;
   const emptyStars = 5 - fullStars - halfStars;
@@ -104,22 +103,23 @@ export const BookDetail = ({route}: any) => {
       },
       text: {
         fontSize: FONT_SIZE.h4,
-        fontFamily:FONT.PoppinsRegular,
-        color:OTHER_COLORS.secondaryText,
+        fontFamily: FONT.PoppinsRegular,
+        color: OTHER_COLORS.secondaryText,
       },
       readMore: {
         color: OTHER_COLORS.secondary,
         fontSize: FONT_SIZE.h4,
-        fontFamily:FONT.PoppinsRegular
+        fontFamily: FONT.PoppinsRegular
       },
-      chatBtnContainer:{
-        position:"absolute",
-        bottom:hp(20),
-        width:"100%",
-        alignSelf:"center"
+      chatBtnContainer: {
+        position: "absolute",
+        bottom: hp(20),
+        width: "100%",
+        alignSelf: "center"
       }
     });
   }, [hp, wp, FONT, FONT_SIZE, OTHER_COLORS]);
+
   return (
     <MainContainer>
       <Header title="book detail" />
@@ -197,7 +197,7 @@ export const BookDetail = ({route}: any) => {
         </View>
       </View>
       <View style={styles.chatBtnContainer}>
-        <LoginButton title="chat now"/>
+        <LoginButton title="chat now" />
       </View>
     </MainContainer>
   );

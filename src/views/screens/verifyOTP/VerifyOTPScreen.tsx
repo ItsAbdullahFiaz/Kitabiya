@@ -1,31 +1,31 @@
-import {StyleSheet, Text, TextInput, View} from 'react-native';
-import React, {useMemo, useRef, useState} from 'react';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
+import React, { useMemo, useRef, useState } from 'react';
 import {
   Header,
   Instructions,
   LoginButton,
   MainContainer,
 } from '../../../components';
-import {useResponsiveDimensions} from '../../../hooks';
-import {StackActions, useNavigation} from '@react-navigation/native';
-import {FONT, FONT_SIZE, OTHER_COLORS, SCREENS, STACK} from '../../../enums';
+import { useResponsiveDimensions } from '../../../hooks';
+import { StackActions, useNavigation } from '@react-navigation/native';
+import { FONT, FONT_SIZE, OTHER_COLORS, SCREENS, STACK } from '../../../enums';
 
-export const VerifyOTP = () => {
+export const VerifyOTPScreem = () => {
   const navigation = useNavigation();
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const inputs = Array(6)
     .fill(null)
-    .map(() => useRef(null));
-  const {hp, wp} = useResponsiveDimensions();
+    .map(() => useRef<TextInput>(null));
+  const { hp, wp } = useResponsiveDimensions();
 
-  const handleChange = (text, index) => {
+  const handleChange = (text: any, index: any) => {
     const newOtp = [...otp];
     newOtp[index] = text;
     setOtp(newOtp);
 
     // Move focus to the next input if the text length is 1 and it's not the last input
     if (text && index < inputs.length - 1) {
-      inputs[index + 1].current.focus();
+      inputs[index + 1]?.current?.focus();
     }
   };
 
@@ -79,13 +79,13 @@ export const VerifyOTP = () => {
             />
           ))}
         </View>
-        <View style={{marginTop: 30}}>
+        <View style={{ marginTop: 30 }}>
           <Instructions textAlign="center">
             A code has been sent to your phone
           </Instructions>
           <Text style={styles.resend}>Resend in 00:57</Text>
         </View>
-        <LoginButton title="confirm" onPress={()=>navigation.dispatch(StackActions.replace(STACK.MAIN as never))}/>
+        <LoginButton title="confirm" onPress={() => navigation.dispatch(StackActions.replace(STACK.MAIN as never))} />
       </View>
     </MainContainer>
   );

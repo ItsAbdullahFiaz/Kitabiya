@@ -1,5 +1,5 @@
-import {StyleSheet, Text, TextInput, View, Pressable} from 'react-native';
-import React, {useMemo, useState} from 'react';
+import { StyleSheet, Text, View, Pressable } from 'react-native';
+import React, { useContext, useMemo, useState } from 'react';
 import {
   Header,
   LoginButton,
@@ -7,14 +7,15 @@ import {
   SocialLogins,
   UserInput,
 } from '../../../components';
-import {useResponsiveDimensions} from '../../../hooks';
-// import AnimatedCheckbox from 'react-native-checkbox-reanimated';
-import {useNavigation} from '@react-navigation/native';
-import {FONT, OTHER_COLORS, SCREENS} from '../../../enums';
+import { useResponsiveDimensions } from '../../../hooks';
+import { useNavigation } from '@react-navigation/native';
+import { FONT_SIZE, SCREENS, STACK, TEXT_STYLE } from '../../../enums';
+import { AppDataContext } from '../../../context';
 
-export const Login = () => {
+export const LoginScreen = () => {
   const navigation = useNavigation();
-  const {hp, wp} = useResponsiveDimensions();
+  const { hp, wp } = useResponsiveDimensions();
+  const { appTheme } = useContext(AppDataContext);
   const [checked, setChecked] = useState<boolean>(false);
 
   const handleCheckboxPress = () => {
@@ -25,23 +26,6 @@ export const Login = () => {
       contentContainer: {
         marginTop: hp(70),
       },
-      // label:{
-      //     fontSize:16,
-      //     fontWeight:"regular",
-      //     fontFamily:"Poppins-Regular",
-      //     textTransform:"capitalize",
-      //     color:"#1B1B1B",
-      // },
-      // input:{
-      //     height:hp(48),
-      //     borderRadius:hp(8),
-      //     borderWidth:0.5,
-      //     borderColor:"#E6E6E6",
-      //     paddingLeft:hp(20)
-      // },
-      // inputContainer:{
-      //     marginTop:hp(20)
-      // },
       checkbox: {
         width: hp(18),
         height: hp(18),
@@ -59,16 +43,14 @@ export const Login = () => {
         justifyContent: 'flex-start',
       },
       rememberText: {
-        fontSize: 12,
-        fontWeight: 'regular',
-        fontFamily: 'Poppins-Regular',
-        color: '#1B1B1B',
+        ...TEXT_STYLE.regular,
+        fontSize: hp(FONT_SIZE.h5),
+        color: appTheme.textColor,
       },
       dont: {
-        fontSize: 14,
-        fontWeight: 'regular',
-        fontFamily: 'Poppins-Regular',
-        color: '#838383',
+        ...TEXT_STYLE.regular,
+        fontSize: hp(FONT_SIZE.h4),
+        color: appTheme.secondaryTextColor,
         marginRight: hp(5),
       },
       dontContainer: {
@@ -77,8 +59,18 @@ export const Login = () => {
         alignItems: 'center',
         marginTop: hp(20),
       },
+      forgotPassword: {
+        ...TEXT_STYLE.regular,
+        fontSize: hp(FONT_SIZE.h5),
+        color: appTheme.secondaryTextColor,
+      },
+      register: {
+        ...TEXT_STYLE.regular,
+        fontSize: hp(FONT_SIZE.h4),
+        color: appTheme.primary,
+      },
     });
-  }, [FONT, OTHER_COLORS, hp, wp]);
+  }, [hp, wp]);
   return (
     <MainContainer>
       <Header title="log in" />
@@ -98,18 +90,18 @@ export const Login = () => {
             <Text style={styles.rememberText}>Remember me</Text>
           </View>
           <Text
-            style={[styles.rememberText, {color: '#838383'}]}
+            style={styles.forgotPassword}
             onPress={() =>
               navigation.navigate(SCREENS.FORGOT_PASSWORD as never)
             }>
             Forgot Password ?
           </Text>
         </View>
-        <LoginButton title="log in" onPress={() => console.warn('Pressed')} />
+        <LoginButton title="log in" onPress={() => navigation.navigate(STACK.MAIN as never)} />
         <SocialLogins />
         <View style={styles.dontContainer}>
           <Text style={styles.dont}>Don't have an account?</Text>
-          <Text style={[styles.dont, {color: '#007dfc'}]}>Register</Text>
+          <Text style={styles.register}>Register</Text>
         </View>
       </View>
     </MainContainer>

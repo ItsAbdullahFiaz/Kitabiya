@@ -1,20 +1,19 @@
 import {
   Image,
-  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useMemo} from 'react';
-import {useResponsiveDimensions} from '../../../hooks';
-import {useNavigation} from '@react-navigation/native';
-import {FONT, OTHER_COLORS, SCREENS} from '../../../enums';
-import {LoginButton, MainContainer, SocialLogins} from '../../../components';
+import React, { useMemo } from 'react';
+import { useResponsiveDimensions } from '../../../hooks';
+import { useNavigation } from '@react-navigation/native';
+import { FONT, OTHER_COLORS, SCREENS } from '../../../enums';
+import { LoginButton, MainContainer, SocialLogins } from '../../../components';
 
-export const Welcome = () => {
+export const WelcomeScreen = () => {
   const navigation = useNavigation();
-  const {hp, wp} = useResponsiveDimensions();
+  const { hp, wp } = useResponsiveDimensions();
 
   const styles = useMemo(() => {
     return StyleSheet.create({

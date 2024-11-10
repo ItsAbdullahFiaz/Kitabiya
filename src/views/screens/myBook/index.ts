@@ -1,1 +1,1 @@
-export * from "./MyBook"
+export * from "./MyBooksScreen"

@@ -1,6 +1,6 @@
 import { StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useContext, useMemo } from 'react'
-import { OTHER_TEXT_STYLE } from '../enums';
+import { TEXT_STYLE } from '../enums';
 import { useResponsiveDimensions } from '../hooks';
 import { AppDataContext } from '../context';
 import { AnyIcon, IconType } from '.';
@@ -23,7 +23,7 @@ export const IconButton = (props: IconButtonProps) => {
                 height: hp(50)
             },
             IconText: {
-                ...OTHER_TEXT_STYLE.caption,
+                ...TEXT_STYLE.regular,
                 color: appTheme.primary,
                 fontSize: hp(16)
             }

@@ -1,1 +1,1 @@
-export * from "./VerifyOTP"
+export * from "./VerifyOTPScreen"

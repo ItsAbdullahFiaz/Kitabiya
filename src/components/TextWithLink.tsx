@@ -1,7 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useContext, useMemo } from 'react'
 import { useResponsiveDimensions } from '../hooks';
-import { OTHER_TEXT_STYLE } from '../enums';
+import { TEXT_STYLE } from '../enums';
 import { AppDataContext } from '../context';
 
 interface TextWithLinkProps {
@@ -22,12 +22,12 @@ export const TextWithLink = (props: TextWithLinkProps) => {
                 marginTop: 50,
             },
             text: {
-                ...OTHER_TEXT_STYLE.caption,
+                ...TEXT_STYLE.regular,
                 color: appTheme.primary,
                 fontSize: hp(12)
             },
             button: {
-                ...OTHER_TEXT_STYLE.caption,
+                ...TEXT_STYLE.regular,
                 color: appTheme.primary,
                 fontSize: hp(14)
             }

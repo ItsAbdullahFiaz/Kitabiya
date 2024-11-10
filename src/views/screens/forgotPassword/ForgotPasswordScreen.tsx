@@ -1,5 +1,5 @@
-import {StyleSheet, View} from 'react-native';
-import React, {useMemo} from 'react';
+import { StyleSheet, View } from 'react-native';
+import React, { useMemo } from 'react';
 import {
   Header,
   Instructions,
@@ -7,13 +7,13 @@ import {
   MainContainer,
   UserInput,
 } from '../../../components';
-import {useResponsiveDimensions} from '../../../hooks';
-import {useNavigation} from '@react-navigation/native';
+import { useResponsiveDimensions } from '../../../hooks';
+import { useNavigation } from '@react-navigation/native';
 import { SCREENS } from '../../../enums';
 
-export const ForgotPassword = () => {
+export const ForgotPasswordScreen = () => {
   const navigation = useNavigation();
-  const {hp, wp} = useResponsiveDimensions();
+  const { hp, wp } = useResponsiveDimensions();
   const styles = useMemo(() => {
     return StyleSheet.create({
       contentContainer: {
@@ -30,7 +30,7 @@ export const ForgotPassword = () => {
           with code to reset your password
         </Instructions>
         <UserInput label="email" />
-        <LoginButton title="confirm" onPress={()=>navigation.navigate(SCREENS.VERIFY_OTP as never)}/>
+        <LoginButton title="confirm" onPress={() => navigation.navigate(SCREENS.VERIFY_OTP as never)} />
       </View>
     </MainContainer>
   );

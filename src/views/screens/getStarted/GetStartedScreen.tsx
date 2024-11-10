@@ -4,15 +4,15 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
-import React, {useMemo} from 'react';
-import {useResponsiveDimensions} from '../../../hooks';
+import React, { useMemo } from 'react';
+import { useResponsiveDimensions } from '../../../hooks';
 import { useNavigation } from '@react-navigation/native';
-import { FONT, OTHER_COLORS, SCREENS } from '../../../enums';
+import { FONT, OTHER_COLORS, STACK } from '../../../enums';
 import { MainContainer } from '../../../components';
 
-export const GetStarted = () => {
-    const navigation=useNavigation();
-  const {hp, wp} = useResponsiveDimensions();
+export const GetStartedScreen = () => {
+  const navigation = useNavigation();
+  const { hp, wp } = useResponsiveDimensions();
 
   const styles = useMemo(() => {
     return StyleSheet.create({
@@ -58,21 +58,21 @@ export const GetStarted = () => {
         textTransform: 'capitalize',
       },
     });
-  }, [OTHER_COLORS,FONT,hp,wp]);
+  }, [OTHER_COLORS, FONT, hp, wp]);
   return (
     <MainContainer>
-        <Image
-          style={styles.img}
-          source={require('../../../assets/images/getStartedImage.png')}
-        />
-        <Text style={styles.heading}>increase your skill in no time</Text>
-        <Text style={styles.subHeading}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor
-        </Text>
-        <TouchableOpacity style={styles.btnContainer} onPress={()=>navigation.navigate(SCREENS.WELCOME as never)}>
-          <Text style={styles.btnText}>get started</Text>
-        </TouchableOpacity>
-      </MainContainer>
+      <Image
+        style={styles.img}
+        source={require('../../../assets/images/getStartedImage.png')}
+      />
+      <Text style={styles.heading}>increase your skill in no time</Text>
+      <Text style={styles.subHeading}>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+        eiusmod tempor
+      </Text>
+      <TouchableOpacity style={styles.btnContainer} onPress={() => navigation.navigate(STACK.AUTH as never)}>
+        <Text style={styles.btnText}>get started</Text>
+      </TouchableOpacity>
+    </MainContainer>
   );
 };

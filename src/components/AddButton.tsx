@@ -7,7 +7,7 @@ import { AnyIcon, IconType } from './AnyIcon';
 
 const SIZE = 41;
 
-export const AddButton = ({ navigation } : any) => {
+export const AddButton = ({ navigation }: any) => {
     const toggleView = () => {
         navigation.navigate(SCREENS.ADD_SCREEN);
     };
@@ -17,12 +17,12 @@ export const AddButton = ({ navigation } : any) => {
             <View>
                 <TouchableOpacity onPress={toggleView}>
                     <View style={styles.button}>
-                    <AnyIcon 
-            type={IconType.Ionicons}
-            name="add"
-            color={OTHER_COLORS.white}
-            size={18}
-            />
+                        <AnyIcon
+                            type={IconType.Ionicons}
+                            name="add"
+                            color={OTHER_COLORS.white}
+                            size={18}
+                        />
                     </View>
                 </TouchableOpacity>
             </View>
@@ -30,14 +30,14 @@ export const AddButton = ({ navigation } : any) => {
     );
 };
 
-const SubAddButton = ({ style, icon, onPress } : any) => (
+const SubAddButton = ({ style, icon, onPress }: any) => (
     <View style={[styles.subButton, style]}>
         <TouchableOpacity onPress={onPress} style={styles.subButtonInner}>
-            <AnyIcon 
-            type={IconType.Ionicons}
-            name="add"
-            color={OTHER_COLORS.white}
-            size={18}
+            <AnyIcon
+                type={IconType.Ionicons}
+                name="add"
+                color={OTHER_COLORS.white}
+                size={18}
             />
         </TouchableOpacity>
     </View>
@@ -52,7 +52,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         position: 'relative',
-        bottom: 15,
     },
     button: {
         alignItems: 'center',

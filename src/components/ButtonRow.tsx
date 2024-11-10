@@ -2,7 +2,7 @@ import React, { useContext, useMemo } from 'react';
 import { TouchableOpacity, View, Text, StyleSheet, StyleProp, ViewStyle, TextStyle } from 'react-native';
 import { AppDataContext } from '../context';
 import { useResponsiveDimensions } from '../hooks';
-import { OTHER_TEXT_STYLE } from '../enums';
+import { TEXT_STYLE } from '../enums';
 
 interface ButtonRowProps {
   icon?: React.ReactNode;
@@ -42,7 +42,7 @@ export const ButtonRow = (props: ButtonRowProps) => {
         alignItems: 'center',
       },
       titleRow: {
-        ...OTHER_TEXT_STYLE.caption,
+        ...TEXT_STYLE.regular,
         fontSize: hp(15),
         color: appTheme.textColor,
       },

@@ -3,29 +3,29 @@ import React, { useContext, useMemo } from 'react';
 import { ScrollView, Text, StyleSheet } from 'react-native';
 import { useResponsiveDimensions } from '../../../hooks';
 import { AppDataContext } from '../../../context';
-import { OTHER_TEXT_STYLE } from '../../../enums';
+import { TEXT_STYLE } from '../../../enums';
 import { Header, MainContainer } from '../../../components';
 
-export const PrivacyPolicy = () => {
+export const PrivacyPolicyScreen = () => {
     const { wp, hp } = useResponsiveDimensions();
     const { appTheme } = useContext(AppDataContext);
 
     const styles = useMemo(() => {
         return StyleSheet.create({
             heading: {
-                ...OTHER_TEXT_STYLE.large_title,
+                ...TEXT_STYLE.extraBold,
                 color: appTheme.textColor,
                 fontSize: hp(24),
                 marginBottom: hp(20),
             },
             subheading: {
-                ...OTHER_TEXT_STYLE.large_title,
+                ...TEXT_STYLE.extraBold,
                 color: appTheme.textColor,
                 fontSize: hp(18),
                 marginTop: hp(20),
             },
             text: {
-                ...OTHER_TEXT_STYLE.caption,
+                ...TEXT_STYLE.regular,
                 color: appTheme.textColor,
                 fontSize: hp(16),
                 lineHeight: hp(24),

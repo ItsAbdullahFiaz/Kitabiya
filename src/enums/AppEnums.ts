@@ -19,7 +19,9 @@ enum SCREENS {
 enum STACK {
   MAIN = 'Main',
   DRAWER = 'Drawer',
-  BOTTOM = 'Bottom'
+  BOTTOM = 'Bottom',
+  ONBOARDING = 'Onboarding',
+  AUTH = 'Auth'
 }
 
 export { SCREENS, STACK };

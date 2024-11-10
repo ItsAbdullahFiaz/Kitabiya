@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import React from 'react'
 
 export const AddScreen = () => {
@@ -8,5 +8,3 @@ export const AddScreen = () => {
     </View>
   )
 }
-
-const styles = StyleSheet.create({})

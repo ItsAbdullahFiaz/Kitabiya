@@ -1,5 +1,5 @@
-import {StyleSheet, View} from 'react-native';
-import React, {useMemo} from 'react';
+import { StyleSheet, View } from 'react-native';
+import React, { useMemo } from 'react';
 import {
   Header,
   LoginButton,
@@ -7,10 +7,10 @@ import {
   SocialLogins,
   UserInput,
 } from '../../../components';
-import {useResponsiveDimensions} from '../../../hooks';
+import { useResponsiveDimensions } from '../../../hooks';
 
-export const Signup = () => {
-  const {hp, wp} = useResponsiveDimensions();
+export const SignupScreen = () => {
+  const { hp, wp } = useResponsiveDimensions();
   const styles = useMemo(() => {
     return StyleSheet.create({
       contentContainer: {

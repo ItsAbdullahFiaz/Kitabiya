@@ -1,7 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity } from 'react-native'
 import React, { useContext, useMemo } from 'react'
 import { DotIndicator } from 'react-native-indicators'
-import { OTHER_TEXT_STYLE } from '../enums';
+import { TEXT_STYLE } from '../enums';
 import { useResponsiveDimensions } from '../hooks';
 import { AppDataContext } from '../context';
 
@@ -34,7 +34,7 @@ export const MainButton = (props: MainButtonProps) => {
                 borderColor: appTheme.primary
             },
             buttonText: {
-                ...OTHER_TEXT_STYLE.caption,
+                ...TEXT_STYLE.regular,
                 color: dismissiveButton ? appTheme.textColor : appTheme.secondary,
                 fontSize: hp(16),
                 marginHorizontal: wp(8),

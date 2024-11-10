@@ -1,25 +1,20 @@
 import {
-  FlatList,
-  Image,
   StatusBar,
   StyleSheet,
-  Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useMemo, useState} from 'react';
-import {AnyIcon, Category, IconType, MainContainer} from '../../../components';
-import {useResponsiveDimensions} from '../../../hooks';
-import {FONT, FONT_SIZE, OTHER_COLORS, SCREENS} from '../../../enums';
-import {useNavigation} from '@react-navigation/native';
-import {BookHeader} from '../../../components/BookHeader';
-import {topTrending} from '../../../utils';
+import React, { useMemo } from 'react';
+import { AnyIcon, Category, IconType } from '../../../components';
+import { useResponsiveDimensions } from '../../../hooks';
+import { FONT, FONT_SIZE, OTHER_COLORS } from '../../../enums';
+import { useNavigation } from '@react-navigation/native';
+import { BookHeader } from '../../../components/BookHeader';
 import ContinueReading from '../../../components/ContinueReading';
 
-export const MyBook = () => {
+export const MyBooksScreen = () => {
   const navigation = useNavigation();
-  const {hp, wp} = useResponsiveDimensions();
+  const { hp, wp } = useResponsiveDimensions();
   const styles = useMemo(() => {
     return StyleSheet.create({
       mainContainer: {
@@ -47,8 +42,8 @@ export const MyBook = () => {
 
   return (
     <View style={styles.mainContainer}>
-            <StatusBar barStyle={"dark-content"} backgroundColor={OTHER_COLORS.white}/>
-      <View style={{padding: hp(16)}}>
+      <StatusBar barStyle={"dark-content"} backgroundColor={OTHER_COLORS.white} />
+      <View style={{ padding: hp(16) }}>
         <BookHeader />
         <View style={styles.searchContainer}>
           <AnyIcon
@@ -65,8 +60,8 @@ export const MyBook = () => {
         </View>
       </View>
       <ContinueReading />
-      <View style={{padding:hp(16)}}>
-        <Category/>
+      <View style={{ padding: hp(16) }}>
+        <Category />
       </View>
     </View>
   );

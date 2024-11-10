@@ -1,7 +1,7 @@
 import { View, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import React, { useContext, useMemo, useState } from 'react';
 import { useResponsiveDimensions } from '../hooks';
-import { OTHER_COLORS, OTHER_TEXT_STYLE } from '../enums';
+import { OTHER_COLORS, TEXT_STYLE } from '../enums';
 import { AppDataContext } from '../context';
 import { AnyIcon, IconType } from '.';
 
@@ -36,7 +36,7 @@ export const CustomInput = (props: CustomInputProps) => {
                 borderColor: OTHER_COLORS.tansparentPrimary,
             },
             input: {
-                ...OTHER_TEXT_STYLE.caption,
+                ...TEXT_STYLE.regular,
                 color: appTheme.textColor,
                 fontSize: hp(14),
                 height: hp(46),
@@ -48,7 +48,7 @@ export const CustomInput = (props: CustomInputProps) => {
                 height: bottomError ? hp(24) : undefined,
             },
             titleWrong: {
-                ...OTHER_TEXT_STYLE.caption,
+                ...TEXT_STYLE.regular,
                 color: OTHER_COLORS.red,
                 marginTop: hp(5),
                 fontSize: hp(12)

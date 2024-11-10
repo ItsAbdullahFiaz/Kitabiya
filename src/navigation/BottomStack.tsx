@@ -1,27 +1,56 @@
-import React from 'react';
+import React, { useContext, useMemo } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Icon from 'react-native-vector-icons/FontAwesome'; // Assuming you're using FontAwesome
-import { Text, TouchableWithoutFeedback, View } from 'react-native';
+import { TouchableWithoutFeedback, View, Text, StyleSheet } from 'react-native';
 import { AddButton, AnyIcon, IconType } from '../components';
-import { OTHER_COLORS, SCREENS } from '../enums';
-import { HomeScreen } from '../views/screens';
-import { MyBook } from '../views/screens/myBook';
-import { Message } from '../views/screens/message';
-import { Account } from '../views/screens/account';
+import { FONT_SIZE, OTHER_COLORS, TEXT_STYLE, SCREENS, SIZES } from '../enums';
+import { HomeScreen, MyBooksScreen, MessagesScreen, AccountScreen } from '../views/screens';
+import { useResponsiveDimensions } from '../hooks';
+import { AppDataContext } from '../context';
 
 const Bottom = createBottomTabNavigator();
 
 const BottomStack = () => {
+    const { wp, hp } = useResponsiveDimensions();
+    const { appTheme } = useContext(AppDataContext);
+
+    const styles = useMemo(() => {
+        return StyleSheet.create({
+            tabBar: {
+                backgroundColor: appTheme.background
+            },
+            tabBarContainer: {
+                flexDirection: 'row',
+                height: hp(60),
+                width: '100%',
+                backgroundColor: appTheme.background
+            },
+            tabItem: {
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center'
+            },
+            sellTab: {
+                marginBottom: hp(20)
+            },
+            tabContent: {
+                alignItems: 'center'
+            },
+            tabLabel: {
+                ...TEXT_STYLE.regular,
+                fontSize: hp(FONT_SIZE.h5),
+                marginTop: hp(4)
+            }
+        });
+    }, [hp, wp]);
+
     return (
         <Bottom.Navigator
             screenOptions={{
                 headerShown: false,
-                tabBarShowLabel: false,
+                tabBarShowLabel: true,
                 tabBarActiveTintColor: OTHER_COLORS.primary,
                 tabBarInactiveTintColor: OTHER_COLORS.secondaryText,
-                tabBarStyle: {
-                    backgroundColor: 'white'
-                }
+                tabBarStyle: styles.tabBar
             }}
             tabBar={(props) => {
                 const {
@@ -30,33 +59,42 @@ const BottomStack = () => {
                     navigation
                 } = props;
                 return (
-                    <View style={{
-                        flexDirection: 'row',
-                        height: 60,
-                        width: '100%',
-                        backgroundColor: 'white'
-                    }}>
+                    <View style={styles.tabBarContainer}>
                         {
                             routes.map((route, idx) => {
                                 const { options } = descriptors[route.key];
                                 const color = index === idx ? options.tabBarActiveTintColor : options.tabBarInactiveTintColor;
+                                const label = options.tabBarLabel || route.name;
+
                                 return (
                                     <View
                                         key={route.key}
-                                        style={{
-                                            flex: 1,
-                                            alignItems: 'center',
-                                            justifyContent: 'center'
-                                        }}
+                                        style={[
+                                            styles.tabItem,
+                                            route.name === 'Sell' && styles.sellTab
+                                        ]}
                                     >
                                         <TouchableWithoutFeedback
                                             onPress={() => navigation.navigate(route.name)}
                                         >
-                                            {options.tabBarIcon && options.tabBarIcon({
-                                                focused: index === idx,
-                                                color: color || 'defaultColor', // Provide a default color
-                                                size: 20 // Add the size property
-                                            })}
+                                            <View style={styles.tabContent}>
+                                                {options.tabBarIcon && options.tabBarIcon({
+                                                    focused: index === idx,
+                                                    color: color || 'defaultColor',
+                                                    size: 20
+                                                })}
+                                                <Text style={[
+                                                    styles.tabLabel,
+                                                    { color }
+                                                ]}>
+                                                    {typeof label === 'function' ? label({
+                                                        focused: index === idx,
+                                                        color: color || 'defaultColor',
+                                                        position: 'below-icon',
+                                                        children: route.name
+                                                    }) : label}
+                                                </Text>
+                                            </View>
                                         </TouchableWithoutFeedback>
                                     </View>
                                 );
@@ -72,34 +110,32 @@ const BottomStack = () => {
                 options={{
                     tabBarLabel: 'Home',
                     tabBarIcon: ({ color }) => (
-                      // <AnyIcon 
-                      // type={IconType.SimpleLineIcons}
-                      // name='home'
-                      // color={color}
-                      // size={18}
-                      // />
-                        <Icon size={20} style={{ padding: 20 }} name="home" color={color} />
+                        <AnyIcon
+                            type={IconType.AntDesign}
+                            name='home'
+                            color={color}
+                            size={20}
+                        />
                     )
                 }}
             />
             <Bottom.Screen
                 name={SCREENS.MY_BOOK}
-                component={MyBook}
+                component={MyBooksScreen}
                 options={{
-                    tabBarLabel: 'My Book',
+                    tabBarLabel: 'My Books',
                     tabBarIcon: ({ color }) => (
-                      // <AnyIcon 
-                      // type={IconType.Feather}
-                      // name='book'
-                      // color={color}
-                      // size={18}
-                      // />
-                        <Icon size={20} style={{ padding: 20 }} name="search" color={color} />
+                        <AnyIcon
+                            type={IconType.Feather}
+                            name='book'
+                            color={color}
+                            size={20}
+                        />
                     )
                 }}
             />
             <Bottom.Screen
-                name="Adding"
+                name="Sell"
                 options={({ navigation }) => ({
                     tabBarIcon: () => <AddButton navigation={navigation} />
                 })}
@@ -108,33 +144,31 @@ const BottomStack = () => {
             </Bottom.Screen>
             <Bottom.Screen
                 name={SCREENS.MESSAGE}
-                component={Message}
+                component={MessagesScreen}
                 options={{
                     tabBarLabel: 'Message',
                     tabBarIcon: ({ color }) => (
-                      // <AnyIcon 
-                      // type={IconType.Feather}
-                      // name='message-square'
-                      // color={color}
-                      // size={18}
-                      // />
-                            <Icon size={20} style={{ padding: 20 }} name="shopping-cart" color={color} />            
-                                  )
+                        <AnyIcon
+                            type={IconType.Feather}
+                            name='message-square'
+                            color={color}
+                            size={20}
+                        />
+                    )
                 }}
             />
             <Bottom.Screen
                 name={SCREENS.ACCOUNT}
-                component={Account}
+                component={AccountScreen}
                 options={{
                     tabBarLabel: 'Account',
                     tabBarIcon: ({ color }) => (
-                      // <AnyIcon 
-                      // type={IconType.Ionicons}
-                      // name='person-outline'
-                      // color={color}
-                      // size={18}
-                      // />
-                        <Icon size={20} style={{ padding: 20 }} name="user" color={color} />
+                        <AnyIcon
+                            type={IconType.Feather}
+                            name='user'
+                            color={color}
+                            size={20}
+                        />
                     )
                 }}
             />
@@ -143,29 +177,3 @@ const BottomStack = () => {
 };
 
 export default BottomStack
-
-// import React from 'react'
-// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-// import { SCREENS } from '../enums';
-// import { HomeScreen } from '../views/screens';
-// import { MyBook } from '../views/screens/myBook';
-// import { Message } from '../views/screens/message';
-// import { Account } from '../views/screens/account';
-// import { Image } from 'react-native';
-// const Tab=createBottomTabNavigator();
-// const BottomStack = () => {
-//   return (
-//     <Tab.Navigator screenOptions={{headerShown:false}}>
-//         <Tab.Screen name={SCREENS.HOME} component={HomeScreen}  options={{
-//           tabBarIcon: () => (
-//             <Image source={require("../assets/images/home.png")} style={{ width: 24, height: 24 }} />
-//           )
-//         }}/>
-//         <Tab.Screen name={SCREENS.MY_BOOK} component={MyBook}/>
-//         <Tab.Screen name={SCREENS.MESSAGE} component={Message}/>
-//         <Tab.Screen name={SCREENS.ACCOUNT} component={Account}/>
-//     </Tab.Navigator>
-//   )
-// }
-
-// export default BottomStack

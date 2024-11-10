@@ -8,7 +8,6 @@ export * from './MainHeading'
 export * from './TextWithLink'
 export * from './Header'
 export * from './AnyIcon'
-export * from './CustomDrawer'
 export * from './ButtonRow'
 export * from './CustomModal'
 export * from "./LoginButton"

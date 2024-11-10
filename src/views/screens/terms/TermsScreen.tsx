@@ -4,7 +4,7 @@ import { ScrollView, Text, StyleSheet } from 'react-native';
 import { useResponsiveDimensions } from '../../../hooks';
 import { AppDataContext } from '../../../context';
 import { Header, MainContainer } from '../../../components';
-import { OTHER_TEXT_STYLE } from '../../../enums';
+import { TEXT_STYLE } from '../../../enums';
 
 export const Terms = () => {
     const { wp, hp } = useResponsiveDimensions();
@@ -13,19 +13,19 @@ export const Terms = () => {
     const styles = useMemo(() => {
         return StyleSheet.create({
             heading: {
-                ...OTHER_TEXT_STYLE.large_title,
+                ...TEXT_STYLE.extraBold,
                 color: appTheme.textColor,
                 fontSize: hp(24),
                 marginBottom: hp(20),
             },
             subheading: {
-                ...OTHER_TEXT_STYLE.large_title,
+                ...TEXT_STYLE.extraBold,
                 color: appTheme.textColor,
                 fontSize: hp(18),
                 marginTop: hp(20),
             },
             text: {
-                ...OTHER_TEXT_STYLE.caption,
+                ...TEXT_STYLE.regular,
                 color: appTheme.textColor,
                 fontSize: hp(16),
                 lineHeight: hp(24),
