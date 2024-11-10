@@ -1,22 +1,42 @@
 import { StyleSheet, Text, View, Pressable } from 'react-native';
 import React, { useContext, useMemo, useState } from 'react';
-import {
-  Header,
-  LoginButton,
-  MainContainer,
-  SocialLogins,
-  UserInput,
-} from '../../../components';
-import { useResponsiveDimensions } from '../../../hooks';
 import { useNavigation } from '@react-navigation/native';
+import { CustomInput, Header, LoginButton, MainButton, MainContainer, SocialLogins, UserInput } from '../../../components';
+import { useResponsiveDimensions, useToast } from '../../../hooks';
+import { resetAndGo, setEmailError, setPasswordError, validateEmail } from '../../../utils';
 import { FONT_SIZE, SCREENS, STACK, TEXT_STYLE } from '../../../enums';
 import { AppDataContext } from '../../../context';
+import { loginUser } from '../../../services';
 
 export const LoginScreen = () => {
   const navigation = useNavigation();
   const { hp, wp } = useResponsiveDimensions();
-  const { appTheme } = useContext(AppDataContext);
+  const { appTheme, appLang } = useContext(AppDataContext);
+  const showToast = useToast();
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false);
+  const [wrongEmailError, setWrongEmailError] = useState('');
+  const [wrongPasswordError, setWrongPasswordError] = useState('');
   const [checked, setChecked] = useState<boolean>(false);
+
+  const handleLogin = async () => {
+    const isEmailValid = validateEmail(email);
+    setEmailError(email, isEmailValid, appLang, setWrongEmailError);
+    setPasswordError(password, true, appLang, setWrongPasswordError);
+
+    if (isEmailValid && password.trim().length !== 0) {
+      setLoading(true)
+      const response = await loginUser(email, password);
+      if (response.success) {
+        resetAndGo(navigation, STACK.MAIN, null)
+        showToast(appLang.loginSuccess, 'successToast')
+      } else {
+        showToast(response.errorMessage, 'errorToast')
+      }
+      setLoading(false)
+    }
+  }
 
   const handleCheckboxPress = () => {
     setChecked(prev => !prev);
@@ -71,12 +91,29 @@ export const LoginScreen = () => {
       },
     });
   }, [hp, wp]);
+
   return (
     <MainContainer>
       <Header title="log in" />
       <View style={styles.contentContainer}>
-        <UserInput label="email" />
-        <UserInput label="password" />
+        <CustomInput
+          value={email}
+          setValue={setEmail}
+          placeholder={appLang.email}
+          textWrong={wrongEmailError}
+          onChange={() => setWrongEmailError('')}
+          bottomError={true}
+        />
+        <CustomInput
+          value={password}
+          setValue={setPassword}
+          placeholder={appLang.password}
+          textWrong={wrongPasswordError}
+          onChange={() => setWrongPasswordError('')}
+          bottomError={true}
+          twoLinesError={true}
+          secureTextEntry={true}
+        />
         <View style={styles.flexContainer}>
           <View style={styles.rememberContainer}>
             <Pressable onPress={handleCheckboxPress} style={styles.checkbox}>
@@ -97,7 +134,11 @@ export const LoginScreen = () => {
             Forgot Password ?
           </Text>
         </View>
-        <LoginButton title="log in" onPress={() => navigation.navigate(STACK.MAIN as never)} />
+        <MainButton
+          onPress={handleLogin}
+          buttonText={appLang.login}
+          isLoading={loading}
+        />
         <SocialLogins />
         <View style={styles.dontContainer}>
           <Text style={styles.dont}>Don't have an account?</Text>

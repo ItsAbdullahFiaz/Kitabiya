@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useContext, useMemo } from 'react'
 import { DotIndicator } from 'react-native-indicators'
 import { TEXT_STYLE } from '../enums';
@@ -46,10 +46,13 @@ export const MainButton = (props: MainButtonProps) => {
 
     return (
         <TouchableOpacity style={styles.button} onPress={onPress} disabled={disableBtn}>
-            {!isLoading ?
-                <Text style={styles.buttonText}>{buttonText}</Text> :
-                <DotIndicator color={appTheme.primary} size={hp(10)} />
-            }
+            {!isLoading ? (
+                <Text style={styles.buttonText}>{buttonText}</Text>
+            ) : (
+                <View>
+                    <DotIndicator color={appTheme.primary} size={hp(10)} />
+                </View>
+            )}
         </TouchableOpacity>
     )
 }

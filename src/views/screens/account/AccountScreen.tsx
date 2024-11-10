@@ -3,9 +3,12 @@ import React, { useMemo } from 'react'
 import { AnyIcon, IconType, MainContainer, ProfileHeader } from '../../../components'
 import { useResponsiveDimensions } from '../../../hooks'
 import { FONT, FONT_SIZE, OTHER_COLORS } from '../../../enums'
+import { signOutUser } from '../../../services'
+import { useNavigation } from '@react-navigation/native'
 
 export const AccountScreen = () => {
   const { hp, wp } = useResponsiveDimensions();
+  const navigation = useNavigation();
   const styles = useMemo(() => {
     return StyleSheet.create({
       buttonsContainer: {
@@ -107,7 +110,7 @@ export const AccountScreen = () => {
           <Text style={styles.btnText}>Setting</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.logoutContainer}>
+      <TouchableOpacity onPress={() => signOutUser(navigation)} style={styles.logoutContainer}>
         <Text style={styles.logoutText}>log out</Text>
       </TouchableOpacity>
     </MainContainer>

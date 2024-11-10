@@ -19,7 +19,8 @@ enum PRIMARY_COLORS_LIGHT {
     placeholderText = '#8F9193',
     textColor2 = '#4A4C4F',
     primaryLight = '#F6F9FB',
-    textColorDim = "#BBBBBB"
+    textColorDim = "#BBBBBB",
+    tansparentPrimary = 'rgba(51, 94, 247, 0.08)',
 }
 
 enum PRIMARY_COLORS_DARK {
@@ -31,7 +32,8 @@ enum PRIMARY_COLORS_DARK {
     secondaryBackground = '#76808a',
     placeholderText = '#8F9193',
     primaryLight = '#314150',
-    textColorDim = "#BBBBBB"
+    textColorDim = "#BBBBBB",
+    tansparentPrimary = 'rgba(51, 94, 247, 0.08)',
 }
 
 enum SECONDARY_COLORS_LIGHT {

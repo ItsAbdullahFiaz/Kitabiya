@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1070998124660",
+    "project_id": "kitabiya-717c2",
+    "storage_bucket": "kitabiya-717c2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1070998124660:android:99fc3b939f36755d65b921",
+        "android_client_info": {
+          "package_name": "com.kitabiya"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0DYSAcj4BjSwfNNKrDXaw6eR2AqB4Yd8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
