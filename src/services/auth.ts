@@ -59,21 +59,7 @@ const resetPassword = async (email: string) => {
         return { success: false, errorMessage };
     }
 };
-const handleGoogleLogin = async () => {
-    try {
-      const {idToken} = await GoogleSignin.signIn();
-      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-      const userCredential = await auth().signInWithCredential(
-        googleCredential,
-      );
-      if (userCredential.user) {
-        // navigation.navigate('Welcome');
-        return { success: true };
-      }
-    } catch (error) {
-      console.error('Login failed with error: ', error);
-    }
-  };
+
   
 
-export { registerUser, loginUser, signOutUser, resetPassword,handleGoogleLogin };
+export { registerUser, loginUser, signOutUser, resetPassword };

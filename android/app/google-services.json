@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1070998124660-47d953025003o8mfmr7gapobjhaai3uj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kitabiya",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
           "client_id": "1070998124660-c9i2ni7s1itl0t1hv4k3h1076fks2u54.apps.googleusercontent.com",
           "client_type": 3
         }

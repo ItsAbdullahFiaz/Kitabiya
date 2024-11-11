@@ -1,9 +1,9 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native'
 import React, { useMemo } from 'react'
 import { FONT, FONT_SIZE, OTHER_COLORS } from '../enums';
 import { useResponsiveDimensions } from '../hooks';
 
-export const ProfileHeader = () => {
+export const ProfileHeader = ({userInfo} : any) => {
     const {hp,wp}=useResponsiveDimensions();
   const styles =useMemo(()=>{
     return StyleSheet.create({
@@ -40,13 +40,19 @@ export const ProfileHeader = () => {
     })
   },[hp,wp,FONT,FONT_SIZE,OTHER_COLORS])
   return (
-    <View style={styles.profileHeader}>
-        <View style={styles.imgContainer}>
-          <Image style={styles.img} source={require("../assets/images/person.jpg")}/>
-        </View>
-        <Text style={styles.name}>emmie watson</Text>
-        <Text style={styles.gmail}>emmie1709@gmail.com</Text>
+    <>
+    {userInfo ? (
+      <View style={styles.profileHeader}>
+      <View style={styles.imgContainer}>
+        <Image style={styles.img} source={{uri:userInfo.photoURL}}/>
       </View>
+      <Text style={styles.name}>{userInfo.displayName}</Text>
+      <Text style={styles.gmail}>{userInfo.email}</Text>
+    </View>
+    ):(
+      <ActivityIndicator/>
+    )}
+      </>
   )
 }
 

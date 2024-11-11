@@ -1,14 +1,31 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { AnyIcon, IconType, MainContainer, ProfileHeader } from '../../../components'
 import { useResponsiveDimensions } from '../../../hooks'
 import { FONT, FONT_SIZE, OTHER_COLORS } from '../../../enums'
 import { signOutUser } from '../../../services'
 import { useNavigation } from '@react-navigation/native'
+import auth from '@react-native-firebase/auth'
 
 export const AccountScreen = () => {
+  // const [fullName,setFullName]=useState("");
+  // const [userEmail,setUserEmail]=useState("");
+  // const [userImage,setUserImage]=useState("");
+  const [userInfo,setUserInfo]=useState<any>("");
   const { hp, wp } = useResponsiveDimensions();
   const navigation = useNavigation();
+  const userDetails=async()=>{
+    try {
+        const user=await auth().currentUser;
+        setUserInfo(user);
+        console.log("CURRENT_USER===>",user);
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+useEffect(()=>{
+    userDetails();
+},[])
   const styles = useMemo(() => {
     return StyleSheet.create({
       buttonsContainer: {
@@ -55,7 +72,7 @@ export const AccountScreen = () => {
   }, [hp, wp, FONT, FONT_SIZE, OTHER_COLORS])
   return (
     <MainContainer>
-      <ProfileHeader />
+      <ProfileHeader userInfo={userInfo}/>
       <View style={styles.buttonsContainer}>
         <TouchableOpacity style={styles.btnContainer}>
           <AnyIcon

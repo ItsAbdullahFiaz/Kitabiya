@@ -5,23 +5,17 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useEffect, useMemo } from 'react';
-import { useResponsiveDimensions } from '../../../hooks';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { useResponsiveDimensions, useToast } from '../../../hooks';
 import { useNavigation } from '@react-navigation/native';
-import { FONT, OTHER_COLORS, SCREENS } from '../../../enums';
+import { FONT, OTHER_COLORS, SCREENS, STACK } from '../../../enums';
 import { LoginButton, MainContainer, SocialLogins } from '../../../components';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 export const WelcomeScreen = () => {
   const navigation = useNavigation();
   const { hp, wp } = useResponsiveDimensions();
+ 
 
-  useEffect(() => {
-    GoogleSignin.configure({
-      webClientId:
-        '1070998124660-c9i2ni7s1itl0t1hv4k3h1076fks2u54.apps.googleusercontent.com',
-    });
-  }, []);
 
   const styles = useMemo(() => {
     return StyleSheet.create({
@@ -58,6 +52,7 @@ export const WelcomeScreen = () => {
       },
     });
   }, [hp, wp, OTHER_COLORS, FONT]);
+
   return (
     <MainContainer>
       <View style={styles.innerContainer}>
@@ -75,7 +70,7 @@ export const WelcomeScreen = () => {
             onPress={() => navigation.navigate(SCREENS.SIGNUP as never)}>
             <Text style={styles.btnText}>sign up</Text>
           </TouchableOpacity>
-          <SocialLogins />
+          <SocialLogins/>
         </View>
       </View>
     </MainContainer>
