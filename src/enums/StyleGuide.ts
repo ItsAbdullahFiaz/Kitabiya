@@ -23,6 +23,10 @@ enum PRIMARY_COLORS_LIGHT {
     tansparentPrimary = 'rgba(51, 94, 247, 0.08)',
     inputBorder = '#E6E6E6',
     black = '#000000',
+    backButtonBackground = '#f5f5f5',
+    primaryBlack = '#1B1B1B',
+    secondaryBlack = '#161616',
+    green = "#09CA67"
 }
 
 enum PRIMARY_COLORS_DARK {
