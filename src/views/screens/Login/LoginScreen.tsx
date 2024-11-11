@@ -44,7 +44,7 @@ export const LoginScreen = () => {
   const styles = useMemo(() => {
     return StyleSheet.create({
       contentContainer: {
-        marginTop: hp(70),
+        marginTop:hp(90)
       },
       checkbox: {
         width: hp(18),
@@ -55,9 +55,9 @@ export const LoginScreen = () => {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginTop: hp(20),
       },
       rememberContainer: {
+        marginBottom:hp(20),
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-start',
@@ -89,6 +89,13 @@ export const LoginScreen = () => {
         fontSize: hp(FONT_SIZE.h4),
         color: appTheme.primary,
       },
+      label:{
+        ...TEXT_STYLE.regular,
+        fontSize:hp(FONT_SIZE.h3),
+        color:appTheme.textColor,
+        textTransform:"capitalize",
+        marginBottom:hp(3)
+      }
     });
   }, [hp, wp]);
 
@@ -96,6 +103,7 @@ export const LoginScreen = () => {
     <MainContainer>
       <Header title="log in" />
       <View style={styles.contentContainer}>
+        <Text style={styles.label}>email</Text>
         <CustomInput
           value={email}
           setValue={setEmail}
@@ -104,6 +112,7 @@ export const LoginScreen = () => {
           onChange={() => setWrongEmailError('')}
           bottomError={true}
         />
+        <Text style={styles.label}>password</Text>
         <CustomInput
           value={password}
           setValue={setPassword}
@@ -142,7 +151,7 @@ export const LoginScreen = () => {
         <SocialLogins />
         <View style={styles.dontContainer}>
           <Text style={styles.dont}>Don't have an account?</Text>
-          <Text style={styles.register}>Register</Text>
+          <Text style={styles.register} onPress={()=>navigation.navigate(SCREENS.SIGNUP as never)}>Register</Text>
         </View>
       </View>
     </MainContainer>

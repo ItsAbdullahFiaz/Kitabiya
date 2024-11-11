@@ -1,7 +1,7 @@
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
 import React, { useContext, useMemo, useState } from 'react';
 import { useResponsiveDimensions } from '../hooks';
-import { OTHER_COLORS, STATUS_COLORS, TEXT_STYLE } from '../enums';
+import { STATUS_COLORS, TEXT_STYLE } from '../enums';
 import { AppDataContext } from '../context';
 import { AnyIcon, IconType } from '.';
 
@@ -33,10 +33,9 @@ export const CustomInput = (props: CustomInputProps) => {
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                backgroundColor: appTheme.primaryLight,
                 borderRadius: hp(8),
                 borderWidth: 1,
-                borderColor: appTheme.tansparentPrimary,
+                borderColor: appTheme.inputBorder,
             },
             input: {
                 ...TEXT_STYLE.regular,
@@ -72,7 +71,7 @@ export const CustomInput = (props: CustomInputProps) => {
                     style={[styles.input, (secureTextEntry || pasteButton) && { width: "90%" }, { paddingRight: pasteButton || secureTextEntry ? 0 : 16 }]}
                     value={value}
                     onChange={onChange}
-                    placeholderTextColor={appTheme.primary}
+                    placeholderTextColor={appTheme.secondaryTextColor}
                     placeholder={placeholder}
                     secureTextEntry={secureTextEntry ? isSecure : false}
                     keyboardType={keyboardType ? keyboardType : 'default'}

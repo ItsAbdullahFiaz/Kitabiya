@@ -21,6 +21,7 @@ enum PRIMARY_COLORS_LIGHT {
     primaryLight = '#F6F9FB',
     textColorDim = "#BBBBBB",
     tansparentPrimary = 'rgba(51, 94, 247, 0.08)',
+    inputBorder = '#E6E6E6'
 }
 
 enum PRIMARY_COLORS_DARK {

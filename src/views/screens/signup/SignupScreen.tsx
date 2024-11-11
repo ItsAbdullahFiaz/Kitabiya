@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import React, { useContext, useMemo, useState } from 'react';
 import { CustomInput, Header, MainButton, MainContainer, SocialLogins } from '../../../components';
 import { useResponsiveDimensions, useToast } from '../../../hooks';
@@ -6,7 +6,7 @@ import { resetAndGo, setEmailError, setPasswordError, validateEmail, validatePas
 import { AppDataContext } from '../../../context';
 import { registerUser } from '../../../services';
 import { useNavigation } from '@react-navigation/native';
-import { STACK } from '../../../enums';
+import { FONT_SIZE, STACK, TEXT_STYLE } from '../../../enums';
 
 export const SignupScreen = () => {
   const navigation = useNavigation();
@@ -41,14 +41,22 @@ export const SignupScreen = () => {
   const styles = useMemo(() => {
     return StyleSheet.create({
       contentContainer: {
-        marginTop: hp(70),
+        marginTop: hp(90),
       },
+      label:{
+        ...TEXT_STYLE.regular,
+        fontSize:hp(FONT_SIZE.h3),
+        color:appTheme.textColor,
+        textTransform:"capitalize",
+        marginBottom:hp(3)
+      }
     });
   }, [hp]);
   return (
     <MainContainer>
       <Header title="sign up" />
       <View style={styles.contentContainer}>
+      <Text style={styles.label}>email</Text>
         <CustomInput
           value={email}
           setValue={setEmail}
@@ -57,6 +65,7 @@ export const SignupScreen = () => {
           onChange={() => setWrongEmailError('')}
           bottomError={true}
         />
+        <Text style={styles.label}>email</Text>
         <CustomInput
           value={password}
           setValue={setPassword}
