@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import React, { useContext, useMemo } from 'react'
 import { useResponsiveDimensions } from '../hooks';
 import { AppDataContext } from '../context';
-import { TEXT_STYLE } from '../enums';
+import { FONT_SIZE, TEXT_STYLE } from '../enums';
 
 interface MainParagraphProps {
     paragraph: string
@@ -19,9 +19,9 @@ export const MainParagraph = (props: MainParagraphProps) => {
                 marginBottom: hp(16),
             },
             heading: {
-                ...TEXT_STYLE.medium,
-                color: appTheme.primary,
-                fontSize: hp(16)
+                ...TEXT_STYLE.regular,
+                color: appTheme.secondaryTextColor,
+                fontSize: hp(FONT_SIZE.h4)
             }
         });
     }, [hp, wp, appTheme]);

@@ -83,6 +83,8 @@ export const LoginScreen = () => {
         ...TEXT_STYLE.regular,
         fontSize: hp(FONT_SIZE.h5),
         color: appTheme.secondaryTextColor,
+        textAlign:"right",
+        marginBottom:hp(10)
       },
       register: {
         ...TEXT_STYLE.regular,
@@ -123,18 +125,18 @@ export const LoginScreen = () => {
           twoLinesError={true}
           secureTextEntry={true}
         />
-        <View style={styles.flexContainer}>
+        {/* <View style={styles.flexContainer}>
           <View style={styles.rememberContainer}>
-            <Pressable onPress={handleCheckboxPress} style={styles.checkbox}>
+            <Pressable onPress={handleCheckboxPress} style={styles.checkbox}> */}
               {/* <AnimatedCheckbox
                 checked={checked}
                 highlightColor="#09CA67"
                 checkmarkColor="#ffffff"
                 boxOutlineColor="#09CA67"
               /> */}
-            </Pressable>
+            {/* </Pressable>
             <Text style={styles.rememberText}>Remember me</Text>
-          </View>
+          </View> */}
           <Text
             style={styles.forgotPassword}
             onPress={() =>
@@ -142,7 +144,7 @@ export const LoginScreen = () => {
             }>
             Forgot Password ?
           </Text>
-        </View>
+        {/* </View> */}
         <MainButton
           onPress={handleLogin}
           buttonText={appLang.login}

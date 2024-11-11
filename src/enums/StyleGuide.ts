@@ -11,6 +11,7 @@ enum FONT {
 
 enum PRIMARY_COLORS_LIGHT {
     primary = '#5A6CF8',
+    light="#fff",
     secondary = '#dde6f0',
     textColor = '#1B1B1B',
     secondaryTextColor = '#838383',

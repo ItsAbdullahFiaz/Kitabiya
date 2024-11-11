@@ -35,7 +35,7 @@ export const MainButton = (props: MainButtonProps) => {
             },
             buttonText: {
                 ...TEXT_STYLE.regular,
-                color: dismissiveButton ? appTheme.textColor : appTheme.secondary,
+                color: dismissiveButton ? appTheme.textColor : appTheme.light,
                 fontSize: hp(16),
                 marginHorizontal: wp(8),
                 flexGrow: 0,

@@ -1,16 +1,17 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { CustomInput, Header, MainButton, MainContainer, MainHeading, MainParagraph } from '../../../components';
 import { useResponsiveDimensions, useToast } from '../../../hooks';
 import { useNavigation } from '@react-navigation/native';
-import { SCREENS } from '../../../enums';
+import { SCREENS, TEXT_STYLE } from '../../../enums';
 import { AppDataContext } from '../../../context';
 import { setEmailError, validateEmail } from '../../../utils';
 import { resetPassword } from '../../../services';
+import { StyleSheet, Text, View } from 'react-native';
 
 export const ForgotPasswordScreen = () => {
   const navigation = useNavigation();
   const { hp, wp } = useResponsiveDimensions();
-  const { appLang } = useContext(AppDataContext);
+  const { appLang,appTheme } = useContext(AppDataContext);
   const showToast = useToast();
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false);
@@ -33,11 +34,27 @@ export const ForgotPasswordScreen = () => {
     }
   }
 
+  const styles=useMemo(()=>{
+    return StyleSheet.create({
+      contentContainer:{
+        marginTop:hp(90)
+      },
+      label:{
+        ...TEXT_STYLE.regular,
+        color:appTheme.textColor,
+        textTransform:"capitalize",
+        marginBottom:hp(3)
+      }
+    })
+  },[hp,wp]) 
+
   return (
     <MainContainer>
       <Header title="forgot password" />
-      <MainHeading heading={appLang.resetPassword} />
+      {/* <MainHeading heading={appLang.resetPassword} /> */}
+      <View style={styles.contentContainer}>
       <MainParagraph paragraph={appLang.resetInstructions} />
+      <Text style={styles.label}>email</Text>
       <CustomInput
         value={email}
         setValue={setEmail}
@@ -51,6 +68,7 @@ export const ForgotPasswordScreen = () => {
         buttonText={appLang.sendInstructions}
         isLoading={loading}
       />
+      </View>
     </MainContainer>
   );
 };

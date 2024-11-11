@@ -1,6 +1,7 @@
 import auth from '@react-native-firebase/auth';
 import { STACK } from '../enums';
 import { resetAndGo } from '../utils';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 const registerUser = async (email: string, password: string) => {
     try {
@@ -58,5 +59,21 @@ const resetPassword = async (email: string) => {
         return { success: false, errorMessage };
     }
 };
+const handleGoogleLogin = async () => {
+    try {
+      const {idToken} = await GoogleSignin.signIn();
+      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+      const userCredential = await auth().signInWithCredential(
+        googleCredential,
+      );
+      if (userCredential.user) {
+        // navigation.navigate('Welcome');
+        return { success: true };
+      }
+    } catch (error) {
+      console.error('Login failed with error: ', error);
+    }
+  };
+  
 
-export { registerUser, loginUser, signOutUser, resetPassword };
+export { registerUser, loginUser, signOutUser, resetPassword,handleGoogleLogin };
