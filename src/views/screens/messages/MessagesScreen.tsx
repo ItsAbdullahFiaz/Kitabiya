@@ -1,8 +1,9 @@
 import { FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useMemo } from 'react'
+import React, { useMemo,useContext } from 'react'
 import { AnyIcon, IconType, MainContainer } from '../../../components'
 import { useResponsiveDimensions } from '../../../hooks'
 import { FONT, FONT_SIZE, OTHER_COLORS } from '../../../enums'
+import { AppDataContext } from '../../../context'
 
 
 const data = [
@@ -56,13 +57,14 @@ const data = [
   },
 ]
 export const MessagesScreen = () => {
+  const {appTheme}=useContext(AppDataContext)
   const { hp, wp } = useResponsiveDimensions();
   const styles = useMemo(() => {
     return StyleSheet.create({
       title: {
         fontSize: FONT_SIZE.h1,
         fontFamily: FONT.PoppinsMedium,
-        color: OTHER_COLORS.black,
+        color: appTheme.black,
         textAlign: "center",
         textTransform: "capitalize"
       },
@@ -71,7 +73,7 @@ export const MessagesScreen = () => {
         height: hp(40),
         width: '100%',
         borderRadius: hp(12),
-        backgroundColor: OTHER_COLORS.backButtonBackground,
+        backgroundColor: appTheme.backButtonBackground,
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
@@ -107,7 +109,7 @@ export const MessagesScreen = () => {
       name: {
         fontSize: FONT_SIZE.h3,
         fontFamily: FONT.PoppinsMedium,
-        color: OTHER_COLORS.primaryBlack,
+        color: appTheme.primaryBlack,
         textTransform: "capitalize"
       },
       textContainer: {
@@ -116,20 +118,20 @@ export const MessagesScreen = () => {
       text: {
         fontSize: FONT_SIZE.h3,
         fontFamily: FONT.PoppinsRegular,
-        color: OTHER_COLORS.secondaryText,
+        color: appTheme.secondaryText,
       },
       numContainer: {
         height: hp(24),
         width: hp(24),
         borderRadius: hp(12),
-        backgroundColor: OTHER_COLORS.green,
+        backgroundColor: appTheme.green,
         justifyContent: "center",
         alignItems: "center"
       },
       numberOfMessages: {
         fontSize: FONT_SIZE.h4,
         fontFamily: FONT.PoppinsRegular,
-        color: OTHER_COLORS.white
+        color: appTheme.background
       }
     })
   }, [hp, wp, FONT, FONT_SIZE, OTHER_COLORS])
@@ -162,13 +164,13 @@ export const MessagesScreen = () => {
         <AnyIcon
           type={IconType.EvilIcons}
           name="search"
-          color={OTHER_COLORS.border}
+          color={appTheme.inputBorder}
           size={16}
         />
         <TextInput
           style={styles.input}
           placeholder="Search here"
-          placeholderTextColor={OTHER_COLORS.border}
+          placeholderTextColor={appTheme.inputBorder}
         />
       </View>
       <View style={styles.listContainer}>
