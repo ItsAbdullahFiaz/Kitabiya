@@ -9,12 +9,12 @@ import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useResponsiveDimensions, useToast } from '../../../hooks';
 import { useNavigation } from '@react-navigation/native';
 import { FONT, OTHER_COLORS, SCREENS, STACK } from '../../../enums';
-import { LoginButton, MainContainer, SocialLogins } from '../../../components';
+import { MainButton, MainContainer, SocialLogins } from '../../../components';
 
 export const WelcomeScreen = () => {
   const navigation = useNavigation();
   const { hp, wp } = useResponsiveDimensions();
- 
+
 
 
   const styles = useMemo(() => {
@@ -61,16 +61,16 @@ export const WelcomeScreen = () => {
           source={require('../../../assets/images/appLogo.png')}
         />
         <View style={styles.contentContainer}>
-          <LoginButton
-            title="log in"
-            onPress={() => navigation.navigate(SCREENS.LOGIN as never)}
+          <MainButton
+            onPress={() => navigation.navigate(SCREENS.SIGNUP as never)}
+            buttonText="sign up"
           />
           <TouchableOpacity
             style={styles.btnContainer}
             onPress={() => navigation.navigate(SCREENS.SIGNUP as never)}>
             <Text style={styles.btnText}>sign up</Text>
           </TouchableOpacity>
-          <SocialLogins/>
+          <SocialLogins />
         </View>
       </View>
     </MainContainer>

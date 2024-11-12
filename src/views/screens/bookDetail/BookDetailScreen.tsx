@@ -1,6 +1,6 @@
 import { Image, StyleSheet, Text, View } from 'react-native';
 import React, { useMemo, useState } from 'react';
-import { AnyIcon, Header, IconType, LoginButton, MainContainer } from '../../../components';
+import { AnyIcon, Header, IconType, MainButton, MainContainer } from '../../../components';
 import { FONT, FONT_SIZE, OTHER_COLORS } from '../../../enums';
 import { useResponsiveDimensions } from '../../../hooks';
 
@@ -197,7 +197,10 @@ export const BookDetailScreen = ({ route }: any) => {
         </View>
       </View>
       <View style={styles.chatBtnContainer}>
-        <LoginButton title="chat now" />
+        <MainButton
+          onPress={() => { }}
+          buttonText="chat now"
+        />
       </View>
     </MainContainer>
   );

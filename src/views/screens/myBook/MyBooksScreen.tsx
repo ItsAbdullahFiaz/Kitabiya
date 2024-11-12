@@ -5,12 +5,11 @@ import {
   View,
 } from 'react-native';
 import React, { useMemo } from 'react';
-import { AnyIcon, Category, IconType } from '../../../components';
+import { AnyIcon, IconType } from '../../../components';
 import { useResponsiveDimensions } from '../../../hooks';
 import { FONT, FONT_SIZE, OTHER_COLORS } from '../../../enums';
 import { useNavigation } from '@react-navigation/native';
-import { BookHeader } from '../../../components/BookHeader';
-import ContinueReading from '../../../components/ContinueReading';
+import { BookHeader, Category, ContinueReading } from './components';
 
 export const MyBooksScreen = () => {
   const navigation = useNavigation();

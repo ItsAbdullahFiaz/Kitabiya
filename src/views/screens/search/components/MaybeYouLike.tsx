@@ -6,14 +6,14 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useMemo} from 'react';
-import {FONT, FONT_SIZE, OTHER_COLORS} from '../enums';
-import {useResponsiveDimensions} from '../hooks';
-import {topTrending} from '../utils';
-import {AnyIcon, IconType} from './AnyIcon';
+import React, { useMemo } from 'react';
+import { FONT, FONT_SIZE, OTHER_COLORS } from '../../../../enums';
+import { useResponsiveDimensions } from '../../../../hooks';
+import { topTrending } from '../../../../utils';
+import { AnyIcon, IconType } from '../../../../components/AnyIcon';
 
 export const MaybeYouLike = () => {
-  const {hp, wp} = useResponsiveDimensions();
+  const { hp, wp } = useResponsiveDimensions();
   const styles = useMemo(() => {
     return StyleSheet.create({
       container: {
@@ -77,8 +77,8 @@ export const MaybeYouLike = () => {
       },
     });
   }, [hp, wp, OTHER_COLORS, FONT, FONT_SIZE]);
-  const renderList = ({item} : any) => {
-    const {image, name, author, rating} = item;
+  const renderList = ({ item }: any) => {
+    const { image, name, author, rating } = item;
     const fullStars = Math.floor(rating);
     const halfStars = rating - fullStars >= 0.5 ? 1 : 0;
     const emptyStars = 5 - fullStars - halfStars;

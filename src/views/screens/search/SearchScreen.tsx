@@ -1,8 +1,9 @@
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useMemo } from 'react'
-import { AnyIcon, BackButton, IconType, MainContainer, MaybeYouLike } from '../../../components'
+import { AnyIcon, BackButton, IconType, MainContainer } from '../../../components'
 import { useResponsiveDimensions } from '../../../hooks'
 import { FONT, FONT_SIZE, OTHER_COLORS } from '../../../enums'
+import { MaybeYouLike } from './components'
 
 
 const data = ['history', 'science fiction', 'families', 'humor', 'thriller', 'self-help', 'personal', 'the wood', 'adventure'];

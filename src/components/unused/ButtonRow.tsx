@@ -1,8 +1,8 @@
 import React, { useContext, useMemo } from 'react';
 import { TouchableOpacity, View, Text, StyleSheet, StyleProp, ViewStyle, TextStyle } from 'react-native';
-import { AppDataContext } from '../context';
-import { useResponsiveDimensions } from '../hooks';
-import { TEXT_STYLE } from '../enums';
+import { AppDataContext } from '../../context';
+import { useResponsiveDimensions } from '../../hooks';
+import { TEXT_STYLE } from '../../enums';
 
 interface ButtonRowProps {
   icon?: React.ReactNode;

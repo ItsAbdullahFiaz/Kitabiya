@@ -1,10 +1,10 @@
 // CustomModal.tsx
 import React, { ReactNode, useContext, useMemo } from 'react';
 import { Modal, View, Text, StyleSheet } from 'react-native';
-import { useResponsiveDimensions } from '../hooks';
-import { AppDataContext } from '../context';
-import { MainButton } from './MainButton';
-import { TEXT_STYLE } from '../enums';
+import { useResponsiveDimensions } from '../../hooks';
+import { AppDataContext } from '../../context';
+import { MainButton } from '../MainButton';
+import { TEXT_STYLE } from '../../enums';
 
 interface CustomModalProps {
     visible: boolean;

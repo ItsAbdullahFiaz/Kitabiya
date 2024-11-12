@@ -11,9 +11,9 @@ export const AppIcon = () => {
             imageContainer: {
                 marginBottom: hp(2),
             },
-            img:{
-                height:hp(74),
-                width:hp(210)
+            img: {
+                height: hp(74),
+                width: hp(210)
             }
         });
     }, [hp, wp]);

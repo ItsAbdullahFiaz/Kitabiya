@@ -1,7 +1,6 @@
 import React from 'react';
-import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
+import { TouchableOpacity, View, StyleSheet } from "react-native";
 import PropTypes from 'prop-types';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { OTHER_COLORS, SCREENS } from '../enums';
 import { AnyIcon, IconType } from './AnyIcon';
 

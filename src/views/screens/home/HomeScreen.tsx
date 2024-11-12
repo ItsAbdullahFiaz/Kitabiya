@@ -1,10 +1,11 @@
 import React, { useContext, useMemo } from 'react';
-import { AnyIcon, AppIcon, CustomInput, Header, HeaderButtons, IconType, NewlyPublished, TopTrending } from '../../../components';
+import { AnyIcon, IconType } from '../../../components';
 import { AppDataContext } from '../../../context';
-import { Text, View, StyleSheet, StatusBar, TouchableOpacity, TextInput } from 'react-native';
+import { Text, View, StyleSheet, StatusBar, TouchableOpacity } from 'react-native';
 import { FONT, FONT_SIZE, SCREENS } from '../../../enums';
 import { useResponsiveDimensions } from '../../../hooks';
 import { useNavigation } from '@react-navigation/native';
+import { HeaderButtons, NewlyPublished, TopTrending } from './components';
 
 export const HomeScreen = () => {
     const navigation = useNavigation();

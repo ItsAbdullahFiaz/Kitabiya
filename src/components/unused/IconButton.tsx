@@ -1,9 +1,9 @@
 import { StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useContext, useMemo } from 'react'
-import { TEXT_STYLE } from '../enums';
-import { useResponsiveDimensions } from '../hooks';
-import { AppDataContext } from '../context';
-import { AnyIcon, IconType } from '.';
+import { TEXT_STYLE } from '../../enums';
+import { useResponsiveDimensions } from '../../hooks';
+import { AppDataContext } from '../../context';
+import { AnyIcon, IconType } from '..';
 
 interface IconButtonProps {
     icon: string;

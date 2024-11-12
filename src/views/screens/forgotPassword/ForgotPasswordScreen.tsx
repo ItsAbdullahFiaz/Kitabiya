@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useState } from 'react';
-import { CustomInput, Header, MainButton, MainContainer, MainHeading, MainParagraph } from '../../../components';
+import { CustomInput, Header, MainButton, MainContainer, MainParagraph } from '../../../components';
 import { useResponsiveDimensions, useToast } from '../../../hooks';
 import { useNavigation } from '@react-navigation/native';
 import { SCREENS, TEXT_STYLE } from '../../../enums';

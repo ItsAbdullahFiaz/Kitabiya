@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View, Pressable } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import React, { useContext, useMemo, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { CustomInput, Header, LoginButton, MainButton, MainContainer, SocialLogins, UserInput } from '../../../components';
+import { CustomInput, Header, MainButton, MainContainer, SocialLogins } from '../../../components';
 import { useResponsiveDimensions, useToast } from '../../../hooks';
 import { resetAndGo, setEmailError, setPasswordError, validateEmail } from '../../../utils';
 import { FONT_SIZE, SCREENS, STACK, TEXT_STYLE } from '../../../enums';
@@ -18,7 +18,6 @@ export const LoginScreen = () => {
   const [loading, setLoading] = useState(false);
   const [wrongEmailError, setWrongEmailError] = useState('');
   const [wrongPasswordError, setWrongPasswordError] = useState('');
-  const [checked, setChecked] = useState<boolean>(false);
 
   const handleLogin = async () => {
     const isEmailValid = validateEmail(email);
@@ -38,9 +37,6 @@ export const LoginScreen = () => {
     }
   }
 
-  const handleCheckboxPress = () => {
-    setChecked(prev => !prev);
-  };
   const styles = useMemo(() => {
     return StyleSheet.create({
       contentContainer: {
@@ -125,18 +121,6 @@ export const LoginScreen = () => {
           twoLinesError={true}
           secureTextEntry={true}
         />
-        {/* <View style={styles.flexContainer}>
-          <View style={styles.rememberContainer}>
-            <Pressable onPress={handleCheckboxPress} style={styles.checkbox}> */}
-        {/* <AnimatedCheckbox
-                checked={checked}
-                highlightColor="#09CA67"
-                checkmarkColor="#ffffff"
-                boxOutlineColor="#09CA67"
-              /> */}
-        {/* </Pressable>
-            <Text style={styles.rememberText}>Remember me</Text>
-          </View> */}
         <Text
           style={styles.forgotPassword}
           onPress={() =>

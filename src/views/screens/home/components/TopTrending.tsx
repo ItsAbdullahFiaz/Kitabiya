@@ -1,17 +1,17 @@
-import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
-import React, {useMemo} from 'react';
-import {useResponsiveDimensions} from '../hooks';
-import {topTrending} from '../utils';
-import {AnyIcon, IconType} from './AnyIcon';
-import {FONT, FONT_SIZE, OTHER_COLORS} from '../enums';
+import { FlatList, Image, StyleSheet, Text, View } from 'react-native';
+import React, { useMemo } from 'react';
+import { useResponsiveDimensions } from '../../../../hooks';
+import { topTrending } from '../../../../utils';
+import { AnyIcon, IconType } from '../../../../components/AnyIcon';
+import { FONT, FONT_SIZE, OTHER_COLORS } from '../../../../enums';
 
 export const TopTrending = () => {
-  const {hp, wp} = useResponsiveDimensions();
+  const { hp, wp } = useResponsiveDimensions();
   const styles = useMemo(() => {
     return StyleSheet.create({
-        container:{
-            paddingBottom:hp(50)
-        },
+      container: {
+        paddingBottom: hp(50)
+      },
       card: {
         height: hp(90),
         width: '100%',
@@ -67,8 +67,8 @@ export const TopTrending = () => {
     });
   }, [hp, wp]);
 
-  const renderItems = ({item}: any) => {
-    const {image, name, author, rating} = item;
+  const renderItems = ({ item }: any) => {
+    const { image, name, author, rating } = item;
     const fullStars = Math.floor(rating);
     const halfStars = rating - fullStars >= 0.5 ? 1 : 0;
     const emptyStars = 5 - fullStars - halfStars;

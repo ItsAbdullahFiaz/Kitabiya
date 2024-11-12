@@ -1,8 +1,8 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useContext, useMemo } from 'react'
-import { useResponsiveDimensions } from '../hooks';
-import { TEXT_STYLE } from '../enums';
-import { AppDataContext } from '../context';
+import { useResponsiveDimensions } from '../../hooks';
+import { TEXT_STYLE } from '../../enums';
+import { AppDataContext } from '../../context';
 
 interface TextWithLinkProps {
     onPress: () => void,
