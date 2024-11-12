@@ -19,6 +19,7 @@ enum PRIMARY_COLORS_LIGHT {
     quaternaryTextColor = '#FFFFFF',
     inputBorder = '#E6E6E6',
     disabled = '#a3aab1',
+    link = '#007DFC'
 }
 
 enum PRIMARY_COLORS_DARK {

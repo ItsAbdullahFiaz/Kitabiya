@@ -89,7 +89,7 @@ export const LoginScreen = () => {
       register: {
         ...TEXT_STYLE.regular,
         fontSize: hp(FONT_SIZE.h4),
-        color: appTheme.primary,
+        color: appTheme.link,
       },
       label: {
         ...TEXT_STYLE.regular,
