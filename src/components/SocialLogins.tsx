@@ -2,6 +2,7 @@ import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } fr
 import React, { useEffect, useMemo, useState } from 'react'
 import { useResponsiveDimensions } from '../hooks'
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 import auth from '@react-native-firebase/auth';
 import { StackActions, useNavigation } from '@react-navigation/native';
 import { STACK } from '../enums';
@@ -10,6 +11,35 @@ export const SocialLogins = () => {
   const navigation = useNavigation<any>();
   const { hp, wp } = useResponsiveDimensions();
   const [loading, setLoading] = useState(false);
+
+  const handleFacebookLogin = async () => {
+    setLoading(true);
+    try {
+      const result = await LoginManager.logInWithPermissions([
+        'public_profile',
+      ]);
+      if (result.isCancelled) {
+        console.log('Login cancelled');
+      } else {
+        const data = await AccessToken.getCurrentAccessToken();
+        if (!data) {
+          throw new Error('Something went wrong obtaining access token');
+        }
+        const credential = auth.FacebookAuthProvider.credential(
+          data.accessToken,
+        );
+        await auth().signInWithCredential(credential);
+        console.log('Login success');
+        navigation.dispatch(StackActions.replace(STACK.MAIN as never));
+      }
+    } catch (error) {
+      console.log('Login fail with error: ' + error);
+    }
+    finally {
+      setLoading(false); // Hide the loading indicator after the process
+    }
+  };
+
   const handleGoogleLogin = async () => {
     setLoading(true);
     try {
@@ -95,7 +125,7 @@ export const SocialLogins = () => {
         <Image style={styles.btnIcon} source={require("../assets/images/google.png")} />
         <Text style={styles.socialBtnText}>continue with google</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={[styles.socialBtnContainer, { marginTop: 20 }]}>
+      <TouchableOpacity style={[styles.socialBtnContainer, { marginTop: 20 }]} onPress={handleFacebookLogin}>
         <Image style={styles.btnIcon} source={require("../assets/images/facebook.png")} />
         <Text style={styles.socialBtnText}>continue with facebook</Text>
       </TouchableOpacity>

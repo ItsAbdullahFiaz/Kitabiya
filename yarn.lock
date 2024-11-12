@@ -6333,6 +6333,11 @@ react-is@^17.0.1:
   resolved "https://registry.npmjs.org/react-is/-/react-is-17.0.2.tgz"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
+react-native-fbsdk-next@^13.1.4:
+  version "13.1.4"
+  resolved "https://registry.yarnpkg.com/react-native-fbsdk-next/-/react-native-fbsdk-next-13.1.4.tgz#80c56f4cb4e66caa6537ceb524413627ea3a90fc"
+  integrity sha512-cdCGxlvdXnGU9tG2QcriTULRKCSa83mLSHFQIlt+hG493ErMbY+QiRy0ipYTDsVC0/Xp6B9H+PAS9JZYq+B+nw==
+
 react-native-indicators@^0.17.0:
   version "0.17.0"
   resolved "https://registry.npmjs.org/react-native-indicators/-/react-native-indicators-0.17.0.tgz"
