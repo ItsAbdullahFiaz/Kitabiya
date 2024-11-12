@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Kitabiya</string>
+    <string name="facebook_app_id">1235042647726770</string>
+<string name="facebook_client_token">d625f1401e2e9d3b5f78419e628b3232</string>
 </resources>
