@@ -128,7 +128,6 @@ export const LoginScreen = () => {
           }>
           Forgot Password ?
         </Text>
-        {/* </View> */}
         <MainButton
           onPress={handleLogin}
           buttonText={appLang.login}

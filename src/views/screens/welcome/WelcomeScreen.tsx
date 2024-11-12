@@ -62,8 +62,8 @@ export const WelcomeScreen = () => {
         />
         <View style={styles.contentContainer}>
           <MainButton
-            onPress={() => navigation.navigate(SCREENS.SIGNUP as never)}
-            buttonText="sign up"
+            onPress={() => navigation.navigate(SCREENS.LOGIN as never)}
+            buttonText="log in"
           />
           <TouchableOpacity
             style={styles.btnContainer}

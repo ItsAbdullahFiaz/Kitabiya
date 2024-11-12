@@ -1,12 +1,14 @@
 import { Share, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useMemo } from 'react'
+import React, { useContext, useMemo } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { useResponsiveDimensions } from '../hooks'
 import { AnyIcon, IconType } from './AnyIcon'
-import { FONT, OTHER_COLORS } from '../enums'
+import { FONT, OTHER_COLORS, TEXT_STYLE } from '../enums'
 import { BackButton } from './BackButton'
+import { AppDataContext } from '../context'
 
 export const Header = ({ title }: any) => {
+    const {appTheme}=useContext(AppDataContext);
     const { wp, hp } = useResponsiveDimensions();
 
     const styles = useMemo(() => {
@@ -17,11 +19,11 @@ export const Header = ({ title }: any) => {
                 width: '100%'
             },
             title: {
+                ...TEXT_STYLE.medium,
                 flex: 1,
-                fontSize: 24,
+                fontSize: hp(24),
                 fontWeight: "bold",
-                color: OTHER_COLORS.black,
-                fontFamily: FONT.PoppinsRegular,
+                color: appTheme.primaryTextColor,
                 textAlign: "center",
                 textTransform: "capitalize"
             },

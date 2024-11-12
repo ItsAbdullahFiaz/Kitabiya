@@ -1,7 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useContext, useMemo } from 'react'
 import { DotIndicator } from 'react-native-indicators'
-import { TEXT_STYLE } from '../enums';
+import { FONT_SIZE, TEXT_STYLE } from '../enums';
 import { useResponsiveDimensions } from '../hooks';
 import { AppDataContext } from '../context';
 
@@ -34,12 +34,13 @@ export const MainButton = (props: MainButtonProps) => {
                 borderColor: appTheme.primary
             },
             buttonText: {
-                ...TEXT_STYLE.regular,
+                ...TEXT_STYLE.medium,
                 color: dismissiveButton ? appTheme.primaryTextColor : appTheme.quaternaryTextColor,
-                fontSize: hp(16),
+                fontSize: hp(FONT_SIZE.h3),
                 marginHorizontal: wp(8),
                 flexGrow: 0,
                 flexShrink: 0,
+                textTransform:"capitalize"
             }
         });
     }, [hp, wp, isLoading, disableBtn, appTheme]);
