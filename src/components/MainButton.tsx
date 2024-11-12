@@ -26,7 +26,7 @@ export const MainButton = (props: MainButtonProps) => {
                 // paddingVertical: hp(12),
                 paddingHorizontal: wp(24),
                 borderRadius: hp(8),
-                backgroundColor: disableBtn || isLoading ? appTheme.secondaryBackground : dismissiveButton ? 'tansparent' : appTheme.primary,
+                backgroundColor: disableBtn || isLoading ? appTheme.disabled : dismissiveButton ? 'tansparent' : appTheme.primary,
                 alignItems: "center",
                 justifyContent: "center",
                 height: hp(50),
@@ -35,7 +35,7 @@ export const MainButton = (props: MainButtonProps) => {
             },
             buttonText: {
                 ...TEXT_STYLE.regular,
-                color: dismissiveButton ? appTheme.textColor : appTheme.light,
+                color: dismissiveButton ? appTheme.primaryTextColor : appTheme.quaternaryTextColor,
                 fontSize: hp(16),
                 marginHorizontal: wp(8),
                 flexGrow: 0,

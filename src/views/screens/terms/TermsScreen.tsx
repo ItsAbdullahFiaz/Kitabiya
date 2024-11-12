@@ -14,19 +14,19 @@ export const Terms = () => {
         return StyleSheet.create({
             heading: {
                 ...TEXT_STYLE.extraBold,
-                color: appTheme.textColor,
+                color: appTheme.primaryTextColor,
                 fontSize: hp(24),
                 marginBottom: hp(20),
             },
             subheading: {
                 ...TEXT_STYLE.extraBold,
-                color: appTheme.textColor,
+                color: appTheme.primaryTextColor,
                 fontSize: hp(18),
                 marginTop: hp(20),
             },
             text: {
                 ...TEXT_STYLE.regular,
-                color: appTheme.textColor,
+                color: appTheme.primaryTextColor,
                 fontSize: hp(16),
                 lineHeight: hp(24),
             },

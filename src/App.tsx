@@ -14,7 +14,7 @@ export default function App() {
     return StyleSheet.create({
       container: {
         flex: 1,
-        backgroundColor: appTheme.secondary
+        backgroundColor: appTheme.primaryBackground
       },
     });
   }, [hp, wp, appTheme]);
@@ -34,7 +34,7 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle={appTheme.primary == '#1b2c3d' ? 'dark-content' : 'light-content'} backgroundColor={appTheme.secondary} />
+      <StatusBar barStyle={appTheme.primary == '#1b2c3d' ? 'dark-content' : 'light-content'} backgroundColor={appTheme.primaryBackground} />
       <RootNavigator />
       <Toast config={toastConfig} />
     </SafeAreaView>

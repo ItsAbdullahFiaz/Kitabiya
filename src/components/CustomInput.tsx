@@ -39,7 +39,7 @@ export const CustomInput = (props: CustomInputProps) => {
             },
             input: {
                 ...TEXT_STYLE.regular,
-                color: appTheme.textColor,
+                color: appTheme.primaryTextColor,
                 fontSize: hp(14),
                 height: hp(46),
                 width: '100%',

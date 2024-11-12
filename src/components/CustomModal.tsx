@@ -27,10 +27,10 @@ export const CustomModal: React.FC<CustomModalProps> = ({ visible, onClose, titl
             },
             modalView: {
                 margin: hp(20),
-                backgroundColor: appTheme.secondary,
+                backgroundColor: appTheme.primaryBackground,
                 borderRadius: hp(18),
                 paddingVertical: hp(35),
-                shadowColor: appTheme.secondary,
+                shadowColor: appTheme.primaryBackground,
                 shadowOffset: {
                     width: 0,
                     height: 2,
@@ -42,7 +42,7 @@ export const CustomModal: React.FC<CustomModalProps> = ({ visible, onClose, titl
             },
             modalTitle: {
                 ...TEXT_STYLE.regular,
-                color: appTheme.textColor,
+                color: appTheme.primaryTextColor,
                 fontSize: hp(20),
                 marginBottom: hp(15),
                 textAlign: 'center'

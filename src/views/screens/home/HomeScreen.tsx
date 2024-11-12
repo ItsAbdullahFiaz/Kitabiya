@@ -2,19 +2,19 @@ import React, { useContext, useMemo } from 'react';
 import { AnyIcon, AppIcon, CustomInput, Header, HeaderButtons, IconType, NewlyPublished, TopTrending } from '../../../components';
 import { AppDataContext } from '../../../context';
 import { Text, View, StyleSheet, StatusBar, TouchableOpacity, TextInput } from 'react-native';
-import { FONT, FONT_SIZE,  SCREENS } from '../../../enums';
+import { FONT, FONT_SIZE, SCREENS } from '../../../enums';
 import { useResponsiveDimensions } from '../../../hooks';
 import { useNavigation } from '@react-navigation/native';
 
 export const HomeScreen = () => {
     const navigation = useNavigation();
-    const {appTheme}=useContext(AppDataContext);
+    const { appTheme } = useContext(AppDataContext);
     const { hp, wp } = useResponsiveDimensions();
     const styles = useMemo(() => {
         return StyleSheet.create({
             container: {
                 flex: 1,
-                backgroundColor: appTheme.background
+                backgroundColor: appTheme.primaryBackground
             },
             homeHeader: {
                 height: hp(162),
@@ -29,7 +29,7 @@ export const HomeScreen = () => {
             userName: {
                 fontSize: FONT_SIZE.h1,
                 fontFamily: FONT.PoppinsMedium,
-                color: appTheme.background,
+                color: appTheme.primaryBackground,
                 textTransform: "capitalize"
             },
             iconContainer: {
@@ -42,7 +42,7 @@ export const HomeScreen = () => {
             },
             searchContainer: {
                 height: hp(50),
-                backgroundColor: appTheme.background,
+                backgroundColor: appTheme.primaryBackground,
                 marginTop: hp(35),
                 borderRadius: hp(12),
                 flexDirection: "row",
@@ -59,7 +59,7 @@ export const HomeScreen = () => {
             heading: {
                 fontSize: FONT_SIZE.h3,
                 fontFamily: FONT.PoppinsBold,
-                color: appTheme.black,
+                color: appTheme.primaryTextColor,
                 textTransform: "capitalize"
             },
             NewlyPublishedHeader: {
@@ -75,7 +75,7 @@ export const HomeScreen = () => {
                 marginLeft: hp(10)
             }
         })
-    }, [ hp, wp])
+    }, [hp, wp])
     return (
         <View style={styles.container}>
             <StatusBar backgroundColor={appTheme.primary} barStyle={"light-content"} />
@@ -88,7 +88,7 @@ export const HomeScreen = () => {
                                 <AnyIcon
                                     type={IconType.Ionicons}
                                     name="heart-outline"
-                                    color={appTheme.black}
+                                    color={appTheme.primaryTextColor}
                                     size={20}
                                 />
                             </HeaderButtons>
@@ -97,7 +97,7 @@ export const HomeScreen = () => {
                             <AnyIcon
                                 type={IconType.SimpleLineIcons}
                                 name="bell"
-                                color={appTheme.black}
+                                color={appTheme.primaryTextColor}
                                 size={20}
                             />
                         </HeaderButtons>

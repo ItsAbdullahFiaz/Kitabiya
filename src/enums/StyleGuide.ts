@@ -11,36 +11,26 @@ enum FONT {
 
 enum PRIMARY_COLORS_LIGHT {
     primary = '#5A6CF8',
-    light="#fff",
-    secondary = '#dde6f0',
-    textColor = '#1B1B1B',
-    secondaryTextColor = '#838383',
-    background = '#ffff',
-    secondaryBackground = '#a3aab1',
-    placeholderText = '#8F9193',
-    textColor2 = '#4A4C4F',
-    primaryLight = '#F6F9FB',
-    textColorDim = "#BBBBBB",
-    tansparentPrimary = 'rgba(51, 94, 247, 0.08)',
+    primaryBackground = '#ffff',
+    secondaryBackground = '#f5f5f5',
+    primaryTextColor = '#000000',
+    secondaryTextColor = '#1B1B1B',
+    tertiaryTextColor = '#838383',
+    quaternaryTextColor = '#FFFFFF',
     inputBorder = '#E6E6E6',
-    black = '#000000',
-    backButtonBackground = '#f5f5f5',
-    primaryBlack = '#1B1B1B',
-    secondaryBlack = '#161616',
-    green = "#09CA67"
+    disabled = '#a3aab1',
 }
 
 enum PRIMARY_COLORS_DARK {
     primary = '#5A6CF8',
-    secondary = '#1b2c3d',
-    textColor = '#F5F5F5',
-    secondaryTextColor = '#838383',
-    background = '#000000',
-    secondaryBackground = '#76808a',
-    placeholderText = '#8F9193',
-    primaryLight = '#314150',
-    textColorDim = "#BBBBBB",
-    tansparentPrimary = 'rgba(51, 94, 247, 0.08)',
+    primaryBackground = '#ffff',
+    secondaryBackground = '#f5f5f5',
+    primaryTextColor = '#000000',
+    secondaryTextColor = '#1B1B1B',
+    tertiaryTextColor = '#838383',
+    quaternaryTextColor = '#FFFFFF',
+    inputBorder = '#E6E6E6',
+    disabled = '#a3aab1',
 }
 
 enum SECONDARY_COLORS_LIGHT {

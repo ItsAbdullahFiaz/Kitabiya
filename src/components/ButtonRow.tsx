@@ -25,7 +25,7 @@ export const ButtonRow = (props: ButtonRowProps) => {
   const styles = useMemo(() => {
     return StyleSheet.create({
       wrapRow: {
-        backgroundColor: appTheme.primaryLight,
+        backgroundColor: appTheme.secondaryBackground,
         borderBottomWidth: lalangTranslationsLength == index || hideBorder ? 0 : hp(0.3),
         borderBottomColor: appLang.primary,
         // borderRadius: hp(4),
@@ -44,7 +44,7 @@ export const ButtonRow = (props: ButtonRowProps) => {
       titleRow: {
         ...TEXT_STYLE.regular,
         fontSize: hp(15),
-        color: appTheme.textColor,
+        color: appTheme.primaryTextColor,
       },
       contentRight: {
         paddingLeft: hp(4)

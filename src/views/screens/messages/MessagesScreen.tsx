@@ -1,5 +1,5 @@
 import { FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useMemo,useContext } from 'react'
+import React, { useMemo, useContext } from 'react'
 import { AnyIcon, IconType, MainContainer } from '../../../components'
 import { useResponsiveDimensions } from '../../../hooks'
 import { FONT, FONT_SIZE, OTHER_COLORS } from '../../../enums'
@@ -57,14 +57,14 @@ const data = [
   },
 ]
 export const MessagesScreen = () => {
-  const {appTheme}=useContext(AppDataContext)
+  const { appTheme } = useContext(AppDataContext)
   const { hp, wp } = useResponsiveDimensions();
   const styles = useMemo(() => {
     return StyleSheet.create({
       title: {
         fontSize: FONT_SIZE.h1,
         fontFamily: FONT.PoppinsMedium,
-        color: appTheme.black,
+        color: appTheme.primaryTextColor,
         textAlign: "center",
         textTransform: "capitalize"
       },
@@ -73,7 +73,7 @@ export const MessagesScreen = () => {
         height: hp(40),
         width: '100%',
         borderRadius: hp(12),
-        backgroundColor: appTheme.backButtonBackground,
+        backgroundColor: appTheme.secondaryBackground,
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
@@ -109,7 +109,7 @@ export const MessagesScreen = () => {
       name: {
         fontSize: FONT_SIZE.h3,
         fontFamily: FONT.PoppinsMedium,
-        color: appTheme.primaryBlack,
+        color: appTheme.secondaryTextColor,
         textTransform: "capitalize"
       },
       textContainer: {
@@ -124,14 +124,14 @@ export const MessagesScreen = () => {
         height: hp(24),
         width: hp(24),
         borderRadius: hp(12),
-        backgroundColor: appTheme.green,
+        backgroundColor: OTHER_COLORS.green,
         justifyContent: "center",
         alignItems: "center"
       },
       numberOfMessages: {
         fontSize: FONT_SIZE.h4,
         fontFamily: FONT.PoppinsRegular,
-        color: appTheme.background
+        color: appTheme.primaryBackground
       }
     })
   }, [hp, wp, FONT, FONT_SIZE, OTHER_COLORS])
