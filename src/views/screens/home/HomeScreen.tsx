@@ -1,23 +1,24 @@
-import React, { useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { AnyIcon, AppIcon, CustomInput, Header, HeaderButtons, IconType, NewlyPublished, TopTrending } from '../../../components';
 import { AppDataContext } from '../../../context';
 import { Text, View, StyleSheet, StatusBar, TouchableOpacity, TextInput } from 'react-native';
-import { FONT, FONT_SIZE, OTHER_COLORS, SCREENS } from '../../../enums';
+import { FONT, FONT_SIZE, SCREENS } from '../../../enums';
 import { useResponsiveDimensions } from '../../../hooks';
 import { useNavigation } from '@react-navigation/native';
 
 export const HomeScreen = () => {
     const navigation = useNavigation();
+    const { appTheme } = useContext(AppDataContext);
     const { hp, wp } = useResponsiveDimensions();
     const styles = useMemo(() => {
         return StyleSheet.create({
             container: {
                 flex: 1,
-                backgroundColor: OTHER_COLORS.white
+                backgroundColor: appTheme.primaryBackground
             },
             homeHeader: {
                 height: hp(162),
-                backgroundColor: OTHER_COLORS.primary,
+                backgroundColor: appTheme.primary,
                 padding: hp(16)
             },
             headerContainer: {
@@ -28,7 +29,7 @@ export const HomeScreen = () => {
             userName: {
                 fontSize: FONT_SIZE.h1,
                 fontFamily: FONT.PoppinsMedium,
-                color: OTHER_COLORS.white,
+                color: appTheme.primaryBackground,
                 textTransform: "capitalize"
             },
             iconContainer: {
@@ -41,7 +42,7 @@ export const HomeScreen = () => {
             },
             searchContainer: {
                 height: hp(50),
-                backgroundColor: OTHER_COLORS.white,
+                backgroundColor: appTheme.primaryBackground,
                 marginTop: hp(35),
                 borderRadius: hp(12),
                 flexDirection: "row",
@@ -58,7 +59,7 @@ export const HomeScreen = () => {
             heading: {
                 fontSize: FONT_SIZE.h3,
                 fontFamily: FONT.PoppinsBold,
-                color: OTHER_COLORS.black,
+                color: appTheme.primaryTextColor,
                 textTransform: "capitalize"
             },
             NewlyPublishedHeader: {
@@ -70,14 +71,14 @@ export const HomeScreen = () => {
             searchHere: {
                 fontSize: FONT_SIZE.h5,
                 fontFamily: FONT.PoppinsRegular,
-                color: OTHER_COLORS.border,
+                color: appTheme.inputBorder,
                 marginLeft: hp(10)
             }
         })
-    }, [OTHER_COLORS, hp, wp, FONT, FONT_SIZE])
+    }, [hp, wp])
     return (
         <View style={styles.container}>
-            <StatusBar backgroundColor={OTHER_COLORS.primary} barStyle={"light-content"} />
+            <StatusBar backgroundColor={appTheme.primary} barStyle={"light-content"} />
             <View style={styles.homeHeader}>
                 <View style={styles.headerContainer}>
                     <Text style={styles.userName}>hello, emmie</Text>
@@ -87,7 +88,7 @@ export const HomeScreen = () => {
                                 <AnyIcon
                                     type={IconType.Ionicons}
                                     name="heart-outline"
-                                    color={OTHER_COLORS.black}
+                                    color={appTheme.primaryTextColor}
                                     size={20}
                                 />
                             </HeaderButtons>
@@ -96,7 +97,7 @@ export const HomeScreen = () => {
                             <AnyIcon
                                 type={IconType.SimpleLineIcons}
                                 name="bell"
-                                color={OTHER_COLORS.black}
+                                color={appTheme.primaryTextColor}
                                 size={20}
                             />
                         </HeaderButtons>
@@ -107,7 +108,7 @@ export const HomeScreen = () => {
                         <AnyIcon
                             type={IconType.EvilIcons}
                             name="search"
-                            color={OTHER_COLORS.border}
+                            color={appTheme.inputBorder}
                             size={16}
                         />
                         {/* <TextInput style={{height:"100%"}} placeholder='Search here' placeholderTextColor={OTHER_COLORS.border}/> */}

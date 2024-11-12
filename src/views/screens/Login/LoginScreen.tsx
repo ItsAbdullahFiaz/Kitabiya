@@ -44,7 +44,7 @@ export const LoginScreen = () => {
   const styles = useMemo(() => {
     return StyleSheet.create({
       contentContainer: {
-        marginTop:hp(90)
+        marginTop: hp(90)
       },
       checkbox: {
         width: hp(18),
@@ -57,7 +57,7 @@ export const LoginScreen = () => {
         alignItems: 'center',
       },
       rememberContainer: {
-        marginBottom:hp(20),
+        marginBottom: hp(20),
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-start',
@@ -65,7 +65,7 @@ export const LoginScreen = () => {
       rememberText: {
         ...TEXT_STYLE.regular,
         fontSize: hp(FONT_SIZE.h5),
-        color: appTheme.textColor,
+        color: appTheme.primaryTextColor,
       },
       dont: {
         ...TEXT_STYLE.regular,
@@ -83,20 +83,20 @@ export const LoginScreen = () => {
         ...TEXT_STYLE.regular,
         fontSize: hp(FONT_SIZE.h5),
         color: appTheme.secondaryTextColor,
-        textAlign:"right",
-        marginBottom:hp(10)
+        textAlign: "right",
+        marginBottom: hp(10)
       },
       register: {
         ...TEXT_STYLE.regular,
         fontSize: hp(FONT_SIZE.h4),
-        color: appTheme.primary,
+        color: appTheme.link,
       },
-      label:{
+      label: {
         ...TEXT_STYLE.regular,
-        fontSize:hp(FONT_SIZE.h3),
-        color:appTheme.textColor,
-        textTransform:"capitalize",
-        marginBottom:hp(3)
+        fontSize: hp(FONT_SIZE.h3),
+        color: appTheme.primaryTextColor,
+        textTransform: "capitalize",
+        marginBottom: hp(3)
       }
     });
   }, [hp, wp]);
@@ -128,22 +128,22 @@ export const LoginScreen = () => {
         {/* <View style={styles.flexContainer}>
           <View style={styles.rememberContainer}>
             <Pressable onPress={handleCheckboxPress} style={styles.checkbox}> */}
-              {/* <AnimatedCheckbox
+        {/* <AnimatedCheckbox
                 checked={checked}
                 highlightColor="#09CA67"
                 checkmarkColor="#ffffff"
                 boxOutlineColor="#09CA67"
               /> */}
-            {/* </Pressable>
+        {/* </Pressable>
             <Text style={styles.rememberText}>Remember me</Text>
           </View> */}
-          <Text
-            style={styles.forgotPassword}
-            onPress={() =>
-              navigation.navigate(SCREENS.FORGOT_PASSWORD as never)
-            }>
-            Forgot Password ?
-          </Text>
+        <Text
+          style={styles.forgotPassword}
+          onPress={() =>
+            navigation.navigate(SCREENS.FORGOT_PASSWORD as never)
+          }>
+          Forgot Password ?
+        </Text>
         {/* </View> */}
         <MainButton
           onPress={handleLogin}
@@ -153,7 +153,7 @@ export const LoginScreen = () => {
         <SocialLogins />
         <View style={styles.dontContainer}>
           <Text style={styles.dont}>Don't have an account?</Text>
-          <Text style={styles.register} onPress={()=>navigation.navigate(SCREENS.SIGNUP as never)}>Register</Text>
+          <Text style={styles.register} onPress={() => navigation.navigate(SCREENS.SIGNUP as never)}>Register</Text>
         </View>
       </View>
     </MainContainer>

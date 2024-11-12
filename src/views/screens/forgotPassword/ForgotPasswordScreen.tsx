@@ -11,7 +11,7 @@ import { StyleSheet, Text, View } from 'react-native';
 export const ForgotPasswordScreen = () => {
   const navigation = useNavigation();
   const { hp, wp } = useResponsiveDimensions();
-  const { appLang,appTheme } = useContext(AppDataContext);
+  const { appLang, appTheme } = useContext(AppDataContext);
   const showToast = useToast();
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false);
@@ -34,40 +34,40 @@ export const ForgotPasswordScreen = () => {
     }
   }
 
-  const styles=useMemo(()=>{
+  const styles = useMemo(() => {
     return StyleSheet.create({
-      contentContainer:{
-        marginTop:hp(90)
+      contentContainer: {
+        marginTop: hp(90)
       },
-      label:{
+      label: {
         ...TEXT_STYLE.regular,
-        color:appTheme.textColor,
-        textTransform:"capitalize",
-        marginBottom:hp(3)
+        color: appTheme.primaryTextColor,
+        textTransform: "capitalize",
+        marginBottom: hp(3)
       }
     })
-  },[hp,wp]) 
+  }, [hp, wp])
 
   return (
     <MainContainer>
       <Header title="forgot password" />
       {/* <MainHeading heading={appLang.resetPassword} /> */}
       <View style={styles.contentContainer}>
-      <MainParagraph paragraph={appLang.resetInstructions} />
-      <Text style={styles.label}>email</Text>
-      <CustomInput
-        value={email}
-        setValue={setEmail}
-        placeholder={appLang.email}
-        textWrong={wrongEmailError}
-        onChange={() => setWrongEmailError('')}
-        bottomError={true}
-      />
-      <MainButton
-        onPress={handleResetPassword}
-        buttonText={appLang.sendInstructions}
-        isLoading={loading}
-      />
+        <MainParagraph paragraph={appLang.resetInstructions} />
+        <Text style={styles.label}>email</Text>
+        <CustomInput
+          value={email}
+          setValue={setEmail}
+          placeholder={appLang.email}
+          textWrong={wrongEmailError}
+          onChange={() => setWrongEmailError('')}
+          bottomError={true}
+        />
+        <MainButton
+          onPress={handleResetPassword}
+          buttonText={appLang.sendInstructions}
+          isLoading={loading}
+        />
       </View>
     </MainContainer>
   );

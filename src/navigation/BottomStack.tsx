@@ -16,13 +16,13 @@ const BottomStack = () => {
     const styles = useMemo(() => {
         return StyleSheet.create({
             tabBar: {
-                backgroundColor: appTheme.background
+                backgroundColor: appTheme.primaryBackground
             },
             tabBarContainer: {
                 flexDirection: 'row',
                 height: hp(60),
                 width: '100%',
-                backgroundColor: appTheme.background
+                backgroundColor: appTheme.primaryBackground
             },
             tabItem: {
                 flex: 1,

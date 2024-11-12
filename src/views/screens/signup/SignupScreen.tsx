@@ -43,12 +43,12 @@ export const SignupScreen = () => {
       contentContainer: {
         marginTop: hp(90),
       },
-      label:{
+      label: {
         ...TEXT_STYLE.regular,
-        fontSize:hp(FONT_SIZE.h3),
-        color:appTheme.textColor,
-        textTransform:"capitalize",
-        marginBottom:hp(3)
+        fontSize: hp(FONT_SIZE.h3),
+        color: appTheme.primaryTextColor,
+        textTransform: "capitalize",
+        marginBottom: hp(3)
       }
     });
   }, [hp]);
@@ -56,7 +56,7 @@ export const SignupScreen = () => {
     <MainContainer>
       <Header title="sign up" />
       <View style={styles.contentContainer}>
-      <Text style={styles.label}>email</Text>
+        <Text style={styles.label}>email</Text>
         <CustomInput
           value={email}
           setValue={setEmail}
