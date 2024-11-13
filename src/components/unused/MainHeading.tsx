@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, { useContext, useMemo } from 'react'
-import { useResponsiveDimensions } from '../hooks';
-import { AppDataContext } from '../context';
+import { AppDataContext } from '../../context';
+import { useResponsiveDimensions } from '../../hooks';
 
 interface MainHeadingProps {
     heading: string
@@ -9,8 +9,8 @@ interface MainHeadingProps {
 
 export const MainHeading = (props: MainHeadingProps) => {
     const { heading } = props
-    const { wp, hp } = useResponsiveDimensions()
-    const { appLang, appTheme } = useContext(AppDataContext);
+    const { wp, hp } = useResponsiveDimensions();
+    const {appTheme} =useContext(AppDataContext);
 
     const styles = useMemo(() => {
         return StyleSheet.create({
@@ -22,7 +22,7 @@ export const MainHeading = (props: MainHeadingProps) => {
                 fontSize: hp(22)
             }
         });
-    }, [hp, wp, appTheme]);
+    }, [hp, wp]);
     return (
         <View style={styles.headingContainer}>
             <Text style={styles.heading}>{heading}</Text>

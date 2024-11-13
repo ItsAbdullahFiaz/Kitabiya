@@ -1,13 +1,15 @@
 import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { useResponsiveDimensions } from '../hooks'
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 import auth from '@react-native-firebase/auth';
 import { StackActions, useNavigation } from '@react-navigation/native';
-import { STACK } from '../enums';
+import { FONT_SIZE, STACK } from '../enums';
+import { AppDataContext } from '../context';
 
 export const SocialLogins = () => {
+const {appTheme}=useContext(AppDataContext);
   const navigation = useNavigation<any>();
   const { hp, wp } = useResponsiveDimensions();
   const [loading, setLoading] = useState(false);
@@ -73,18 +75,18 @@ export const SocialLogins = () => {
       line: {
         flex: 1,
         height: 0.5,
-        backgroundColor: '#838383',
+        backgroundColor: appTheme.tertiaryTextColor,
       },
       text: {
         marginHorizontal: 10,
-        color: '#838383',
+        color: appTheme.tertiaryTextColor,
         textTransform: "capitalize"
       },
       socialBtnContainer: {
         flexDirection: "row",
         height: hp(48),
         borderWidth: 0.3,
-        borderColor: "#838383",
+        borderColor: appTheme.tertiaryTextColor,
         borderRadius: hp(8),
         justifyContent: "center",
         alignItems: "center",
@@ -95,8 +97,8 @@ export const SocialLogins = () => {
         marginRight: hp(10)
       },
       socialBtnText: {
-        fontSize: 16,
-        color: "#000",
+        fontSize: hp(FONT_SIZE.h3),
+        color: appTheme.primaryTextColor,
         fontWeight: "bold",
         textTransform: "capitalize",
         fontFamily: "Poppins-Regular"
@@ -108,7 +110,7 @@ export const SocialLogins = () => {
         alignItems: 'center',
       },
     })
-  }, [])
+  }, [hp,wp])
   return (
     <View>
       {loading && (

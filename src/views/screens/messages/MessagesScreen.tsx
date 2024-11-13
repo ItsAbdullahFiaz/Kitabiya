@@ -2,7 +2,7 @@ import { FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } 
 import React, { useMemo, useContext } from 'react'
 import { AnyIcon, IconType, MainContainer } from '../../../components'
 import { useResponsiveDimensions } from '../../../hooks'
-import { FONT, FONT_SIZE, OTHER_COLORS } from '../../../enums'
+import { FONT, FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../enums'
 import { AppDataContext } from '../../../context'
 
 
@@ -62,8 +62,8 @@ export const MessagesScreen = () => {
   const styles = useMemo(() => {
     return StyleSheet.create({
       title: {
-        fontSize: FONT_SIZE.h1,
-        fontFamily: FONT.PoppinsMedium,
+        ...TEXT_STYLE.medium,
+        fontSize: hp(FONT_SIZE.h1),
         color: appTheme.primaryTextColor,
         textAlign: "center",
         textTransform: "capitalize"
@@ -107,8 +107,8 @@ export const MessagesScreen = () => {
         height: "100%"
       },
       name: {
-        fontSize: FONT_SIZE.h3,
-        fontFamily: FONT.PoppinsMedium,
+        ...TEXT_STYLE.medium,
+        fontSize: hp(FONT_SIZE.h3),
         color: appTheme.secondaryTextColor,
         textTransform: "capitalize"
       },
@@ -116,25 +116,25 @@ export const MessagesScreen = () => {
         marginLeft: hp(10)
       },
       text: {
+        ...TEXT_STYLE.regular,
         fontSize: FONT_SIZE.h3,
-        fontFamily: FONT.PoppinsRegular,
         color: appTheme.secondaryText,
       },
       numContainer: {
         height: hp(24),
         width: hp(24),
         borderRadius: hp(12),
-        backgroundColor: OTHER_COLORS.green,
+        backgroundColor: appTheme.green,
         justifyContent: "center",
         alignItems: "center"
       },
       numberOfMessages: {
+        ...TEXT_STYLE.regular,
         fontSize: FONT_SIZE.h4,
-        fontFamily: FONT.PoppinsRegular,
         color: appTheme.primaryBackground
       }
     })
-  }, [hp, wp, FONT, FONT_SIZE, OTHER_COLORS])
+  }, [hp, wp])
 
   const renderList = ({ item }: any) => {
     const { image, name, text, numberOfMessages } = item;

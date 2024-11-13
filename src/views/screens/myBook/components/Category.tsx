@@ -1,24 +1,26 @@
 import { FlatList, Image, StyleSheet, Text, View } from 'react-native'
-import React, { useMemo } from 'react'
+import React, { useContext, useMemo } from 'react'
 import { useResponsiveDimensions } from '../../../../hooks'
-import { FONT, FONT_SIZE, OTHER_COLORS } from '../../../../enums';
+import { FONT, FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../../enums';
 import { topTrending } from '../../../../utils';
+import { AppDataContext } from '../../../../context';
 
 export const Category = () => {
+    const {appTheme} = useContext(AppDataContext);
     const { hp, wp } = useResponsiveDimensions();
     const styles = useMemo(() => {
         return StyleSheet.create({
             title: {
-                fontSize: FONT_SIZE.h3,
-                fontFamily: FONT.PoppinsBold,
-                color: OTHER_COLORS.black,
+                ...TEXT_STYLE.bold,
+                fontSize: hp(FONT_SIZE.h3),
+                color: appTheme.primaryTextColor,
                 textTransform: "capitalize"
             },
             card: {
                 height: hp(140),
                 width: hp(113),
                 borderWidth: 0.5,
-                borderColor: OTHER_COLORS.backButtonBackground,
+                borderColor: appTheme.secondaryBackground,
                 borderTopRightRadius: hp(8),
                 borderTopLeftRadius: hp(8),
                 overflow: "hidden",
@@ -39,18 +41,18 @@ export const Category = () => {
                 justifyContent: 'space-between',
             },
             name: {
-                fontSize: FONT_SIZE.h4,
-                fontFamily: FONT.PoppinsMedium,
-                color: OTHER_COLORS.black,
+                ...TEXT_STYLE.medium,
+                fontSize: hp(FONT_SIZE.h4),
+                color: appTheme.primaryTextColor,
                 textTransform: "capitalize"
             },
             total: {
-                fontSize: FONT_SIZE.h5,
-                fontFamily: FONT.PoppinsRegular,
-                color: OTHER_COLORS.secondaryText,
+                ...TEXT_STYLE.regular,
+                fontSize: hp(FONT_SIZE.h5),
+                color: appTheme.tertiaryTextColor,
             }
         })
-    }, [hp, wp, FONT, FONT_SIZE, OTHER_COLORS])
+    }, [hp, wp])
     const renderList = ({ item }: any) => {
         const { name, image, total } = item;
         return (

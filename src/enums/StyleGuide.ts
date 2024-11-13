@@ -14,12 +14,18 @@ enum PRIMARY_COLORS_LIGHT {
     primaryBackground = '#ffff',
     secondaryBackground = '#f5f5f5',
     primaryTextColor = '#000000',
+    darkBlack = '#1D1D1D',
     secondaryTextColor = '#1B1B1B',
     tertiaryTextColor = '#838383',
     quaternaryTextColor = '#FFFFFF',
     inputBorder = '#E6E6E6',
     disabled = '#a3aab1',
-    link = '#007DFC'
+    link = '#007DFC',
+    green = "#09CA67",
+    grey = '#595959',
+    star = "#FCD400",
+    imagePlaceholderColor = '#C4C4C4',
+    secondaryBlack = '#161616',
 }
 
 enum PRIMARY_COLORS_DARK {
@@ -28,6 +34,7 @@ enum PRIMARY_COLORS_DARK {
     secondaryBackground = '#f5f5f5',
     primaryTextColor = '#000000',
     secondaryTextColor = '#1B1B1B',
+    secondaryBlack = '#161616',
     tertiaryTextColor = '#838383',
     quaternaryTextColor = '#FFFFFF',
     inputBorder = '#E6E6E6',

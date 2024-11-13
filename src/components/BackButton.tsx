@@ -1,11 +1,13 @@
 import { Share, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useMemo } from 'react'
+import React, { useContext, useMemo } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { useResponsiveDimensions } from '../hooks'
 import { AnyIcon, IconType } from './AnyIcon'
 import { FONT, OTHER_COLORS } from '../enums'
+import { AppDataContext } from '../context'
 
 export const BackButton = ({ title }: any) => {
+    const {appTheme}=useContext(AppDataContext);
     const navigation = useNavigation<any>()
     const { wp, hp } = useResponsiveDimensions();
 
@@ -15,13 +17,13 @@ export const BackButton = ({ title }: any) => {
                 width: hp(40),
                 height: hp(40),
                 borderRadius: 20,
-                backgroundColor: OTHER_COLORS.backButtonBackground,
+                backgroundColor: appTheme.secondaryBackground,
                 justifyContent: "center",
                 alignItems: "center",
                 paddingRight: hp(3)
             }
         });
-    }, [hp, wp, OTHER_COLORS, FONT]);
+    }, [hp, wp]);
 
     return (
         <TouchableOpacity style={styles.btnContainer} onPress={() => navigation.goBack()}>
@@ -29,7 +31,7 @@ export const BackButton = ({ title }: any) => {
                 type={IconType.Ionicons}
                 name="chevron-back-outline"
                 size={hp(28)}
-                color={OTHER_COLORS.primaryBlack}
+                color={appTheme.secondaryTextColor}
             />
         </TouchableOpacity>
     )

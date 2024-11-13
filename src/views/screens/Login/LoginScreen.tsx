@@ -80,7 +80,7 @@ export const LoginScreen = () => {
         fontSize: hp(FONT_SIZE.h5),
         color: appTheme.secondaryTextColor,
         textAlign: "right",
-        marginBottom: hp(10)
+        marginTop: hp(5),
       },
       register: {
         ...TEXT_STYLE.regular,
@@ -93,6 +93,9 @@ export const LoginScreen = () => {
         color: appTheme.primaryTextColor,
         textTransform: "capitalize",
         marginBottom: hp(3)
+      },
+      loginContainer:{
+        marginTop:hp(30)
       }
     });
   }, [hp, wp]);
@@ -110,7 +113,7 @@ export const LoginScreen = () => {
           onChange={() => setWrongEmailError('')}
           bottomError={true}
         />
-        <Text style={styles.label}>password</Text>
+        <Text style={[styles.label,{marginTop:hp(20)}]}>password</Text>
         <CustomInput
           value={password}
           setValue={setPassword}
@@ -126,13 +129,15 @@ export const LoginScreen = () => {
           onPress={() =>
             navigation.navigate(SCREENS.FORGOT_PASSWORD as never)
           }>
-          Forgot Password ?
+          Forgot Password?
         </Text>
+        <View style={styles.loginContainer}>
         <MainButton
           onPress={handleLogin}
           buttonText={appLang.login}
           isLoading={loading}
         />
+        </View>
         <SocialLogins />
         <View style={styles.dontContainer}>
           <Text style={styles.dont}>Don't have an account?</Text>

@@ -6,13 +6,15 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useMemo } from 'react';
-import { FONT, FONT_SIZE, OTHER_COLORS } from '../../../../enums';
+import React, { useContext, useMemo } from 'react';
+import { FONT, FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../../enums';
 import { useResponsiveDimensions } from '../../../../hooks';
 import { topTrending } from '../../../../utils';
 import { AnyIcon, IconType } from '../../../../components/AnyIcon';
+import { AppDataContext } from '../../../../context';
 
 export const MaybeYouLike = () => {
+  const {appTheme}=useContext(AppDataContext);
   const { hp, wp } = useResponsiveDimensions();
   const styles = useMemo(() => {
     return StyleSheet.create({
@@ -25,15 +27,15 @@ export const MaybeYouLike = () => {
         alignItems: 'center',
       },
       title: {
-        fontSize: FONT_SIZE.h3,
-        fontFamily: FONT.PoppinsBold,
-        color: OTHER_COLORS.black,
+        ...TEXT_STYLE.bold,
+        fontSize: hp(FONT_SIZE.h3),
+        color: appTheme.primaryTextColor,
         textTransform: 'capitalize',
       },
       btnText: {
-        fontSize: FONT_SIZE.h4,
-        fontFamily: FONT.PoppinsRegular,
-        color: OTHER_COLORS.secondaryText,
+        ...TEXT_STYLE.regular,
+        fontSize: hp(FONT_SIZE.h4),
+        color: appTheme.link,
       },
       card: {
         height: hp(70),
@@ -61,22 +63,22 @@ export const MaybeYouLike = () => {
         marginLeft: hp(10),
       },
       name: {
-        fontSize: FONT_SIZE.h4,
-        fontFamily: FONT.PoppinsMedium,
-        color: OTHER_COLORS.secondaryBlack,
+        ...TEXT_STYLE.medium,
+        fontSize: hp(FONT_SIZE.h4),
+        color: appTheme.secondaryBlack,
         textTransform: 'capitalize',
       },
       author: {
-        fontSize: FONT_SIZE.h5,
-        fontFamily: FONT.PoppinsRegular,
-        color: OTHER_COLORS.grey,
+        ...TEXT_STYLE.regular,
+        fontSize: hp(FONT_SIZE.h5),
+        color: appTheme.grey,
         textTransform: 'capitalize',
       },
       columnWrapper: {
         justifyContent: 'space-between',
       },
     });
-  }, [hp, wp, OTHER_COLORS, FONT, FONT_SIZE]);
+  }, [hp, wp]);
   const renderList = ({ item }: any) => {
     const { image, name, author, rating } = item;
     const fullStars = Math.floor(rating);
@@ -96,24 +98,24 @@ export const MaybeYouLike = () => {
                 type={IconType.FontAwesome}
                 key={index}
                 name="star"
-                size={10}
-                color={OTHER_COLORS.star}
+                size={hp(FONT_SIZE.h6)}
+                color={appTheme.star}
               />
             ))}
             {halfStars === 1 && (
               <AnyIcon
                 type={IconType.FontAwesome}
                 name="star-half"
-                size={10}
-                color={OTHER_COLORS.star}
+                size={hp(FONT_SIZE.h6)}
+                color={appTheme.star}
               />
             )}
             {[...Array(emptyStars)].map((_, index) => (
               <AnyIcon
                 type={IconType.FontAwesome}
                 name="star-o"
-                size={10}
-                color={OTHER_COLORS.star}
+                size={hp(FONT_SIZE.h6)}
+                color={appTheme.star}
               />
             ))}
           </View>

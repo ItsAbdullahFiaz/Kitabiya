@@ -1,10 +1,12 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useMemo, useState } from 'react'
-import { FONT, FONT_SIZE, OTHER_COLORS, SCREENS } from '../../../../enums'
+import React, { useContext, useMemo, useState } from 'react'
+import { SCREENS } from '../../../../enums'
 import { useResponsiveDimensions } from '../../../../hooks'
 import { useNavigation } from '@react-navigation/native'
+import { AppDataContext } from '../../../../context'
 
 export const BookHeader = () => {
+  const {appTheme}=useContext(AppDataContext);
   const navigation = useNavigation();
   const { hp, wp } = useResponsiveDimensions();
   const [selectedTab, setSelectedTab] = useState('Book');
@@ -12,7 +14,7 @@ export const BookHeader = () => {
     return StyleSheet.create({
       container: {
         flexDirection: 'row',
-        backgroundColor: OTHER_COLORS.backButtonBackground,
+        backgroundColor: appTheme.secondaryBackground,
         borderRadius: hp(20),
         padding: hp(4),
       },
@@ -23,17 +25,17 @@ export const BookHeader = () => {
         borderRadius: hp(15),
       },
       activeTab: {
-        backgroundColor: OTHER_COLORS.primary,
+        backgroundColor: appTheme.primary,
       },
       tabText: {
-        color: OTHER_COLORS.secondaryText,
+        color: appTheme.tertiaryTextColor,
         fontWeight: 'bold',
       },
       activeTabText: {
-        color: OTHER_COLORS.white,
+        color: appTheme.primaryBackground,
       },
     })
-  }, [hp, wp, FONT, FONT_SIZE, OTHER_COLORS])
+  }, [hp, wp])
   return (
     <View style={styles.container}>
       <TouchableOpacity

@@ -1,11 +1,13 @@
 import { FlatList, Image, StyleSheet, Text, View } from 'react-native'
-import React, { useMemo } from 'react'
+import React, { useContext, useMemo } from 'react'
 import { useResponsiveDimensions } from '../../../../hooks'
-import { FONT, FONT_SIZE, OTHER_COLORS } from '../../../../enums';
+import { FONT, FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../../enums';
 import { topTrending } from '../../../../utils';
 import { AnyIcon, IconType } from '../../../../components/AnyIcon';
+import { AppDataContext } from '../../../../context';
 
 export const NewlyPublished = () => {
+  const {appTheme}=useContext(AppDataContext);
   const { hp, wp } = useResponsiveDimensions();
   const styles = useMemo(() => {
     return StyleSheet.create({
@@ -25,15 +27,15 @@ export const NewlyPublished = () => {
         height: "100%",
       },
       name: {
-        fontSize: FONT_SIZE.h4,
-        fontFamily: FONT.PoppinsMedium,
-        color: OTHER_COLORS.secondaryBlack,
+        ...TEXT_STYLE.medium,
+        fontSize: hp(FONT_SIZE.h4),
+        color: appTheme.secondaryBlack,
         textTransform: 'capitalize',
       },
       author: {
-        fontSize: FONT_SIZE.h5,
-        fontFamily: FONT.PoppinsRegular,
-        color: OTHER_COLORS.grey,
+        ...TEXT_STYLE.regular,
+        fontSize: hp(FONT_SIZE.h5),
+        color: appTheme.grey,
         textTransform: 'capitalize',
       },
       starsContainer: {
@@ -41,20 +43,20 @@ export const NewlyPublished = () => {
         marginTop: hp(5),
       },
       price: {
-        fontSize: FONT_SIZE.h4,
-        fontFamily: FONT.PoppinsMedium,
-        color: OTHER_COLORS.primary,
+        ...TEXT_STYLE.medium,
+        fontSize: hp(FONT_SIZE.h4),
+        color: appTheme.primary,
         marginTop: hp(3)
       },
       free: {
-        fontSize: FONT_SIZE.h4,
-        fontFamily: FONT.PoppinsMedium,
-        color: OTHER_COLORS.green,
+        ...TEXT_STYLE.medium,
+        fontSize: hp(FONT_SIZE.h4),
+        color: appTheme.green,
         textTransform: "capitalize",
         marginTop: hp(3)
       }
     })
-  }, [hp, wp, FONT, FONT_SIZE, OTHER_COLORS])
+  }, [hp, wp])
   const renderList = ({ item }: any) => {
     const { image, name, author, rating, price } = item;
     const fullStars = Math.floor(rating);
@@ -73,24 +75,24 @@ export const NewlyPublished = () => {
               type={IconType.FontAwesome}
               key={index}
               name="star"
-              size={10}
-              color={OTHER_COLORS.star}
+              size={hp(FONT_SIZE.h6)}
+              color={appTheme.star}
             />
           ))}
           {halfStars === 1 && (
             <AnyIcon
               type={IconType.FontAwesome}
               name="star-half"
-              size={10}
-              color={OTHER_COLORS.star}
+              size={hp(FONT_SIZE.h6)}
+              color={appTheme.star}
             />
           )}
           {[...Array(emptyStars)].map((_, index) => (
             <AnyIcon
               type={IconType.FontAwesome}
               name="star-o"
-              size={10}
-              color={OTHER_COLORS.star}
+              size={hp(FONT_SIZE.h6)}
+              color={appTheme.star}
             />
           ))}
         </View>

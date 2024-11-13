@@ -47,7 +47,7 @@ export const CustomInput = (props: CustomInputProps) => {
                 marginTop: hp(4),
             },
             wrongTextContainer: {
-                height: bottomError ? hp(twoLinesError ? 48 : 24) : undefined,
+                // height: bottomError ? hp(twoLinesError ? 48 : 24) : undefined,
             },
             titleWrong: {
                 ...TEXT_STYLE.regular,

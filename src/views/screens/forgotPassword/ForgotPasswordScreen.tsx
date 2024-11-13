@@ -44,6 +44,9 @@ export const ForgotPasswordScreen = () => {
         color: appTheme.primaryTextColor,
         textTransform: "capitalize",
         marginBottom: hp(3)
+      },
+      btnContainer:{
+        marginTop:hp(30)
       }
     })
   }, [hp, wp])
@@ -51,7 +54,6 @@ export const ForgotPasswordScreen = () => {
   return (
     <MainContainer>
       <Header title="forgot password" />
-      {/* <MainHeading heading={appLang.resetPassword} /> */}
       <View style={styles.contentContainer}>
         <MainParagraph paragraph={appLang.resetInstructions} />
         <Text style={styles.label}>email</Text>
@@ -63,11 +65,13 @@ export const ForgotPasswordScreen = () => {
           onChange={() => setWrongEmailError('')}
           bottomError={true}
         />
+        <View style={styles.btnContainer}>
         <MainButton
           onPress={handleResetPassword}
           buttonText={appLang.sendInstructions}
           isLoading={loading}
         />
+        </View>
       </View>
     </MainContainer>
   );

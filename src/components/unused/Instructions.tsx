@@ -1,19 +1,23 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React, { useMemo } from 'react'
-import { FONT, FONT_SIZE, OTHER_COLORS } from '../../enums'
+import React, { useContext, useMemo } from 'react'
+import { FONT_SIZE, TEXT_STYLE } from '../../enums'
+import { AppDataContext } from '../../context'
+import { useResponsiveDimensions } from '../../hooks'
 
 export const Instructions = ({ children, textAlign }: any) => {
+  const {appTheme}=useContext(AppDataContext);
+  const {hp,wp}=useResponsiveDimensions();
   const styles = useMemo(() => {
     return StyleSheet.create({
       text: {
-        fontSize: FONT_SIZE.h4,
-        fontFamily: FONT.PoppinsRegular,
+        ...TEXT_STYLE.regular,
+        fontSize: hp(FONT_SIZE.h4),
         fontWeight: "regular",
-        color: OTHER_COLORS.secondaryText,
+        color: appTheme.tertiaryTextColor,
         textAlign: textAlign
       }
     })
-  }, [FONT, FONT_SIZE, OTHER_COLORS])
+  }, [hp,wp])
   return (
     <View>
       <Text style={styles.text}>{children}</Text>

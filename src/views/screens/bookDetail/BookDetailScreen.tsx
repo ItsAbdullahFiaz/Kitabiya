@@ -1,10 +1,12 @@
 import { Image, StyleSheet, Text, View } from 'react-native';
-import React, { useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { AnyIcon, Header, IconType, MainButton, MainContainer } from '../../../components';
-import { FONT, FONT_SIZE, OTHER_COLORS } from '../../../enums';
+import { FONT, FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../enums';
 import { useResponsiveDimensions } from '../../../hooks';
+import { AppDataContext } from '../../../context';
 
 export const BookDetailScreen = ({ route }: any) => {
+  const {appTheme}=useContext(AppDataContext);
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleText = () => setIsExpanded(!isExpanded);
@@ -48,26 +50,26 @@ export const BookDetailScreen = ({ route }: any) => {
         marginLeft: hp(20),
       },
       name: {
-        fontSize: FONT_SIZE.h3,
-        fontFamily: FONT.PoppinsMedium,
-        color: OTHER_COLORS.secondaryBlack,
+        ...TEXT_STYLE.medium,
+        fontSize: hp(FONT_SIZE.h3),
+        color: appTheme.secondaryTextColor,
         textTransform: 'capitalize',
       },
       author: {
+        ...TEXT_STYLE.regular,
         marginVertical: hp(5),
-        fontSize: FONT_SIZE.h5,
-        fontFamily: FONT.PoppinsRegular,
-        color: OTHER_COLORS.grey,
+        fontSize: hp(FONT_SIZE.h5),
+        color: appTheme.grey,
         textTransform: 'capitalize',
       },
       price: {
+        ...TEXT_STYLE.medium,
         marginVertical: hp(5),
-        fontSize: FONT_SIZE.h3,
-        fontFamily: FONT.PoppinsMedium,
-        color: OTHER_COLORS.primary,
+        fontSize: hp(FONT_SIZE.h3),
+        color: appTheme.primary,
       },
       genreContainer: {
-        backgroundColor: OTHER_COLORS.backButtonBackground,
+        backgroundColor: appTheme.secondaryBackground,
         height: hp(26),
         borderRadius: hp(12),
         marginRight: hp(8),
@@ -76,40 +78,40 @@ export const BookDetailScreen = ({ route }: any) => {
         alignItems: 'center',
       },
       free: {
-        fontSize: FONT_SIZE.h4,
-        fontFamily: FONT.PoppinsMedium,
-        color: OTHER_COLORS.green,
+        ...TEXT_STYLE.medium,
+        fontSize: hp(FONT_SIZE.h4),
+        color: appTheme.green,
         textTransform: 'capitalize',
         marginTop: hp(3),
         marginVertical: hp(5),
       },
       genreText: {
-        fontSize: FONT_SIZE.h5,
-        fontFamily: FONT.PoppinsRegular,
-        color: OTHER_COLORS.secondaryText,
+        ...TEXT_STYLE.regular,
+        fontSize: hp(FONT_SIZE.h5),
+        color: appTheme.tertiaryTextColor,
         textTransform: 'capitalize',
       },
       detailsContainer: {
         marginTop: hp(30),
       },
       detailHeading: {
-        fontSize: FONT_SIZE.h3,
-        fontFamily: FONT.PoppinsBold,
-        color: OTHER_COLORS.black,
+        ...TEXT_STYLE.bold,
+        fontSize: hp(FONT_SIZE.h3),
+        color: appTheme.primaryTextColor,
         textTransform: 'capitalize',
       },
       textContainer: {
         marginVertical: hp(10),
       },
       text: {
-        fontSize: FONT_SIZE.h4,
-        fontFamily: FONT.PoppinsRegular,
-        color: OTHER_COLORS.secondaryText,
+        ...TEXT_STYLE.regular,
+        fontSize: hp(FONT_SIZE.h4),
+        color: appTheme.tertiaryTextColor,
       },
       readMore: {
-        color: OTHER_COLORS.secondary,
-        fontSize: FONT_SIZE.h4,
-        fontFamily: FONT.PoppinsRegular
+        ...TEXT_STYLE.regular,
+        color: appTheme.link,
+        fontSize: hp(FONT_SIZE.h4),
       },
       chatBtnContainer: {
         position: "absolute",
@@ -118,7 +120,7 @@ export const BookDetailScreen = ({ route }: any) => {
         alignSelf: "center"
       }
     });
-  }, [hp, wp, FONT, FONT_SIZE, OTHER_COLORS]);
+  }, [hp, wp]);
 
   return (
     <MainContainer>
@@ -136,24 +138,24 @@ export const BookDetailScreen = ({ route }: any) => {
                 type={IconType.FontAwesome}
                 key={index}
                 name="star"
-                size={10}
-                color={OTHER_COLORS.star}
+                size={hp(FONT_SIZE.h6)}
+                color={appTheme.star}
               />
             ))}
             {halfStars === 1 && (
               <AnyIcon
                 type={IconType.FontAwesome}
                 name="star-half"
-                size={10}
-                color={OTHER_COLORS.star}
+                size={hp(FONT_SIZE.h6)}
+                color={appTheme.star}
               />
             )}
             {[...Array(emptyStars)].map((_, index) => (
               <AnyIcon
                 type={IconType.FontAwesome}
                 name="star-o"
-                size={10}
-                color={OTHER_COLORS.star}
+                size={hp(FONT_SIZE.h6)}
+                color={appTheme.star}
               />
             ))}
           </View>

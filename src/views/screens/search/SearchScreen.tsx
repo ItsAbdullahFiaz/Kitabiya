@@ -1,13 +1,15 @@
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useMemo } from 'react'
+import React, { useContext, useMemo } from 'react'
 import { AnyIcon, BackButton, IconType, MainContainer } from '../../../components'
 import { useResponsiveDimensions } from '../../../hooks'
-import { FONT, FONT_SIZE, OTHER_COLORS } from '../../../enums'
+import { FONT, FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../enums'
 import { MaybeYouLike } from './components'
+import { AppDataContext } from '../../../context'
 
 
 const data = ['history', 'science fiction', 'families', 'humor', 'thriller', 'self-help', 'personal', 'the wood', 'adventure'];
 export const SearchScreen = () => {
+    const {appTheme}=useContext(AppDataContext);
     const { hp, wp } = useResponsiveDimensions();
     const styles = useMemo(() => {
         return StyleSheet.create({
@@ -20,7 +22,7 @@ export const SearchScreen = () => {
                 height: hp(40),
                 width: hp(329),
                 borderRadius: hp(12),
-                backgroundColor: OTHER_COLORS.backButtonBackground,
+                backgroundColor: appTheme.secondaryBackground,
                 flexDirection: "row",
                 justifyContent: "flex-start",
                 alignItems: "center",
@@ -38,9 +40,9 @@ export const SearchScreen = () => {
                 marginTop: hp(20)
             },
             text: {
-                fontSize: FONT_SIZE.h5,
-                fontFamily: FONT.PoppinsMedium,
-                color: OTHER_COLORS.darkBlack,
+                ...TEXT_STYLE.medium,
+                fontSize: hp(FONT_SIZE.h5),
+                color: appTheme.darkBlack,
                 textTransform: "capitalize"
             },
             textContainer: {
@@ -56,14 +58,14 @@ export const SearchScreen = () => {
 
             },
             btnText: {
-                fontSize: FONT_SIZE.h5,
-                fontFamily: FONT.PoppinsMedium,
-                color: OTHER_COLORS.secondaryText,
+                ...TEXT_STYLE.medium,
+                fontSize: hp(FONT_SIZE.h5),
+                color: appTheme.tertiaryTextColor,
             },
             searchedText: {
-                fontSize: FONT_SIZE.h5,
-                fontFamily: FONT.PoppinsRegular,
-                color: OTHER_COLORS.primary,
+                ...TEXT_STYLE.regular,
+                fontSize: hp(FONT_SIZE.h5),
+                color: appTheme.primary,
                 marginRight: hp(8),
                 textTransform: "capitalize"
             },
@@ -73,7 +75,7 @@ export const SearchScreen = () => {
                 marginTop: hp(10)
             }
         })
-    }, [hp, wp, FONT, FONT_SIZE, OTHER_COLORS])
+    }, [hp, wp])
 
     return (
         <MainContainer>
@@ -83,10 +85,10 @@ export const SearchScreen = () => {
                     <AnyIcon
                         type={IconType.EvilIcons}
                         name="search"
-                        color={OTHER_COLORS.border}
+                        color={appTheme.inputBorder}
                         size={16}
                     />
-                    <TextInput style={styles.input} placeholder='Search here' placeholderTextColor={OTHER_COLORS.border} />
+                    <TextInput style={styles.input} placeholder='Search here' placeholderTextColor={appTheme.inputBorder} />
                 </View>
             </View>
             <View style={styles.recent}>
@@ -105,7 +107,7 @@ export const SearchScreen = () => {
                                     type={IconType.EvilIcons}
                                     name='close'
                                     size={16}
-                                    color={OTHER_COLORS.primary}
+                                    color={appTheme.primary}
                                 />
                             </TouchableOpacity>
                         </View>

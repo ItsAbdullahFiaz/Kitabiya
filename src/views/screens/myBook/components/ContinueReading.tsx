@@ -1,12 +1,14 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useMemo } from 'react'
+import React, { useContext, useMemo } from 'react'
 import { useResponsiveDimensions } from '../../../../hooks'
-import { FONT, FONT_SIZE, OTHER_COLORS, SCREENS } from '../../../../enums';
+import { FONT, FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE } from '../../../../enums';
 import { FlatList } from 'react-native';
 import { topTrending } from '../../../../utils';
 import { useNavigation } from '@react-navigation/native';
+import { AppDataContext } from '../../../../context';
 
 export const ContinueReading = () => {
+  const {appTheme}=useContext(AppDataContext);
   const navigation = useNavigation<any>();
   const { hp, wp } = useResponsiveDimensions();
   const styles = useMemo(() => {
@@ -18,15 +20,15 @@ export const ContinueReading = () => {
         alignItems: 'center',
       },
       title: {
-        fontSize: FONT_SIZE.h3,
-        fontFamily: FONT.PoppinsBold,
-        color: OTHER_COLORS.black,
+        ...TEXT_STYLE.bold,
+        fontSize: hp(FONT_SIZE.h3),
+        color: appTheme.primaryTextColor,
         textTransform: 'capitalize',
       },
       btnText: {
-        fontSize: FONT_SIZE.h4,
-        fontFamily: FONT.PoppinsRegular,
-        color: OTHER_COLORS.secondaryText,
+        ...TEXT_STYLE.regular,
+        fontSize: hp(FONT_SIZE.h4),
+        color: appTheme.tertiaryTextColor,
       },
       card: {
         width: hp(120),
@@ -44,25 +46,25 @@ export const ContinueReading = () => {
         height: hp(160)
       },
       name: {
-        fontSize: FONT_SIZE.h4,
-        fontFamily: FONT.PoppinsMedium,
-        color: OTHER_COLORS.darkBlack,
+        ...TEXT_STYLE.medium,
+        fontSize: hp(FONT_SIZE.h4),
+        color: appTheme.darkBlack,
         textTransform: "capitalize"
       },
       author: {
-        fontSize: FONT_SIZE.h5,
-        fontFamily: FONT.PoppinsRegular,
-        color: OTHER_COLORS.grey,
+        ...TEXT_STYLE.regular,
+        fontSize: hp(FONT_SIZE.h5),
+        color: appTheme.grey,
         textTransform: "capitalize"
       },
       chap: {
-        fontSize: FONT_SIZE.h6,
-        fontFamily: FONT.PoppinsRegular,
-        color: OTHER_COLORS.primary,
+        ...TEXT_STYLE.regular,
+        fontSize: hp(FONT_SIZE.h6),
+        color: appTheme.primary,
         textTransform: "capitalize"
       }
     })
-  }, [hp, wp, FONT, FONT_SIZE, OTHER_COLORS])
+  }, [hp, wp])
 
   const renderList = ({ item }: any) => {
     const { name, image, author, totalPages, onPage } = item;

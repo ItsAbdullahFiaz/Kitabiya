@@ -4,28 +4,30 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import React, { useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { AnyIcon, IconType } from '../../../components';
 import { useResponsiveDimensions } from '../../../hooks';
 import { FONT, FONT_SIZE, OTHER_COLORS } from '../../../enums';
 import { useNavigation } from '@react-navigation/native';
 import { BookHeader, Category, ContinueReading } from './components';
+import { AppDataContext } from '../../../context';
 
 export const MyBooksScreen = () => {
+  const {appTheme}=useContext(AppDataContext);
   const navigation = useNavigation();
   const { hp, wp } = useResponsiveDimensions();
   const styles = useMemo(() => {
     return StyleSheet.create({
       mainContainer: {
         flex: 1,
-        backgroundColor: OTHER_COLORS.white,
+        backgroundColor: appTheme.primaryBackground,
       },
       searchContainer: {
         marginTop: hp(20),
         height: hp(40),
         width: '100%',
         borderRadius: hp(12),
-        backgroundColor: OTHER_COLORS.backButtonBackground,
+        backgroundColor: appTheme.secondaryBackground,
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
@@ -37,24 +39,24 @@ export const MyBooksScreen = () => {
         paddingTop: hp(5),
       },
     });
-  }, [hp, wp, FONT, FONT_SIZE, OTHER_COLORS]);
+  }, [hp, wp]);
 
   return (
     <View style={styles.mainContainer}>
-      <StatusBar barStyle={"dark-content"} backgroundColor={OTHER_COLORS.white} />
+      <StatusBar barStyle={"dark-content"} backgroundColor={appTheme.primaryBackground} />
       <View style={{ padding: hp(16) }}>
         <BookHeader />
         <View style={styles.searchContainer}>
           <AnyIcon
             type={IconType.EvilIcons}
             name="search"
-            color={OTHER_COLORS.border}
+            color={appTheme.inputBorder}
             size={16}
           />
           <TextInput
             style={styles.input}
             placeholder="Search here"
-            placeholderTextColor={OTHER_COLORS.border}
+            placeholderTextColor={appTheme.inputBorder}
           />
         </View>
       </View>

@@ -49,6 +49,9 @@ export const SignupScreen = () => {
         color: appTheme.primaryTextColor,
         textTransform: "capitalize",
         marginBottom: hp(3)
+      },
+      signupContainer:{
+        marginTop:hp(40)
       }
     });
   }, [hp]);
@@ -65,7 +68,7 @@ export const SignupScreen = () => {
           onChange={() => setWrongEmailError('')}
           bottomError={true}
         />
-        <Text style={styles.label}>email</Text>
+        <Text style={[styles.label,{marginTop:hp(20)}]}>password</Text>
         <CustomInput
           value={password}
           setValue={setPassword}
@@ -76,11 +79,13 @@ export const SignupScreen = () => {
           twoLinesError={true}
           secureTextEntry={true}
         />
+        <View style={styles.signupContainer}>
         <MainButton
           onPress={handleSignup}
           buttonText={appLang.signUp}
           isLoading={loading}
         />
+        </View>
         <SocialLogins />
       </View>
     </MainContainer>

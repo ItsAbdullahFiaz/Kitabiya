@@ -1,11 +1,13 @@
 import { FlatList, Image, StyleSheet, Text, View } from 'react-native';
-import React, { useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { useResponsiveDimensions } from '../../../../hooks';
 import { topTrending } from '../../../../utils';
 import { AnyIcon, IconType } from '../../../../components/AnyIcon';
-import { FONT, FONT_SIZE, OTHER_COLORS } from '../../../../enums';
+import { FONT, FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../../enums';
+import { AppDataContext } from '../../../../context';
 
 export const TopTrending = () => {
+  const {appTheme}=useContext(AppDataContext);
   const { hp, wp } = useResponsiveDimensions();
   const styles = useMemo(() => {
     return StyleSheet.create({
@@ -27,7 +29,7 @@ export const TopTrending = () => {
       },
       imgContainer: {
         width: hp(70),
-        backgroundColor: OTHER_COLORS.imagePlaceholderColor,
+        backgroundColor: appTheme.imagePlaceholderColor,
         height: '100%',
         borderRadius: hp(8),
         overflow: 'hidden',
@@ -43,9 +45,9 @@ export const TopTrending = () => {
         alignItems: 'center',
       },
       views: {
-        fontSize: FONT_SIZE.h5,
-        fontFamily: FONT.PoppinsMedium,
-        color: OTHER_COLORS.primary,
+        ...TEXT_STYLE.medium,
+        fontSize: hp(FONT_SIZE.h5),
+        color: appTheme.primary,
         marginLeft: hp(5),
       },
       starsContainer: {
@@ -53,15 +55,15 @@ export const TopTrending = () => {
         marginTop: hp(5),
       },
       name: {
-        fontSize: FONT_SIZE.h4,
-        fontFamily: FONT.PoppinsMedium,
-        color: OTHER_COLORS.secondaryBlack,
+        ...TEXT_STYLE.medium,
+        fontSize: hp(FONT_SIZE.h4),
+        color: appTheme.secondaryBlack,
         textTransform: 'capitalize',
       },
       author: {
-        fontSize: FONT_SIZE.h5,
-        fontFamily: FONT.PoppinsRegular,
-        color: OTHER_COLORS.grey,
+        ...TEXT_STYLE.regular,
+        fontSize: hp(FONT_SIZE.h5),
+        color: appTheme.grey,
         textTransform: 'capitalize',
       },
     });
@@ -87,24 +89,24 @@ export const TopTrending = () => {
                   type={IconType.FontAwesome}
                   key={index}
                   name="star"
-                  size={10}
-                  color={OTHER_COLORS.star}
+                  size={hp(FONT_SIZE.h6)}
+                  color={appTheme.star}
                 />
               ))}
               {halfStars === 1 && (
                 <AnyIcon
                   type={IconType.FontAwesome}
                   name="star-half"
-                  size={10}
-                  color={OTHER_COLORS.star}
+                  size={hp(FONT_SIZE.h6)}
+                  color={appTheme.star}
                 />
               )}
               {[...Array(emptyStars)].map((_, index) => (
                 <AnyIcon
                   type={IconType.FontAwesome}
                   name="star-o"
-                  size={10}
-                  color={OTHER_COLORS.star}
+                  size={hp(FONT_SIZE.h6)}
+                  color={appTheme.star}
                 />
               ))}
             </View>
@@ -114,8 +116,8 @@ export const TopTrending = () => {
           <AnyIcon
             type={IconType.Ionicons}
             name="eye-outline"
-            size={16}
-            color={OTHER_COLORS.primary}
+            size={hp(FONT_SIZE.h3)}
+            color={appTheme.primary}
           />
           <Text style={styles.views}>237 views</Text>
         </View>

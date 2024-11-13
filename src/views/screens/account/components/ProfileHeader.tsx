@@ -1,9 +1,11 @@
 import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native'
-import React, { useMemo } from 'react'
-import { FONT, FONT_SIZE, OTHER_COLORS } from '../../../../enums';
+import React, { useContext, useMemo } from 'react'
+import { FONT, FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../../enums';
 import { useResponsiveDimensions } from '../../../../hooks';
+import { AppDataContext } from '../../../../context';
 
 export const ProfileHeader = ({ userInfo }: any) => {
+  const {appTheme}=useContext(AppDataContext);
   const { hp, wp } = useResponsiveDimensions();
   const styles = useMemo(() => {
     return StyleSheet.create({
@@ -17,7 +19,7 @@ export const ProfileHeader = ({ userInfo }: any) => {
         height: hp(88),
         width: hp(88),
         borderRadius: hp(44),
-        backgroundColor: OTHER_COLORS.imagePlaceholderColor,
+        backgroundColor: appTheme.imagePlaceholderColor,
         overflow: "hidden"
       },
       img: {
@@ -26,19 +28,19 @@ export const ProfileHeader = ({ userInfo }: any) => {
         objectFit: "cover"
       },
       name: {
+        ...TEXT_STYLE.medium,
         marginTop: hp(5),
-        fontSize: FONT_SIZE.h3,
-        fontFamily: FONT.PoppinsMedium,
-        color: OTHER_COLORS.primaryBlack,
+        fontSize: hp(FONT_SIZE.h3),
+        color: appTheme.secondaryTextColor,
         textTransform: "capitalize"
       },
       gmail: {
-        fontSize: FONT_SIZE.h4,
-        fontFamily: FONT.PoppinsRegular,
-        color: OTHER_COLORS.secondaryText
+        ...TEXT_STYLE.regular,
+        fontSize: hp(FONT_SIZE.h4),
+        color: appTheme.tertiaryTextColor
       }
     })
-  }, [hp, wp, FONT, FONT_SIZE, OTHER_COLORS])
+  }, [hp, wp])
   return (
     <>
       {userInfo ? (

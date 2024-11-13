@@ -1,9 +1,10 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useMemo } from 'react'
+import { StyleSheet,  TouchableOpacity } from 'react-native'
+import React, { useContext, useMemo } from 'react'
 import { useResponsiveDimensions } from '../../../../hooks'
-import { OTHER_COLORS } from '../../../../enums';
+import { AppDataContext } from '../../../../context';
 
 export const HeaderButtons = ({ children, onPress }: any) => {
+    const {appTheme}=useContext(AppDataContext);
     const { hp, wp } = useResponsiveDimensions();
 
     const styles = useMemo(() => {
@@ -11,13 +12,13 @@ export const HeaderButtons = ({ children, onPress }: any) => {
             btnContainer: {
                 width: hp(36),
                 height: hp(36),
-                backgroundColor: OTHER_COLORS.white,
+                backgroundColor: appTheme.primaryBackground,
                 borderRadius: hp(18),
                 justifyContent: "center",
                 alignItems: "center"
             }
         })
-    }, [hp, wp, OTHER_COLORS])
+    }, [hp, wp])
     return (
         <TouchableOpacity style={styles.btnContainer} onPress={onPress}>
             {children}

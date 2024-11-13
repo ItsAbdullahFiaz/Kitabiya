@@ -1,11 +1,13 @@
 import { FlatList, StyleSheet, Text, TextInput, View, TouchableOpacity, Image } from 'react-native'
-import React, { useMemo } from 'react'
+import React, { useContext, useMemo } from 'react'
 import { AnyIcon, Header, IconType, MainContainer } from '../../../components'
-import { FONT, FONT_SIZE, OTHER_COLORS } from '../../../enums'
+import { FONT, FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../enums'
 import { useResponsiveDimensions } from '../../../hooks'
 import { topTrending } from '../../../utils'
+import { AppDataContext } from '../../../context'
 
 export const FavouritesScreen = () => {
+  const {appTheme}=useContext(AppDataContext);
   const { hp, wp } = useResponsiveDimensions();
   const styles = useMemo(() => {
     return StyleSheet.create({
@@ -14,7 +16,7 @@ export const FavouritesScreen = () => {
         height: hp(40),
         width: '100%',
         borderRadius: hp(12),
-        backgroundColor: OTHER_COLORS.backButtonBackground,
+        backgroundColor: appTheme.secondaryBackground,
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
@@ -32,24 +34,24 @@ export const FavouritesScreen = () => {
         borderRadius: hp(8),
         overflow: "hidden",
         borderWidth: 0.3,
-        borderColor: OTHER_COLORS.backButtonBackground
+        borderColor: appTheme.secondaryBackground
       },
       img: {
         height: hp(85),
         width: "100%",
       },
       name: {
-        fontSize: FONT_SIZE.h4,
-        fontFamily: FONT.PoppinsMedium,
-        color: OTHER_COLORS.black,
+        ...TEXT_STYLE.medium,
+        fontSize: hp(FONT_SIZE.h4),
+        color: appTheme.primaryTextColor,
         textTransform: "capitalize",
         textAlign: "center",
         marginTop: hp(3)
       },
       total: {
-        fontSize: FONT_SIZE.h5,
-        fontFamily: FONT.PoppinsRegular,
-        color: OTHER_COLORS.secondaryText,
+        ...TEXT_STYLE.regular,
+        fontSize: hp(FONT_SIZE.h5),
+        color: appTheme.tertiaryTextColor,
         textAlign: "center"
       },
       columnWrapper: {
@@ -60,7 +62,7 @@ export const FavouritesScreen = () => {
         paddingBottom: hp(100)
       }
     })
-  }, [hp, wp, OTHER_COLORS, FONT, FONT_SIZE])
+  }, [hp, wp])
 
   const renderList = ({ item }: any) => {
     const { image, name, total } = item;
@@ -79,13 +81,13 @@ export const FavouritesScreen = () => {
         <AnyIcon
           type={IconType.EvilIcons}
           name="search"
-          color={OTHER_COLORS.border}
+          color={appTheme.inputBorder}
           size={16}
         />
         <TextInput
           style={styles.input}
           placeholder="Search here"
-          placeholderTextColor={OTHER_COLORS.border}
+          placeholderTextColor={appTheme.inputBorder}
         />
       </View>
       <View style={styles.listContainer}>

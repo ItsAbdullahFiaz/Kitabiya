@@ -8,10 +8,12 @@ import {
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useResponsiveDimensions, useToast } from '../../../hooks';
 import { useNavigation } from '@react-navigation/native';
-import { FONT, OTHER_COLORS, SCREENS, STACK } from '../../../enums';
+import { FONT, FONT_SIZE, OTHER_COLORS, SCREENS, STACK, TEXT_STYLE } from '../../../enums';
 import { MainButton, MainContainer, SocialLogins } from '../../../components';
+import { AppDataContext } from '../../../context';
 
 export const WelcomeScreen = () => {
+  const {appTheme}=useContext(AppDataContext);
   const navigation = useNavigation();
   const { hp, wp } = useResponsiveDimensions();
 
@@ -41,17 +43,17 @@ export const WelcomeScreen = () => {
         alignItems: 'center',
         marginTop: hp(30),
         borderWidth: 1,
-        borderColor: OTHER_COLORS.primary,
+        borderColor: appTheme.primary,
       },
       btnText: {
-        fontSize: 16,
+        ...TEXT_STYLE.regular,
+        fontSize: hp(FONT_SIZE.h3),
         fontWeight: 'medium',
-        fontFamily: FONT.PoppinsRegular,
-        color: OTHER_COLORS.primary,
+        color: appTheme.primary,
         textTransform: 'capitalize',
       },
     });
-  }, [hp, wp, OTHER_COLORS, FONT]);
+  }, [hp, wp]);
 
   return (
     <MainContainer>
