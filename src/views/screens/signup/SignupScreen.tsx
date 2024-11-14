@@ -63,7 +63,8 @@ export const SignupScreen = () => {
         <CustomInput
           value={email}
           setValue={setEmail}
-          placeholder={appLang.email}
+          // placeholder={appLang.email}
+          placeholder={"Text your email"}
           textWrong={wrongEmailError}
           onChange={() => setWrongEmailError('')}
           bottomError={true}
@@ -72,7 +73,8 @@ export const SignupScreen = () => {
         <CustomInput
           value={password}
           setValue={setPassword}
-          placeholder={appLang.password}
+          // placeholder={appLang.password}
+          placeholder={"Text your password"}
           textWrong={wrongPasswordError}
           onChange={() => setWrongPasswordError('')}
           bottomError={true}
