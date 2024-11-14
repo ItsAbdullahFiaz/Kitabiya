@@ -86,6 +86,7 @@ export const LoginScreen = () => {
         ...TEXT_STYLE.regular,
         fontSize: hp(FONT_SIZE.h4),
         color: appTheme.link,
+        
       },
       label: {
         ...TEXT_STYLE.regular,
@@ -108,7 +109,8 @@ export const LoginScreen = () => {
         <CustomInput
           value={email}
           setValue={setEmail}
-          placeholder={appLang.email}
+          // placeholder={appLang.email}
+          placeholder={"Text your email"}
           textWrong={wrongEmailError}
           onChange={() => setWrongEmailError('')}
           bottomError={true}
@@ -117,7 +119,8 @@ export const LoginScreen = () => {
         <CustomInput
           value={password}
           setValue={setPassword}
-          placeholder={appLang.password}
+          // placeholder={appLang.password}
+          placeholder={"Text your email"}
           textWrong={wrongPasswordError}
           onChange={() => setWrongPasswordError('')}
           bottomError={true}

@@ -25,7 +25,7 @@ export const MainButton = (props: MainButtonProps) => {
                 width: "100%",
                 // paddingVertical: hp(12),
                 paddingHorizontal: wp(24),
-                borderRadius: hp(16),
+                borderRadius: hp(12),
                 backgroundColor: disableBtn || isLoading ? appTheme.disabled : dismissiveButton ? 'tansparent' : appTheme.primary,
                 alignItems: "center",
                 justifyContent: "center",
