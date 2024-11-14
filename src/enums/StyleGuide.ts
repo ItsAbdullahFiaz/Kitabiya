@@ -26,6 +26,7 @@ enum PRIMARY_COLORS_LIGHT {
     star = "#FCD400",
     imagePlaceholderColor = '#C4C4C4',
     secondaryBlack = '#161616',
+    compulsory = "#d62828"
 }
 
 enum PRIMARY_COLORS_DARK {
