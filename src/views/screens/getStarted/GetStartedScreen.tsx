@@ -3,6 +3,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import React, { useContext, useMemo } from 'react';
 import { useResponsiveDimensions } from '../../../hooks';
@@ -12,7 +13,7 @@ import { MainContainer } from '../../../components';
 import { AppDataContext } from '../../../context';
 
 export const GetStartedScreen = () => {
-  const {appTheme}=useContext(AppDataContext);
+  const { appTheme } = useContext(AppDataContext);
   const navigation = useNavigation();
   const { hp, wp } = useResponsiveDimensions();
 
@@ -21,6 +22,8 @@ export const GetStartedScreen = () => {
       img: {
         width: hp(380),
         height: hp(380),
+      },
+      imgContainer: {
         marginTop: hp(50),
       },
       heading: {
@@ -63,10 +66,12 @@ export const GetStartedScreen = () => {
   }, [hp, wp]);
   return (
     <MainContainer>
-      <Image
-        style={styles.img}
-        source={require('../../../assets/images/getStartedImage.png')}
-      />
+      <View style={styles.imgContainer}>
+        <Image
+          style={styles.img}
+          source={require('../../../assets/images/getStartedImage.png')}
+        />
+      </View>
       <Text style={styles.heading}>increase your skill in no time</Text>
       <Text style={styles.subHeading}>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
