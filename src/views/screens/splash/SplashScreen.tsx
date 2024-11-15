@@ -13,7 +13,7 @@ export const SplashScreen = () => {
     function onAuthStateChanged(user: any) {
         console.log(user)
         setTimeout(() => {
-            resetAndGo(navigation, user ? STACK.MAIN : STACK.AUTH, null);
+            resetAndGo(navigation, user ? STACK.MAIN : STACK.ONBOARDING, null);
         }, 2000);
     }
 
