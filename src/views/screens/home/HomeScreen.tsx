@@ -118,11 +118,11 @@ export const HomeScreen = () => {
                 </View>
             </View>
             <View style={styles.topTrendingContainer}>
-                <Text style={styles.heading}>top trending</Text>
+                <Text style={styles.heading}>For you</Text>
                 <TopTrending />
             </View>
             <View style={styles.NewlyPublishedHeader}>
-                <Text style={styles.heading}>newly published</Text>
+                <Text style={styles.heading}>Newly Added</Text>
                 <TouchableOpacity>
                     <Text>See more</Text>
                 </TouchableOpacity>
