@@ -42,6 +42,9 @@ const getStoredStringValue = async (key: string, setStoredValue: any, defaultVal
     }
 }
 
+const validateName = (name: string) => {
+    return name.length >= 3;
+}
 const validateEmail = (email: string) => {
     return email.length >= 4 && email.includes('@') && email.includes('.');
 }
@@ -50,6 +53,9 @@ const validatePassword = (password: string) => {
     return password.length >= 8 && /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
 }
 
+const setNameError = (name: string, isNameValid: boolean, appLang: any, setWrongNameError: any) => {
+    setWrongNameError(name.trim().length === 0 ? appLang.nameRequired : !isNameValid ? appLang.NameWrong : '');
+}
 const setEmailError = (email: string, isEmailValid: boolean, appLang: any, setWrongEmailError: any) => {
     setWrongEmailError(email.trim().length === 0 ? appLang.emailRequired : !isEmailValid ? appLang.emailWrong : '');
 }
@@ -636,4 +642,4 @@ const topTrending=[
          description:"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
     },
 ]
-export { resetAndGo, isEmptyString, storeStringValue, getStoredStringValue, topTrending, validateEmail, validatePassword, setEmailError, setPasswordError }
+export { resetAndGo, isEmptyString, storeStringValue, getStoredStringValue, topTrending, validateEmail, validatePassword,validateName, setEmailError, setPasswordError,setNameError }

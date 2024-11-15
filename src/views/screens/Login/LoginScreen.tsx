@@ -7,7 +7,8 @@ import { resetAndGo, setEmailError, setPasswordError, validateEmail } from '../.
 import { FONT_SIZE, SCREENS, STACK, TEXT_STYLE } from '../../../enums';
 import { AppDataContext } from '../../../context';
 import { loginUser } from '../../../services';
-
+import firestore from '@react-native-firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const LoginScreen = () => {
   const navigation = useNavigation();
@@ -24,7 +25,9 @@ export const LoginScreen = () => {
     const isEmailValid = validateEmail(email);
     setEmailError(email, isEmailValid, appLang, setWrongEmailError);
     setPasswordError(password, true, appLang, setWrongPasswordError);
-
+    const res=await firestore().collection('Users').where('email', '==', email).get();
+    console.log("FIRESTORE_RESPONSE===>",JSON.stringify(res._docs[0].data()));
+    saveToLocal(res._docs[0].data().userName,res._docs[0].data().email,res._docs[0].data().userId);
     if (isEmailValid && password.trim().length !== 0) {
       setLoading(true)
       const response = await loginUser(email, password);
@@ -38,6 +41,11 @@ export const LoginScreen = () => {
     }
   }
 
+  const saveToLocal=async(name:any,email:any,userId:any)=>{
+    await AsyncStorage.setItem("NAME",name);
+    await AsyncStorage.setItem("EMAIL",email);
+    await AsyncStorage.setItem("USERID",userId);
+  }
   const styles = useMemo(() => {
     return StyleSheet.create({
       contentContainer: {

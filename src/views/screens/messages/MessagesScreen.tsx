@@ -1,10 +1,12 @@
 import { FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useMemo, useContext } from 'react'
+import React, { useMemo, useContext, useEffect, useState } from 'react'
 import { AnyIcon, IconType, MainContainer } from '../../../components'
 import { useResponsiveDimensions } from '../../../hooks'
-import { FONT, FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../enums'
+import { FONT, FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE } from '../../../enums'
 import { AppDataContext } from '../../../context'
-
+import firestore from '@react-native-firebase/firestore'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useNavigation } from '@react-navigation/native'
 
 const data = [
   {
@@ -57,8 +59,25 @@ const data = [
   },
 ]
 export const MessagesScreen = () => {
+  const navigation=useNavigation<any>();
+  const [users,setUsers]=useState([]);
   const { appTheme } = useContext(AppDataContext)
   const { hp, wp } = useResponsiveDimensions();
+  const getUsers=async()=>{
+    let tempArr=[];
+    const email=await AsyncStorage.getItem("EMAIL");
+    const res=await firestore().collection("users").where('email','!=',email).get();
+    if(res._docs !== []){
+      res._docs.map((item)=>{
+        tempArr.push(item.data());
+      });
+    }
+    setUsers(tempArr);
+    console.log("MESSAGE_FIRESTORE_RESPONSE====>",JSON.stringify(res._docs[0].data()));
+  }
+  useEffect(()=>{
+    getUsers();
+  },[])
   const styles = useMemo(() => {
     return StyleSheet.create({
       title: {
@@ -139,7 +158,7 @@ export const MessagesScreen = () => {
   const renderList = ({ item }: any) => {
     const { image, name, text, numberOfMessages } = item;
     return (
-      <TouchableOpacity style={styles.card}>
+      <TouchableOpacity style={styles.card} >
         <View style={styles.firstContainer}>
           <View style={styles.imgContainer}>
             <Image style={styles.img} source={image} />
@@ -175,8 +194,21 @@ export const MessagesScreen = () => {
       </View>
       <View style={styles.listContainer}>
         <FlatList
-          data={data}
-          renderItem={renderList}
+          data={users}
+          renderItem={({item,index})=>{
+            return (
+              <TouchableOpacity style={styles.card} onPress={()=>navigation.navigate(SCREENS.CHAT as never,{data:item})}>
+        <View style={styles.firstContainer}>
+          <View style={styles.imgContainer}>
+            <Image style={styles.img} source={require("../../../assets/images/user.png")} />
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.name}>{item.userName}</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+            )
+          }}
         />
       </View>
     </MainContainer>
