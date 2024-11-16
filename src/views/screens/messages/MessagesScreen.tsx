@@ -58,12 +58,14 @@ const data = [
     numberOfMessages: 0
   },
 ]
+let id='';
 export const MessagesScreen = () => {
   const navigation=useNavigation<any>();
   const [users,setUsers]=useState([]);
   const { appTheme } = useContext(AppDataContext)
   const { hp, wp } = useResponsiveDimensions();
   const getUsers=async()=>{
+    id = await AsyncStorage.getItem("USERID");
     let tempArr=[];
     const email=await AsyncStorage.getItem("EMAIL");
     const res=await firestore().collection("users").where('email','!=',email).get();
@@ -197,7 +199,7 @@ export const MessagesScreen = () => {
           data={users}
           renderItem={({item,index})=>{
             return (
-              <TouchableOpacity style={styles.card} onPress={()=>navigation.navigate(SCREENS.CHAT as never,{data:item})}>
+              <TouchableOpacity style={styles.card} onPress={()=>navigation.navigate(SCREENS.CHAT as never,{data:item,id:id})}>
         <View style={styles.firstContainer}>
           <View style={styles.imgContainer}>
             <Image style={styles.img} source={require("../../../assets/images/user.png")} />
