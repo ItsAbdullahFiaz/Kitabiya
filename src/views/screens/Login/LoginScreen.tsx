@@ -9,6 +9,7 @@ import { AppDataContext } from '../../../context';
 import { loginUser } from '../../../services';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { notificationService } from '../../../services/NotificationService';
 
 export const LoginScreen = () => {
   const navigation = useNavigation();
@@ -22,30 +23,106 @@ export const LoginScreen = () => {
   const [wrongPasswordError, setWrongPasswordError] = useState('');
 
   const handleLogin = async () => {
-    const isEmailValid = validateEmail(email);
-    setEmailError(email, isEmailValid, appLang, setWrongEmailError);
-    setPasswordError(password, true, appLang, setWrongPasswordError);
-    const res=await firestore().collection('Users').where('email', '==', email).get();
-    console.log("FIRESTORE_RESPONSE===>",JSON.stringify(res._docs[0].data()));
-    saveToLocal(res._docs[0].data().userName,res._docs[0].data().email,res._docs[0].data().userId);
-    if (isEmailValid && password.trim().length !== 0) {
-      setLoading(true)
-      const response = await loginUser(email, password);
-      if (response.success) {
-        resetAndGo(navigation, STACK.MAIN, null)
-        showToast(appLang.loginSuccess, 'successToast')
-      } else {
-        showToast(response.errorMessage, 'errorToast')
-      }
-      setLoading(false)
-    }
-  }
+    try {
+      console.log('Login attempt started');
 
-  const saveToLocal=async(name:any,email:any,userId:any)=>{
-    await AsyncStorage.setItem("NAME",name);
-    await AsyncStorage.setItem("EMAIL",email);
-    await AsyncStorage.setItem("USERID",userId);
-  }
+      const isEmailValid = validateEmail(email);
+      setEmailError(email, isEmailValid, appLang, setWrongEmailError);
+      setPasswordError(password, true, appLang, setWrongPasswordError);
+
+      if (!isEmailValid || password.trim().length === 0) {
+        console.log('Validation failed:', { isEmailValid, passwordLength: password.trim().length });
+        return;
+      }
+
+      setLoading(true);
+
+      // Normalize email
+      const normalizedEmail = email.toLowerCase().trim();
+      console.log('Normalized email:', normalizedEmail);
+
+      // First check if user exists
+      const userQuery = await firestore()
+        .collection('users')
+        .where('email', '==', normalizedEmail)
+        .get();
+
+      console.log('User query result:', { exists: !userQuery.empty });
+
+      if (userQuery.empty) {
+        console.log('No user found with this email');
+        showToast('User not found', 'errorToast');
+        setLoading(false);
+        return;
+      }
+
+      // Get user data
+      const userData = userQuery.docs[0].data();
+      console.log('User data retrieved:', { userId: userData.userId });
+
+      // Verify password
+      if (userData.password !== password.trim()) {
+        console.log('Password mismatch');
+        showToast('Invalid password', 'errorToast');
+        setLoading(false);
+        return;
+      }
+
+      // Save user data to local storage with normalized email
+      await saveToLocal(
+        userData.userName.trim(),
+        normalizedEmail,
+        userData.userId
+      );
+      console.log('User data saved to local storage');
+
+      // Request notification permission and save token
+      try {
+        const permissionGranted = await notificationService.requestUserPermission();
+        if (permissionGranted) {
+          await notificationService.saveFCMToken(userData.userId);
+          console.log('FCM token saved');
+        }
+      } catch (error) {
+        console.error('Notification setup error:', error);
+        // Continue with login even if notification setup fails
+      }
+
+      // Proceed with login using normalized email
+      const response = await loginUser(normalizedEmail, password.trim());
+      console.log('Login response:', response);
+
+      if (response.success) {
+        console.log('Login successful, navigating...');
+        resetAndGo(navigation, STACK.MAIN, null);
+        showToast(appLang.loginSuccess, 'successToast');
+      } else {
+        console.log('Login failed:', response.errorMessage);
+        showToast(response.errorMessage, 'errorToast');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      showToast('An error occurred during login', 'errorToast');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const saveToLocal = async (name: string, email: string, userId: string) => {
+    try {
+      console.log('Saving to AsyncStorage:', { name, email, userId });
+      await AsyncStorage.multiSet([
+        ['NAME', name.trim()],
+        ['EMAIL', email],
+        ['USERID', userId],
+      ]);
+      console.log('Successfully saved to AsyncStorage');
+    } catch (error) {
+      console.error('Error saving to AsyncStorage:', error);
+      throw error;
+    }
+  };
+
   const styles = useMemo(() => {
     return StyleSheet.create({
       contentContainer: {
@@ -103,8 +180,8 @@ export const LoginScreen = () => {
         textTransform: "capitalize",
         marginBottom: hp(3)
       },
-      loginContainer:{
-        marginTop:hp(30)
+      loginContainer: {
+        marginTop: hp(30)
       }
     });
   }, [hp, wp]);
@@ -122,7 +199,7 @@ export const LoginScreen = () => {
           onChange={() => setWrongEmailError('')}
           bottomError={true}
         />
-        <Text style={[styles.label,{marginTop:hp(20)}]}>password</Text>
+        <Text style={[styles.label, { marginTop: hp(20) }]}>password</Text>
         <CustomInput
           value={password}
           setValue={setPassword}
@@ -141,11 +218,11 @@ export const LoginScreen = () => {
           Forgot Password?
         </Text>
         <View style={styles.loginContainer}>
-        <MainButton
-          onPress={handleLogin}
-          buttonText={appLang.login}
-          isLoading={loading}
-        />
+          <MainButton
+            onPress={handleLogin}
+            buttonText={appLang.login}
+            isLoading={loading}
+          />
         </View>
         <SocialLogins />
         <View style={styles.dontContainer}>

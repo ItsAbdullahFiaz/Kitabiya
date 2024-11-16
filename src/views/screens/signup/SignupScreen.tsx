@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { CustomInput, Header, MainButton, MainContainer, SocialLogins } from '../../../components';
 import { useResponsiveDimensions, useToast } from '../../../hooks';
-import { resetAndGo, setEmailError,setNameError, setPasswordError, validateEmail, validatePassword,validateName } from '../../../utils';
+import { resetAndGo, setEmailError, setNameError, setPasswordError, validateEmail, validatePassword, validateName } from '../../../utils';
 import { AppDataContext } from '../../../context';
 import { registerUser } from '../../../services';
 import { useNavigation } from '@react-navigation/native';
@@ -10,50 +10,108 @@ import { FONT_SIZE, STACK, TEXT_STYLE } from '../../../enums';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import uuid from 'react-native-uuid';
+import { notificationService } from '../../../services/NotificationService';
 
 export const SignupScreen = () => {
   const navigation = useNavigation();
   const { hp, wp } = useResponsiveDimensions();
   const { appTheme, appLang } = useContext(AppDataContext);
   const showToast = useToast();
-  const [userName,setUserName]=useState('');
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [userName, setUserName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [wrongNameError, setWrongNameError] = useState('');
   const [wrongEmailError, setWrongEmailError] = useState('');
   const [wrongPasswordError, setWrongPasswordError] = useState('');
 
-  const handleSignup = async () => {
-    const userId = uuid.v4();
-    await firestore().collection("users").doc(userId).set({userName,email,password,userId});
-    const res=await firestore().collection("users").where('email','==',email).get();
-    saveToLocal(res._docs[0].data().userName,res._docs[0].data().email,res._docs[0].data().userId)
-    console.log("SIGNUP_FIRESRORE_RES===",JSON.stringify(res._docs[0].data()));
-    const isEmailValid = validateEmail(email);
-    const isPasswordValid = validatePassword(password);
-    const isUserNameValid = validateName(userName);
-    setEmailError(email, isEmailValid, appLang, setWrongEmailError);
-    setPasswordError(password, isPasswordValid, appLang, setWrongPasswordError);
-    setNameError(userName, isUserNameValid, appLang, setWrongNameError);
-
-    if (isEmailValid && isPasswordValid) {
-      setLoading(true)
-      const response = await registerUser(email, password);
-      if (response.success) {
-        resetAndGo(navigation, STACK.MAIN, null)
-        showToast(appLang.signupSuccess, 'successToast')
-      } else {
-        showToast(response.errorMessage, 'errorToast')
-      }
-      setLoading(false)
+  const saveToLocal = async (name: string, email: string, userId: string) => {
+    try {
+      await AsyncStorage.multiSet([
+        ['NAME', name],
+        ['EMAIL', email],
+        ['USERID', userId],
+      ]);
+    } catch (error) {
+      console.error('Error saving to AsyncStorage:', error);
+      throw error;
     }
-  }
-  const saveToLocal=async(name:any,email:any,userId:any)=>{
-    await AsyncStorage.setItem("NAME",name);
-    await AsyncStorage.setItem("EMAIL",email);
-    await AsyncStorage.setItem("USERID",userId);
-  }
+  };
+
+  const handleSignup = async () => {
+    try {
+      const isEmailValid = validateEmail(email);
+      const isPasswordValid = validatePassword(password);
+      const isUserNameValid = validateName(userName);
+
+      setEmailError(email, isEmailValid, appLang, setWrongEmailError);
+      setPasswordError(password, isPasswordValid, appLang, setWrongPasswordError);
+      setNameError(userName, isUserNameValid, appLang, setWrongNameError);
+
+      if (!isEmailValid || !isPasswordValid || !isUserNameValid) {
+        return;
+      }
+
+      setLoading(true);
+
+      // Normalize email to lowercase
+      const normalizedEmail = email.toLowerCase().trim();
+
+      // Check if email already exists
+      const existingUser = await firestore()
+        .collection('users')
+        .where('email', '==', normalizedEmail)
+        .get();
+
+      if (!existingUser.empty) {
+        showToast('Email already exists', 'errorToast');
+        setLoading(false);
+        return;
+      }
+
+      // Generate userId
+      const userId = uuid.v4().toString();
+
+      // Get FCM token
+      const fcmToken = await notificationService.getFCMToken();
+
+      // Create user document with normalized email
+      await firestore().collection('users').doc(userId).set({
+        userName: userName.trim(),
+        email: normalizedEmail, // Store normalized email
+        password,
+        userId,
+        fcmToken,
+        createdAt: firestore.FieldValue.serverTimestamp()
+      });
+
+      // Save to local storage with normalized email
+      await saveToLocal(userName.trim(), normalizedEmail, userId);
+
+      // Register with authentication using normalized email
+      const response = await registerUser(normalizedEmail, password);
+
+      if (response.success) {
+        // Request notification permission and save token
+        const permissionGranted = await notificationService.requestUserPermission();
+        if (permissionGranted) {
+          await notificationService.saveFCMToken(userId);
+        }
+
+        resetAndGo(navigation, STACK.MAIN, null);
+        showToast(appLang.signupSuccess, 'successToast');
+      } else {
+        // If auth fails, delete the Firestore document
+        await firestore().collection('users').doc(userId).delete();
+        showToast(response.errorMessage, 'errorToast');
+      }
+    } catch (error) {
+      console.error('Signup error:', error);
+      showToast('An error occurred during signup', 'errorToast');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const styles = useMemo(() => {
     return StyleSheet.create({
@@ -67,11 +125,12 @@ export const SignupScreen = () => {
         textTransform: "capitalize",
         marginBottom: hp(3)
       },
-      signupContainer:{
-        marginTop:hp(40)
+      signupContainer: {
+        marginTop: hp(40)
       }
     });
   }, [hp]);
+
   return (
     <MainContainer>
       <Header title="sign up" />
@@ -95,7 +154,7 @@ export const SignupScreen = () => {
           onChange={() => setWrongEmailError('')}
           bottomError={true}
         />
-        <Text style={[styles.label,{marginTop:hp(20)}]}>password</Text>
+        <Text style={[styles.label, { marginTop: hp(20) }]}>password</Text>
         <CustomInput
           value={password}
           setValue={setPassword}
@@ -107,11 +166,11 @@ export const SignupScreen = () => {
           secureTextEntry={true}
         />
         <View style={styles.signupContainer}>
-        <MainButton
-          onPress={handleSignup}
-          buttonText={appLang.signUp}
-          isLoading={loading}
-        />
+          <MainButton
+            onPress={handleSignup}
+            buttonText={appLang.signUp}
+            isLoading={loading}
+          />
         </View>
         <SocialLogins />
       </View>
