@@ -7,6 +7,7 @@ import { useResponsiveDimensions } from '../../../hooks';
 import { useNavigation } from '@react-navigation/native';
 import { HeaderButtons, NewlyPublished, TopTrending } from './components';
 import { notificationService } from '../../../services/NotificationService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const HomeScreen = () => {
     const navigation = useNavigation();
@@ -14,15 +15,24 @@ export const HomeScreen = () => {
     const { hp, wp } = useResponsiveDimensions();
 
     useEffect(() => {
-        const requestNotificationPermission = async () => {
-            const permissionGranted = await notificationService.requestUserPermission();
-            if (permissionGranted) {
-                await notificationService.getFCMToken();
-                notificationService.onTokenRefresh();
+        const setupNotifications = async () => {
+            try {
+                // Request permission
+                const permissionGranted = await notificationService.requestUserPermission();
+                if (permissionGranted) {
+                    // Get userId from AsyncStorage
+                    const userId = await AsyncStorage.getItem('USERID');
+                    if (userId) {
+                        // Save FCM token
+                        await notificationService.saveFCMToken(userId);
+                    }
+                }
+            } catch (error) {
+                console.error('Error setting up notifications:', error);
             }
         };
 
-        requestNotificationPermission();
+        setupNotifications();
     }, []);
 
     const styles = useMemo(() => {

@@ -8,54 +8,44 @@ import { LeaderboardToast } from './components';
 import { AppDataContext } from './context';
 import { useResponsiveDimensions } from './hooks';
 import { notificationService } from './services/NotificationService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
   const { appTheme } = useContext(AppDataContext);
   const { wp, hp } = useResponsiveDimensions();
 
   useEffect(() => {
-    // Create default notification channel
-    notificationService.createDefaultChannel();
+    const setup = async () => {
+      // Create default notification channel
+      await notificationService.createDefaultChannel();
+
+      // Check for initial notification (app opened from quit state)
+      const initialNotification = await notifee.getInitialNotification();
+      if (initialNotification?.notification?.data?.type === 'chat') {
+        // Store this information somewhere to be used after navigation is ready
+        // You can use global state management (Redux/Context) or AsyncStorage
+        await AsyncStorage.setItem('initialNotification', JSON.stringify(initialNotification.notification.data));
+      }
+    };
+
+    setup();
 
     // Handle foreground messages from Firebase
     const unsubscribeForeground = messaging().onMessage(async remoteMessage => {
-      console.log('Foreground message received:', remoteMessage);
-
-      if (remoteMessage?.notification) {
-        // For notification messages, create a Notifee notification
-        await notifee.displayNotification({
-          title: remoteMessage.notification.title,
-          body: remoteMessage.notification.body,
-          data: remoteMessage.data,
-          android: {
-            channelId: 'default',
-            pressAction: {
-              id: 'default',
-            },
-            style: {
-              type: AndroidStyle.BIGTEXT,
-              text: remoteMessage.notification.body || ''
-            },
-          },
-        });
-      }
-    });
-
-    // Set up Notifee foreground event handler
-    const unsubscribeNotifee = notifee.onForegroundEvent(({ type, detail }) => {
-      switch (type) {
-        case EventType.PRESS:
-          console.log('User pressed notification', detail.notification);
-          break;
-        case EventType.DISMISSED:
-          console.log('User dismissed notification', detail.notification);
-          break;
+      if (remoteMessage.data?.type === 'chat') {
+        await notificationService.displayChatNotification(
+          remoteMessage.notification?.title || 'New Message',
+          remoteMessage.notification?.body || '',
+          {
+            senderId: remoteMessage.data.senderId,
+            receiverId: remoteMessage.data.receiverId
+          }
+        );
       }
     });
 
     return () => {
       unsubscribeForeground();
-      unsubscribeNotifee();
     };
   }, []);
 

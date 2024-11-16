@@ -1,6 +1,8 @@
 import messaging from '@react-native-firebase/messaging';
 import { Platform, PermissionsAndroid } from 'react-native';
 import notifee, { AndroidImportance, AndroidVisibility } from '@notifee/react-native';
+import firestore from '@react-native-firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class NotificationService {
     async requestUserPermission() {
@@ -64,6 +66,54 @@ class NotificationService {
                 },
             },
         });
+    }
+
+    async displayChatNotification(title: string, body: string, chatData: any) {
+        await notifee.displayNotification({
+            title,
+            body,
+            data: {
+                type: 'chat',
+                id: chatData.senderId,
+                userId: chatData.receiverId,
+                screen: 'CHAT'
+            },
+            android: {
+                channelId: 'default',
+                pressAction: {
+                    id: 'default',
+                },
+            },
+        });
+    }
+
+    async saveFCMToken(userId: string) {
+        try {
+            const token = await messaging().getToken();
+            console.log('Saving FCM token:', token, 'for user:', userId);
+
+            await firestore()
+                .collection('users')
+                .doc(userId)
+                .update({
+                    fcmToken: token,
+                });
+
+            // Set up token refresh listener
+            messaging().onTokenRefresh(async (newToken) => {
+                await firestore()
+                    .collection('users')
+                    .doc(userId)
+                    .update({
+                        fcmToken: newToken,
+                    });
+            });
+
+            return token;
+        } catch (error) {
+            console.error('Error saving FCM token:', error);
+            throw error;
+        }
     }
 }
 

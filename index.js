@@ -8,6 +8,7 @@ import notifee, { EventType } from '@notifee/react-native';
 import App from './src/App';
 import { name as appName } from './app.json';
 import { AppDataProvider } from './src/context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MainApp = () => (
     <AppDataProvider>
@@ -19,11 +20,16 @@ const MainApp = () => (
 messaging().setBackgroundMessageHandler(async remoteMessage => {
     console.log('Message handled in the background!', remoteMessage);
 
-    if (!remoteMessage.notification) {
+    if (remoteMessage.data?.type === 'chat') {
         await notifee.displayNotification({
-            title: remoteMessage.data?.title,
-            body: remoteMessage.data?.body,
-            data: remoteMessage.data,
+            title: remoteMessage.notification?.title || 'New Message',
+            body: remoteMessage.notification?.body || '',
+            data: {
+                type: 'chat',
+                id: remoteMessage.data.senderId,
+                userId: remoteMessage.data.receiverId,
+                screen: 'CHAT'
+            },
             android: {
                 channelId: 'default',
                 pressAction: {
@@ -37,7 +43,12 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
 // Handle background notification press events
 notifee.onBackgroundEvent(async ({ type, detail }) => {
     if (type === EventType.PRESS) {
-        console.log('User pressed notification in background', detail.notification);
+        const { notification } = detail;
+
+        // Store the notification data to be handled when app opens
+        if (notification?.data?.type === 'chat') {
+            await AsyncStorage.setItem('initialNotification', JSON.stringify(notification.data));
+        }
     }
 });
 
