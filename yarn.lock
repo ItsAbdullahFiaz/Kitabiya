@@ -1074,6 +1074,13 @@
   resolved "https://registry.npmjs.org/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@egjs/hammerjs@^2.0.17":
+  version "2.0.17"
+  resolved "https://registry.yarnpkg.com/@egjs/hammerjs/-/hammerjs-2.0.17.tgz#5dc02af75a6a06e4c2db0202cae38c9263895124"
+  integrity sha512-XQsZgjm2EcVUiZQf11UBJQfmZeEmOW8DpI1gsFeln6w0ae0ii4dMQEQ0kjl6DspdWX1aGY1/loyXnP0JS06e/A==
+  dependencies:
+    "@types/hammerjs" "^2.0.36"
+
 "@eslint-community/eslint-utils@^4.2.0", "@eslint-community/eslint-utils@^4.4.0":
   version "4.4.1"
   resolved "https://registry.npmjs.org/@eslint-community/eslint-utils/-/eslint-utils-4.4.1.tgz"
@@ -1497,6 +1504,21 @@
   version "1.0.1"
   resolved "https://registry.npmjs.org/@firebase/webchannel-wrapper/-/webchannel-wrapper-1.0.1.tgz"
   integrity sha512-jmEnr/pk0yVkA7mIlHNnxCi+wWzOFUg0WyIotgkKAb2u1J7fAeDBcVNSTjTihbAYNusCLQdW5s9IJ5qwnEufcQ==
+
+"@gorhom/bottom-sheet@^5.0.5":
+  version "5.0.5"
+  resolved "https://registry.yarnpkg.com/@gorhom/bottom-sheet/-/bottom-sheet-5.0.5.tgz#bf37be6463fa8133163d84428b71cde9bcb5707a"
+  integrity sha512-OPMbwrU/sx/o8AOHe4Bmthp0oR/a1jsTYmdjeGlnWmpnwAVa13QEALsgCm8WaDKA39qeoD7rT38e4/GYeL4myA==
+  dependencies:
+    "@gorhom/portal" "1.0.14"
+    invariant "^2.2.4"
+
+"@gorhom/portal@1.0.14":
+  version "1.0.14"
+  resolved "https://registry.yarnpkg.com/@gorhom/portal/-/portal-1.0.14.tgz#1953edb76aaba80fb24021dc774550194a18e111"
+  integrity sha512-MXyL4xvCjmgaORr/rtryDNFy3kU4qUbKlwtQqqsygd0xX3mhKjOLn6mQK8wfu0RkoE0pBE0nAasRoHua+/QZ7A==
+  dependencies:
+    nanoid "^3.3.1"
 
 "@grpc/grpc-js@~1.9.0":
   version "1.9.15"
@@ -2395,6 +2417,11 @@
   integrity sha512-olP3sd1qOEe5dXTSaFvQG+02VdRXcdytWLAZsAq1PecU8uqQAhkrnbli7DagjtXKW/Bl7YJbUsa8MPcuc8LHEQ==
   dependencies:
     "@types/node" "*"
+
+"@types/hammerjs@^2.0.36":
+  version "2.0.46"
+  resolved "https://registry.yarnpkg.com/@types/hammerjs/-/hammerjs-2.0.46.tgz#381daaca1360ff8a7c8dff63f32e69745b9fb1e1"
+  integrity sha512-ynRvcq6wvqexJ9brDMS4BnBLzmr0e14d6ZJTEShTBWKymQiHwlAyGu0ZPEFI2Fh1U53F7tN9ufClWM5KvqkKOw==
 
 "@types/hoist-non-react-statics@^3.3.1":
   version "3.3.5"
@@ -5789,7 +5816,7 @@ ms@2.1.3, ms@^2.1.3:
   resolved "https://registry.npmjs.org/ms/-/ms-2.1.3.tgz"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
 
-nanoid@3.3.7:
+nanoid@3.3.7, nanoid@^3.3.1:
   version "3.3.7"
   resolved "https://registry.npmjs.org/nanoid/-/nanoid-3.3.7.tgz"
   integrity sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==
@@ -6309,6 +6336,16 @@ react-native-fbsdk-next@^13.1.4:
   resolved "https://registry.npmjs.org/react-native-fbsdk-next/-/react-native-fbsdk-next-13.1.4.tgz"
   integrity sha512-cdCGxlvdXnGU9tG2QcriTULRKCSa83mLSHFQIlt+hG493ErMbY+QiRy0ipYTDsVC0/Xp6B9H+PAS9JZYq+B+nw==
 
+react-native-gesture-handler@^2.21.0:
+  version "2.21.0"
+  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.21.0.tgz#b8d8ed4bb4a1ade9d2071741b63f955831388969"
+  integrity sha512-8fR1a8EX1aP+TFGiF8pP3UJks2CcfEu7WZzctkJg1yu2DtbVu+uJB/kAPS1XuZxFBKn7pyJcwuQhzuhilzK4DA==
+  dependencies:
+    "@egjs/hammerjs" "^2.0.17"
+    hoist-non-react-statics "^3.3.0"
+    invariant "^2.2.4"
+    prop-types "^15.7.2"
+
 react-native-get-random-values@^1.11.0:
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/react-native-get-random-values/-/react-native-get-random-values-1.11.0.tgz#1ca70d1271f4b08af92958803b89dccbda78728d"
@@ -6331,6 +6368,11 @@ react-native-gifted-chat@^2.6.4:
     react-native-lightbox-v2 "^0.9.0"
     react-native-parsed-text "^0.0.22"
     uuid "^10.0.0"
+
+react-native-image-picker@^7.1.2:
+  version "7.1.2"
+  resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-7.1.2.tgz#383849d1953caf4578874a1f5e5dd11c737bd5cd"
+  integrity sha512-b5y5nP60RIPxlAXlptn2QwlIuZWCUDWa/YPUVjgHc0Ih60mRiOg1PSzf0IjHSLeOZShCpirpvSPGnDExIpTRUg==
 
 react-native-indicators@^0.17.0:
   version "0.17.0"
