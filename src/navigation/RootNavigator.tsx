@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import { NavigationHandler } from './NavigationHandler';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SCREENS, STACK } from '../enums';
 import { AuthStack, MainStack, OnboardingStack } from '.';
@@ -10,6 +11,7 @@ const Stack = createNativeStackNavigator();
 export const RootNavigator = () => {
     return (
         <NavigationContainer>
+            <NavigationHandler />
             <Stack.Navigator screenOptions={{ headerShown: false }}>
                 <Stack.Screen name={SCREENS.SPLASH} component={SplashScreen} />
                 <Stack.Screen name={STACK.ONBOARDING} component={OnboardingStack} />

@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 import { AnyIcon, IconType } from '../../../components';
 import { AppDataContext } from '../../../context';
 import { Text, View, StyleSheet, StatusBar, TouchableOpacity } from 'react-native';
@@ -6,11 +6,25 @@ import { FONT, FONT_SIZE, SCREENS } from '../../../enums';
 import { useResponsiveDimensions } from '../../../hooks';
 import { useNavigation } from '@react-navigation/native';
 import { HeaderButtons, NewlyPublished, TopTrending } from './components';
+import { notificationService } from '../../../services/NotificationService';
 
 export const HomeScreen = () => {
     const navigation = useNavigation();
     const { appTheme } = useContext(AppDataContext);
     const { hp, wp } = useResponsiveDimensions();
+
+    useEffect(() => {
+        const requestNotificationPermission = async () => {
+            const permissionGranted = await notificationService.requestUserPermission();
+            if (permissionGranted) {
+                await notificationService.getFCMToken();
+                notificationService.onTokenRefresh();
+            }
+        };
+
+        requestNotificationPermission();
+    }, []);
+
     const styles = useMemo(() => {
         return StyleSheet.create({
             container: {
