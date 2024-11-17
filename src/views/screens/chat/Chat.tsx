@@ -1,9 +1,9 @@
 import { StyleSheet } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Header, MainContainer } from '../../../components';
-import { GiftedChat } from 'react-native-gifted-chat';
+import { GiftedChat, IMessage } from 'react-native-gifted-chat';
 import firestore from '@react-native-firebase/firestore';
-import { notificationService } from '../../../services/NotificationService';
+import { NOTIFICATION_SERVER_URL } from '../../../config';
 
 export const Chat = ({ route }: any) => {
   const [messages, setMessages] = useState<any>([]);
@@ -12,13 +12,20 @@ export const Chat = ({ route }: any) => {
   // Fetch receiver's FCM token
   useEffect(() => {
     const getReceiverToken = async () => {
-      const userDoc = await firestore()
-        .collection('users')
-        .doc(route.params.data.userId)
-        .get();
+      try {
+        // Get receiver's token from Firestore
+        const userDoc = await firestore()
+          .collection('users')
+          .doc(route.params.data.userId)
+          .get();
 
-      if (userDoc.exists) {
-        setReceiverToken(userDoc.data()?.fcmToken || '');
+        if (userDoc.exists) {
+          const token = userDoc.data()?.fcmToken;
+          console.log('Receiver token:', token);
+          setReceiverToken(token || '');
+        }
+      } catch (error) {
+        console.error('Error fetching receiver token:', error);
       }
     };
 
@@ -49,35 +56,62 @@ export const Chat = ({ route }: any) => {
 
   const sendNotification = async (messageText: string) => {
     try {
-      const response = await fetch('https://fcm.googleapis.com/fcm/send', {
+      const url = `${NOTIFICATION_SERVER_URL}/send-notification`;
+      console.log('Sending notification to:', url);
+
+      const requestData = {
+        token: receiverToken,
+        title: route.params.data.userName || 'New Message',
+        body: messageText,
+        data: {
+          type: 'chat',
+          senderId: route.params.id,
+          receiverId: route.params.data.userId,
+          screen: 'CHAT'
+        }
+      };
+
+      console.log('Request data:', requestData);
+
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // Replace with your Firebase Server Key
-          'Authorization': 'key=YOUR_FIREBASE_SERVER_KEY'
+          'Accept': 'application/json',
         },
-        body: JSON.stringify({
-          to: receiverToken,
-          notification: {
-            title: route.params.data.userName || 'New Message',
-            body: messageText,
-          },
-          data: {
-            type: 'chat',
-            senderId: route.params.id,
-            receiverId: route.params.data.userId,
-            screen: 'CHAT'
-          },
-        }),
+        body: JSON.stringify(requestData),
       });
 
-      console.log('Notification sent:', await response.json());
+      console.log('Response status:', response.status);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        if (errorData.code === 'messaging/registration-token-not-registered') {
+          // Remove invalid token from database
+          await firestore()
+            .collection('users')
+            .doc(route.params.data.userId)
+            .update({
+              fcmToken: firestore.FieldValue.delete(),
+            });
+        }
+        throw new Error(errorData.error || 'Failed to send notification');
+      }
+
+      const result = await response.json();
+      console.log('Notification sent:', result);
     } catch (error) {
       console.error('Error sending notification:', error);
+      if (error instanceof Error) {
+        console.error('Error details:', {
+          message: error.message,
+          stack: error.stack
+        });
+      }
     }
   };
 
-  const onSend = useCallback(async (messages = []) => {
+  const onSend = useCallback(async (messages: IMessage[] = []) => {
     const msg = messages[0];
     const myMsg = {
       ...msg,
@@ -86,7 +120,7 @@ export const Chat = ({ route }: any) => {
       createdAt: new Date(),
     };
 
-    setMessages(previousMessages => GiftedChat.append(previousMessages, myMsg));
+    setMessages((previousMessages: IMessage[]) => GiftedChat.append(previousMessages, [myMsg]));
 
     // Save message to both users' chat collections
     await firestore()
@@ -112,7 +146,7 @@ export const Chat = ({ route }: any) => {
       <Header title="chat" />
       <GiftedChat
         messages={messages}
-        onSend={messages => onSend(messages)}
+        onSend={messages => onSend(messages as any)}
         user={{
           _id: route.params.id,
         }}
