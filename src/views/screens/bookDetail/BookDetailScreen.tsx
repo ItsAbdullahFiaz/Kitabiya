@@ -6,7 +6,7 @@ import { useResponsiveDimensions } from '../../../hooks';
 import { AppDataContext } from '../../../context';
 
 export const BookDetailScreen = ({ route }: any) => {
-  const {appTheme}=useContext(AppDataContext);
+  const {appTheme,appLang}=useContext(AppDataContext);
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleText = () => setIsExpanded(!isExpanded);
@@ -124,7 +124,7 @@ export const BookDetailScreen = ({ route }: any) => {
 
   return (
     <MainContainer>
-      <Header title="book detail" />
+      <Header title={appLang.bookdetail} />
       <View style={styles.introContainer}>
         <View style={styles.imgContainer}>
           <Image source={data.image} />
@@ -162,7 +162,7 @@ export const BookDetailScreen = ({ route }: any) => {
           {data.price > 0 ? (
             <Text style={styles.price}>{`$${data.price}`}</Text>
           ) : (
-            <Text style={styles.free}>free</Text>
+            <Text style={styles.free}>{appLang.free}</Text>
           )}
           <View
             style={{
@@ -181,18 +181,18 @@ export const BookDetailScreen = ({ route }: any) => {
         </View>
       </View>
       <View style={styles.detailsContainer}>
-        <Text style={styles.detailHeading}>details</Text>
+        <Text style={styles.detailHeading}>{appLang.details}</Text>
         <View style={styles.textContainer}>
           <Text style={styles.text}>
             {displayText}
             {!isExpanded && shouldShowReadMore && (
               <Text onPress={toggleText} style={styles.readMore}>
-                Read more
+                {appLang.Readmore}
               </Text>
             )}
             {isExpanded && shouldShowReadMore && (
               <Text onPress={toggleText} style={styles.readMore}>
-                Show less
+                {appLang.Showless}
               </Text>
             )}
           </Text>
@@ -201,7 +201,7 @@ export const BookDetailScreen = ({ route }: any) => {
       <View style={styles.chatBtnContainer}>
         <MainButton
           onPress={() => { }}
-          buttonText="chat now"
+          buttonText={appLang.chatnow}
         />
       </View>
     </MainContainer>

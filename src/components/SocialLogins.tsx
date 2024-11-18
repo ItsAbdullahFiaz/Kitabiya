@@ -129,7 +129,7 @@ const {appTheme,appLang}=useContext(AppDataContext);
       </TouchableOpacity>
       <TouchableOpacity style={[styles.socialBtnContainer, { marginTop: 20 }]} onPress={handleFacebookLogin}>
         <Image style={styles.btnIcon} source={require("../assets/images/facebook.png")} />
-        <Text style={styles.socialBtnText}>continuefacebook</Text>
+        <Text style={styles.socialBtnText}>{appLang.continuefacebook}</Text>
       </TouchableOpacity>
     </View>
   )

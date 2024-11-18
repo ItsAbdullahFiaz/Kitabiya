@@ -8,7 +8,7 @@ import { TEXT_STYLE } from '../../../enums';
 
 export const Terms = () => {
     const { wp, hp } = useResponsiveDimensions();
-    const { appTheme } = useContext(AppDataContext);
+    const { appTheme,appLang } = useContext(AppDataContext);
 
     const styles = useMemo(() => {
         return StyleSheet.create({
