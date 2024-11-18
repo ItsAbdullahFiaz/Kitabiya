@@ -9,7 +9,7 @@ import { FONT_SIZE, STACK } from '../enums';
 import { AppDataContext } from '../context';
 
 export const SocialLogins = () => {
-const {appTheme}=useContext(AppDataContext);
+const {appTheme,appLang}=useContext(AppDataContext);
   const navigation = useNavigation<any>();
   const { hp, wp } = useResponsiveDimensions();
   const [loading, setLoading] = useState(false);
@@ -120,16 +120,16 @@ const {appTheme}=useContext(AppDataContext);
       )}
       <View style={styles.lineContainer}>
         <View style={styles.line} />
-        <Text style={styles.text}>or</Text>
+        <Text style={styles.text}>{appLang.or}</Text>
         <View style={styles.line} />
       </View>
       <TouchableOpacity style={styles.socialBtnContainer} onPress={handleGoogleLogin}>
         <Image style={styles.btnIcon} source={require("../assets/images/google.png")} />
-        <Text style={styles.socialBtnText}>continue with google</Text>
+        <Text style={styles.socialBtnText}>{appLang.continuegoogle}</Text>
       </TouchableOpacity>
       <TouchableOpacity style={[styles.socialBtnContainer, { marginTop: 20 }]} onPress={handleFacebookLogin}>
         <Image style={styles.btnIcon} source={require("../assets/images/facebook.png")} />
-        <Text style={styles.socialBtnText}>continue with facebook</Text>
+        <Text style={styles.socialBtnText}>continuefacebook</Text>
       </TouchableOpacity>
     </View>
   )

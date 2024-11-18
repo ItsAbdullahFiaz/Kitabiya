@@ -13,7 +13,7 @@ import { MainButton, MainContainer, SocialLogins } from '../../../components';
 import { AppDataContext } from '../../../context';
 
 export const WelcomeScreen = () => {
-  const {appTheme}=useContext(AppDataContext);
+  const {appTheme,appLang}=useContext(AppDataContext);
   const navigation = useNavigation();
   const { hp, wp } = useResponsiveDimensions();
 
@@ -65,12 +65,12 @@ export const WelcomeScreen = () => {
         <View style={styles.contentContainer}>
           <MainButton
             onPress={() => navigation.navigate(SCREENS.LOGIN as never)}
-            buttonText="log in"
+            buttonText={appLang.titlelogin}
           />
           <TouchableOpacity
             style={styles.btnContainer}
             onPress={() => navigation.navigate(SCREENS.SIGNUP as never)}>
-            <Text style={styles.btnText}>sign up</Text>
+            <Text style={styles.btnText}>{appLang.signUp}</Text>
           </TouchableOpacity>
           <SocialLogins />
         </View>
