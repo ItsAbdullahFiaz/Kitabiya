@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import { AppDataContext } from '../../../../context';
 
 export const ContinueReading = () => {
-  const {appTheme}=useContext(AppDataContext);
+  const {appTheme,appLang}=useContext(AppDataContext);
   const navigation = useNavigation<any>();
   const { hp, wp } = useResponsiveDimensions();
   const styles = useMemo(() => {
@@ -83,9 +83,9 @@ export const ContinueReading = () => {
     <>
       <View style={{ padding: hp(16) }}>
         <View style={styles.header}>
-          <Text style={styles.title}>continue reading</Text>
+          <Text style={styles.title}>{appLang.continuereading}</Text>
           <TouchableOpacity>
-            <Text style={styles.btnText}>See more</Text>
+            <Text style={styles.btnText}>{appLang.Seemore}</Text>
           </TouchableOpacity>
         </View>
       </View>
