@@ -8,10 +8,14 @@ class NotificationService {
     async requestUserPermission() {
         try {
             if (Platform.OS === 'android') {
-                const granted = await PermissionsAndroid.request(
-                    PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
-                );
-                return granted === PermissionsAndroid.RESULTS.GRANTED;
+                if (Platform.Version >= 33) {
+                    const granted = await PermissionsAndroid.request(
+                        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
+                    )
+                    return granted === PermissionsAndroid.RESULTS.GRANTED;
+                } else {
+                    return true;
+                }
             } else {
                 const authStatus = await messaging().requestPermission();
                 return (

@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from "react-native";
 import React, { useMemo } from "react";
 import { useResponsiveDimensions } from "../hooks";
-import { GREYSCALE_COLORS, OTHER_COLORS } from "../enums";
+import { GREYSCALE_COLORS, OTHER_COLORS, STATUS_COLORS } from "../enums";
 
 interface LeaderboardToastProps {
     text1: string,
@@ -39,7 +39,7 @@ export const LeaderboardToast = (props: LeaderboardToastProps) => {
         });
     }, [wp, hp]);
 
-    const boxColor = type == "successLeaderboard" ? OTHER_COLORS.green : OTHER_COLORS.red;
+    const boxColor = type == "successLeaderboard" ? STATUS_COLORS.success : STATUS_COLORS.error;
     const isSuccess = type == "successLeaderboard";
     return (
         <View style={[styles.box_style, { backgroundColor: boxColor }]}>
