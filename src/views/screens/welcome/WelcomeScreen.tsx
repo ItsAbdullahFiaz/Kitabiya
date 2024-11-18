@@ -17,8 +17,6 @@ export const WelcomeScreen = () => {
   const navigation = useNavigation();
   const { hp, wp } = useResponsiveDimensions();
 
-
-
   const styles = useMemo(() => {
     return StyleSheet.create({
       innerContainer: {
