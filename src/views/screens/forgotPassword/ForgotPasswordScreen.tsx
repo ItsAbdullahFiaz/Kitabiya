@@ -53,15 +53,15 @@ export const ForgotPasswordScreen = () => {
 
   return (
     <MainContainer>
-      <Header title="forgot password" />
+      <Header title={appLang.forgotPassword} />
       <View style={styles.contentContainer}>
         <MainParagraph paragraph={appLang.resetInstructions} />
-        <Text style={styles.label}>email</Text>
+        <Text style={styles.label}>{appLang.email}</Text>
         <CustomInput
           value={email}
           setValue={setEmail}
-          //  placeholder={appLang.email}
-           placeholder={"Text your email"}
+           placeholder={appLang.textemail}
+         
           textWrong={wrongEmailError}
           onChange={() => setWrongEmailError('')}
           bottomError={true}
@@ -69,7 +69,7 @@ export const ForgotPasswordScreen = () => {
         <View style={styles.btnContainer}>
         <MainButton
           onPress={handleResetPassword}
-          buttonText={"confirm"}
+          buttonText={appLang.confirm}
           isLoading={loading}
         />
         </View>

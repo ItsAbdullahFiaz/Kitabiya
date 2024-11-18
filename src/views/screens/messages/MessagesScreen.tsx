@@ -57,7 +57,7 @@ const data = [
   },
 ]
 export const MessagesScreen = () => {
-  const { appTheme } = useContext(AppDataContext)
+  const { appTheme,appLang } = useContext(AppDataContext)
   const { hp, wp } = useResponsiveDimensions();
   const styles = useMemo(() => {
     return StyleSheet.create({
@@ -159,7 +159,7 @@ export const MessagesScreen = () => {
   }
   return (
     <MainContainer>
-      <Text style={styles.title}>message</Text>
+      <Text style={styles.title}>{appLang.message}</Text>
       <View style={styles.searchContainer}>
         <AnyIcon
           type={IconType.EvilIcons}
@@ -169,7 +169,7 @@ export const MessagesScreen = () => {
         />
         <TextInput
           style={styles.input}
-          placeholder="Search here"
+          placeholder={appLang.Searchhere}
           placeholderTextColor={appTheme.inputBorder}
         />
       </View>
