@@ -140,7 +140,7 @@ export const AccountScreen = () => {
         style={styles.logoutContainer}>
         <Text style={styles.logoutText}>{appLang.logout}</Text>
       </TouchableOpacity>
-      <Text style={styles.versionText}>Version {appVersion}</Text>
+      <Text style={styles.versionText}>{appLang.version} {appVersion}</Text>
     </MainContainer>
   );
 };
