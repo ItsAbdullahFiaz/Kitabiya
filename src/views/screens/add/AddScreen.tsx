@@ -19,6 +19,7 @@ import {
   Language,
   Location,
   Price,
+  RemoveSheet,
   Type,
 } from './components';
 import {AppDataContext} from '../../../context';
@@ -38,10 +39,16 @@ export const AddScreen = () => {
   const {appTheme} = useContext(AppDataContext);
   const {hp, wp} = useResponsiveDimensions();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
+  const [myIndex, setMyIndex] = useState<any>("");
 
   const handleModal = (val: any) => {
     setIsModalOpen(val);
   };
+
+  const handleRemoveModal=(val : any) =>{
+    setIsRemoveModalOpen(val); 
+  }
 
   const openImagePicker = () => {
     const options = {
@@ -86,6 +93,17 @@ export const AddScreen = () => {
       }
     });
   };
+
+  const handleOpenAndDelete=(index:number)=>{
+    setIsRemoveModalOpen(true);
+    setMyIndex(index);
+  }
+  const removeImage=(id:any)=>{
+    const remaining=imagesList.filter((item:any,index:any)=>index !== id);
+    console.log("REMAINING===>",remaining);
+    setImagesList(remaining);
+    setIsRemoveModalOpen(false);
+  }
 
   const styles = useMemo(() => {
     return StyleSheet.create({
@@ -243,10 +261,10 @@ export const AddScreen = () => {
                   <FlatList
                   horizontal
                   data={imagesList}
-                  renderItem={({item})=>{
-                    console.log("FLATLIST_IMAGE===>",item);
+                  renderItem={({item,index})=>{
+                    console.log("FLATLIST_INDEX===>",index);
                     return (
-                    <TouchableOpacity style={styles.listImg}>
+                    <TouchableOpacity style={styles.listImg} onPress={()=>handleOpenAndDelete(index)}>
                       <Image style={{width:"100%",height:"100%"}} source={{uri:item}}/>
                     </TouchableOpacity>
                     )
@@ -296,6 +314,13 @@ export const AddScreen = () => {
             handleModal={handleModal}
             handleCameraLaunch={handleCameraLaunch}
             openImagePicker={openImagePicker}
+          />
+        </Modal>
+        <Modal visible={isRemoveModalOpen} transparent>
+          <RemoveSheet
+          handleRemoveModal={handleRemoveModal}
+          removeImage={removeImage}
+          index={myIndex}
           />
         </Modal>
       </ScrollView>
