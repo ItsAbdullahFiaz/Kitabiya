@@ -11,7 +11,7 @@ import { AppDataContext } from '../../../context';
 
 export const AccountScreen = () => {
   const [userInfo, setUserInfo] = useState<any>('');
-  const [appVersion, setAppVersion] = useState('1.0.0');
+  const [appVersion, setAppVersion] = useState('1.0.1');
   const { appTheme, appLang } = useContext(AppDataContext);
   const { hp, wp } = useResponsiveDimensions();
   const navigation = useNavigation();
