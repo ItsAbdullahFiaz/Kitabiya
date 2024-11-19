@@ -118,7 +118,7 @@ export const HomeScreen = () => {
                                 />
                             </HeaderButtons>
                         </View>
-                        <HeaderButtons>
+                        <HeaderButtons onPress={() => navigation.navigate(SCREENS.NOTIFICATION as never)} >
                             <AnyIcon
                                 type={IconType.SimpleLineIcons}
                                 name="bell"
