@@ -172,6 +172,7 @@ export const LoginScreen = () => {
         ...TEXT_STYLE.regular,
         fontSize: hp(FONT_SIZE.h4),
         color: appTheme.link,
+
       },
       label: {
         ...TEXT_STYLE.regular,
@@ -188,22 +189,22 @@ export const LoginScreen = () => {
 
   return (
     <MainContainer>
-      <Header title="log in" />
+      <Header title={appLang.titlelogin} />
       <View style={styles.contentContainer}>
-        <Text style={styles.label}>email</Text>
+        <Text style={styles.label}>{appLang.email}</Text>
         <CustomInput
           value={email}
           setValue={setEmail}
-          placeholder={appLang.email}
+          placeholder={appLang.textemail}
           textWrong={wrongEmailError}
           onChange={() => setWrongEmailError('')}
           bottomError={true}
         />
-        <Text style={[styles.label, { marginTop: hp(20) }]}>password</Text>
+        <Text style={[styles.label, { marginTop: hp(20) }]}>{appLang.password}</Text>
         <CustomInput
           value={password}
           setValue={setPassword}
-          placeholder={appLang.password}
+          placeholder={appLang.textpassword}
           textWrong={wrongPasswordError}
           onChange={() => setWrongPasswordError('')}
           bottomError={true}
@@ -215,7 +216,7 @@ export const LoginScreen = () => {
           onPress={() =>
             navigation.navigate(SCREENS.FORGOT_PASSWORD as never)
           }>
-          Forgot Password?
+          {appLang.forgotPassword}
         </Text>
         <View style={styles.loginContainer}>
           <MainButton
@@ -226,8 +227,8 @@ export const LoginScreen = () => {
         </View>
         <SocialLogins />
         <View style={styles.dontContainer}>
-          <Text style={styles.dont}>Don't have an account?</Text>
-          <Text style={styles.register} onPress={() => navigation.navigate(SCREENS.SIGNUP as never)}>Register</Text>
+          <Text style={styles.dont}>{appLang.Dontaccount}</Text>
+          <Text style={styles.register} onPress={() => navigation.navigate(SCREENS.SIGNUP as never)}>{appLang.Register}</Text>
         </View>
       </View>
     </MainContainer>

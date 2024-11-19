@@ -9,7 +9,7 @@ import { AppDataContext } from '../../../context'
 
 const data = ['history', 'science fiction', 'families', 'humor', 'thriller', 'self-help', 'personal', 'the wood', 'adventure'];
 export const SearchScreen = () => {
-    const {appTheme}=useContext(AppDataContext);
+    const {appTheme ,appLang}=useContext(AppDataContext);
     const { hp, wp } = useResponsiveDimensions();
     const styles = useMemo(() => {
         return StyleSheet.create({
@@ -88,13 +88,13 @@ export const SearchScreen = () => {
                         color={appTheme.inputBorder}
                         size={16}
                     />
-                    <TextInput style={styles.input} placeholder='Search here' placeholderTextColor={appTheme.inputBorder} />
+                    <TextInput style={styles.input} placeholder={appLang.Searchhere} placeholderTextColor={appTheme.inputBorder} />
                 </View>
             </View>
             <View style={styles.recent}>
-                <Text style={styles.text}>recently</Text>
+                <Text style={styles.text}>{appLang.recently}</Text>
                 <TouchableOpacity>
-                    <Text style={styles.btnText}>Delete all</Text>
+                    <Text style={styles.btnText}>{appLang.Deleteall}</Text>
                 </TouchableOpacity>
             </View>
             <View style={styles.listContainer}>

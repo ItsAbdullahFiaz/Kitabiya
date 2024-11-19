@@ -1,4 +1,4 @@
-import { FlatList, Image, StyleSheet, Text, View } from 'react-native'
+import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useContext, useMemo } from 'react'
 import { useResponsiveDimensions } from '../../../../hooks'
 import { FONT, FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../../enums';
@@ -63,7 +63,7 @@ export const NewlyPublished = () => {
     const halfStars = rating - fullStars >= 0.5 ? 1 : 0;
     const emptyStars = 5 - fullStars - halfStars;
     return (
-      <View style={styles.card}>
+      <TouchableOpacity style={styles.card}>
         <View style={styles.imgContainer}>
           <Image style={styles.img} source={image} />
         </View>
@@ -101,7 +101,7 @@ export const NewlyPublished = () => {
         ) : (
           <Text style={styles.free}>free</Text>
         )}
-      </View>
+      </TouchableOpacity>
     )
   }
   return (

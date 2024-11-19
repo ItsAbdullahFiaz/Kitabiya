@@ -5,18 +5,21 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { useResponsiveDimensions } from '../../../hooks';
 import { useNavigation } from '@react-navigation/native';
 import { FONT, FONT_SIZE, OTHER_COLORS, STACK, TEXT_STYLE } from '../../../enums';
-import { MainContainer } from '../../../components';
+import { MainButton, MainContainer } from '../../../components';
 import { AppDataContext } from '../../../context';
 
 export const GetStartedScreen = () => {
-  const { appTheme } = useContext(AppDataContext);
+  const {appLang, appTheme } = useContext(AppDataContext);
   const navigation = useNavigation();
   const { hp, wp } = useResponsiveDimensions();
-
+  const [loading, setLoading] = useState(false);
+  const handleSwitch=()=>{
+    navigation.navigate(STACK.AUTH as never);
+  }
   const styles = useMemo(() => {
     return StyleSheet.create({
       img: {
@@ -50,7 +53,7 @@ export const GetStartedScreen = () => {
         height: hp(48),
         width: '100%',
         backgroundColor: appTheme.primary,
-        borderRadius: 8,
+        borderRadius: 12,
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: hp(50),
@@ -62,6 +65,9 @@ export const GetStartedScreen = () => {
         color: appTheme.primaryBackground,
         textTransform: 'capitalize',
       },
+      loginContainer:{
+        marginTop:hp(30)
+      }
     });
   }, [hp, wp]);
   return (
@@ -72,14 +78,18 @@ export const GetStartedScreen = () => {
           source={require('../../../assets/images/getStartedImage.png')}
         />
       </View>
-      <Text style={styles.heading}>increase your skill in no time</Text>
-      <Text style={styles.subHeading}>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-        eiusmod tempor
+      <Text style={styles.heading}>{appLang.increaseyourskill}</Text>
+      <Text style={styles.subHeading}>{appLang.lorem}
+        
       </Text>
-      <TouchableOpacity style={styles.btnContainer} onPress={() => navigation.navigate(STACK.AUTH as never)}>
-        <Text style={styles.btnText}>get started</Text>
-      </TouchableOpacity>
+      
+      <View style={styles.loginContainer}>
+        <MainButton
+          onPress={handleSwitch}
+          buttonText={appLang.getstart}
+          isLoading={loading}
+        />
+        </View>
     </MainContainer>
   );
 };

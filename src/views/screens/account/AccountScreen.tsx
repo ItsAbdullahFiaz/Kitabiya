@@ -11,7 +11,7 @@ import {AppDataContext} from '../../../context';
 
 export const AccountScreen = () => {
   const [userInfo, setUserInfo] = useState<any>('');
-  const {appTheme} = useContext(AppDataContext);
+  const {appTheme,appLang} = useContext(AppDataContext);
   const {hp, wp} = useResponsiveDimensions();
   const navigation = useNavigation();
   const userDetails = async () => {
@@ -81,7 +81,7 @@ export const AccountScreen = () => {
             size={hp(24)}
             color={appTheme.primary}
           />
-          <Text style={styles.btnText}>Profile</Text>
+          <Text style={styles.btnText}>{appLang.Profile}</Text>
         </TouchableOpacity>
         <View style={styles.border} />
         <TouchableOpacity style={styles.secondBtnContainer}>
@@ -92,9 +92,9 @@ export const AccountScreen = () => {
               size={hp(20)}
               color={appTheme.primary}
             />
-            <Text style={styles.btnText}>Language</Text>
+            <Text style={styles.btnText}>{appLang.Language}</Text>
           </View>
-          <Text>Enflish (US)</Text>
+          <Text>{appLang.English}</Text>
         </TouchableOpacity>
         <View style={styles.border} />
         <TouchableOpacity style={styles.btnContainer}>
@@ -104,7 +104,7 @@ export const AccountScreen = () => {
             size={hp(20)}
             color={appTheme.primary}
           />
-          <Text style={styles.btnText}>Privacy Policy</Text>
+          <Text style={styles.btnText}>{appLang.PrivacyPolicy}</Text>
         </TouchableOpacity>
         <View style={styles.border} />
         <TouchableOpacity style={styles.btnContainer}>
@@ -114,7 +114,7 @@ export const AccountScreen = () => {
             size={hp(20)}
             color={appTheme.primary}
           />
-          <Text style={styles.btnText}>Help Center</Text>
+          <Text style={styles.btnText}>{appLang.HelpCenter}</Text>
         </TouchableOpacity>
         <View style={styles.border} />
         <TouchableOpacity style={styles.btnContainer}>
@@ -124,13 +124,13 @@ export const AccountScreen = () => {
             size={hp(20)}
             color={appTheme.primary}
           />
-          <Text style={styles.btnText}>Setting</Text>
+          <Text style={styles.btnText}>{appLang.Setting}</Text>
         </TouchableOpacity>
       </View>
       <TouchableOpacity
         onPress={() => signOutUser(navigation)}
         style={styles.logoutContainer}>
-        <Text style={styles.logoutText}>log out</Text>
+        <Text style={styles.logoutText}>{appLang.logout}</Text>
       </TouchableOpacity>
     </MainContainer>
   );

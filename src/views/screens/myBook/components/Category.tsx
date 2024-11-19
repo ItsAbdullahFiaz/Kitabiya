@@ -6,7 +6,7 @@ import { topTrending } from '../../../../utils';
 import { AppDataContext } from '../../../../context';
 
 export const Category = () => {
-    const {appTheme} = useContext(AppDataContext);
+    const {appTheme,appLang} = useContext(AppDataContext);
     const { hp, wp } = useResponsiveDimensions();
     const styles = useMemo(() => {
         return StyleSheet.create({
@@ -67,7 +67,7 @@ export const Category = () => {
     }
     return (
         <>
-            <Text style={styles.title}>category</Text>
+            <Text style={styles.title}>{appLang.category}</Text>
             <View>
                 <FlatList
                     numColumns={3}

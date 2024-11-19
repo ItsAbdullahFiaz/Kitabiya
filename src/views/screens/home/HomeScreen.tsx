@@ -11,7 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const HomeScreen = () => {
     const navigation = useNavigation();
-    const { appTheme } = useContext(AppDataContext);
+    const { appTheme,appLang } = useContext(AppDataContext);
     const { hp, wp } = useResponsiveDimensions();
 
     useEffect(() => {
@@ -106,7 +106,7 @@ export const HomeScreen = () => {
             <StatusBar backgroundColor={appTheme.primary} barStyle={"light-content"} />
             <View style={styles.homeHeader}>
                 <View style={styles.headerContainer}>
-                    <Text style={styles.userName}>hello, emmie</Text>
+                    <Text style={styles.userName}>{appLang.helloemmie}</Text>
                     <View style={styles.iconContainer}>
                         <View style={styles.cartIconContainer}>
                             <HeaderButtons onPress={() => navigation.navigate(SCREENS.FAVOURITES as never)}>
@@ -137,18 +137,18 @@ export const HomeScreen = () => {
                             size={16}
                         />
                         {/* <TextInput style={{height:"100%"}} placeholder='Search here' placeholderTextColor={OTHER_COLORS.border}/> */}
-                        <Text style={styles.searchHere}>Search here</Text>
+                        <Text style={styles.searchHere}>{appLang.Searchhere}</Text>
                     </TouchableOpacity>
                 </View>
             </View>
             <View style={styles.topTrendingContainer}>
-                <Text style={styles.heading}>top trending</Text>
+                <Text style={styles.heading}>{appLang.Foryou}</Text>
                 <TopTrending />
             </View>
             <View style={styles.NewlyPublishedHeader}>
-                <Text style={styles.heading}>newly published</Text>
+                <Text style={styles.heading}>{appLang.NewlyAdded}</Text>
                 <TouchableOpacity>
-                    <Text>See more</Text>
+                    <Text>{appLang.Seemore}</Text>
                 </TouchableOpacity>
             </View>
             <View style={{ paddingLeft: 16, marginTop: 10 }}>
