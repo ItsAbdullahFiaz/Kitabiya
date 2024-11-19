@@ -14,7 +14,6 @@ export const BottomSheetComponent = ({
   const {appTheme} = useContext(AppDataContext);
   const {hp, wp} = useResponsiveDimensions();
   const handleSheetChanges = useCallback((index: number) => {
-    console.log('handleSheetChanges', index);
   }, []);
   const bottomSheetRef = useRef<BottomSheet>(null);
 
@@ -35,7 +34,6 @@ export const BottomSheetComponent = ({
         snapPoints={['25%']}
         enablePanDownToClose
         onClose={() => {
-          console.log('BottomSheet closed');
           handleModal(false);
         }}
         onChange={handleSheetChanges}

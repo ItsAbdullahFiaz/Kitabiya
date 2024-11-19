@@ -35,12 +35,46 @@ import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
 
 export const AddScreen = () => {
   const [imagesList,setImagesList]=useState<any>([]);
-  const [selectedImage, setSelectedImage] = useState<any>(null);
   const {appTheme} = useContext(AppDataContext);
   const {hp, wp} = useResponsiveDimensions();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
   const [myIndex, setMyIndex] = useState<any>("");
+  const [selected, setSelected] = useState(null);
+  const [type, setType] = useState("choose");
+  const [language, setLanguage] = useState("choose");
+  const [location, setLocation] = useState("choose");
+  const [bookTitle, setBookTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+
+    const handleSelect = (type : any) => {
+      setSelected(type);
+    };
+    const handleSelectType = (type : any) => {
+      console.log("TYPE===>",type);
+      setType(type);
+    };
+    const handleSelectLanguage = (type : any) => {
+      console.log("Language===>",type);
+      setLanguage(type);
+    };
+    const handleSelectLocation = (type : any) => {
+      console.log("Location===>",type);
+      setLocation(type);
+    };
+    const handleSelectTitle=(val : any)=>{
+      console.log("Book_TITLe===>",val);
+      setBookTitle(val);
+    }
+    const handleDescription=(val : any)=>{
+      console.log("Book_Description===>",val);
+      setDescription(val);
+    }
+    const handlePrice=(val : any)=>{
+      console.log("Book_Price===>",val);
+      setPrice(val);
+    }
 
   const handleModal = (val: any) => {
     setIsModalOpen(val);
@@ -65,7 +99,6 @@ export const AddScreen = () => {
         console.log('Image picker error: ', response.error);
       } else {
         let imageUri = response.uri || response.assets?.[0]?.uri;
-        console.log('IMAGE===>', imageUri);
         setImagesList((prev)=>[...prev,imageUri]);
         setIsModalOpen(false);
       }
@@ -87,7 +120,6 @@ export const AddScreen = () => {
         console.log('Camera Error: ', response.error);
       } else {
         let imageUri = response.uri || response.assets?.[0]?.uri;
-        console.log('IMAGE===>', imageUri);
         setImagesList((prev)=>[...prev,imageUri]);
         setIsModalOpen(false);
       }
@@ -100,7 +132,6 @@ export const AddScreen = () => {
   }
   const removeImage=(id:any)=>{
     const remaining=imagesList.filter((item:any,index:any)=>index !== id);
-    console.log("REMAINING===>",remaining);
     setImagesList(remaining);
     setIsRemoveModalOpen(false);
   }
@@ -262,7 +293,6 @@ export const AddScreen = () => {
                   horizontal
                   data={imagesList}
                   renderItem={({item,index})=>{
-                    console.log("FLATLIST_INDEX===>",index);
                     return (
                     <TouchableOpacity style={styles.listImg} onPress={()=>handleOpenAndDelete(index)}>
                       <Image style={{width:"100%",height:"100%"}} source={{uri:item}}/>
@@ -294,15 +324,15 @@ export const AddScreen = () => {
           </View>
           )}
         </View>
-        <Condition />
-        <Type />
-        <Language />
+        <Condition handleSelect={handleSelect} selected={selected}/>
+        <Type handleSelectType={handleSelectType} type={type}/>
+        <Language handleSelectLanguage={handleSelectLanguage} language={language}/>
         <View style={styles.border} />
-        <AdTitle />
-        <Description />
-        <Location />
+        <AdTitle bookTitlt={bookTitle} handleSelectTitle={handleSelectTitle}/>
+        <Description handleDescription={handleDescription} description={description}/>
+        <Location handleSelectLocation={handleSelectLocation} location={location}/>
         <View style={styles.border} />
-        <Price />
+        <Price handlePrice={handlePrice} price={price}/>
         <View style={styles.nextBtnContainer}>
           <MainButton
             onPress={() => console.warn('Pressed')}

@@ -5,14 +5,10 @@ import { useResponsiveDimensions } from '../../../../hooks';
 import { FONT_SIZE, TEXT_STYLE } from '../../../../enums';
 import { AnyIcon, IconType } from '../../../../components';
 
-export const Condition = () => {
+export const Condition = ({handleSelect,selected} : any) => {
     const {appTheme} = useContext(AppDataContext);
     const {hp,wp}=useResponsiveDimensions();
-    const [selected, setSelected] = useState(null);
-
-    const handleSelect = (type : any) => {
-      setSelected(type);
-    };
+    
 const styles = useMemo(()=>{
     return StyleSheet.create({
         titleContainer:{

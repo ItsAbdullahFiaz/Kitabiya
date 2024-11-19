@@ -5,7 +5,7 @@ import { useResponsiveDimensions } from '../../../../hooks';
 import { FONT, FONT_SIZE, TEXT_STYLE } from '../../../../enums';
 import { AnyIcon, IconType } from '../../../../components';
 
-export const Description = () => {
+export const Description = ({description,handleDescription}:any) => {
     const {appTheme} = useContext(AppDataContext);
   const { hp, wp } = useResponsiveDimensions();
 
@@ -54,10 +54,12 @@ export const Description = () => {
       </View>
       <TextInput
         multiline
+        value={description}
         numberOfLines={4}
         style={styles.input}
         placeholder="Describe the item you are selling"
         placeholderTextColor={appTheme.primaryTextColor}
+        onChangeText={val=>handleDescription(val)}
       />
     </View>
   );

@@ -5,7 +5,7 @@ import { useResponsiveDimensions } from '../../../../hooks';
 import { FONT_SIZE, TEXT_STYLE } from '../../../../enums';
 import { AnyIcon, IconType } from '../../../../components';
 
-export const Price = () => {
+export const Price = ({handlePrice,price}:any) => {
     const {appTheme} = useContext(AppDataContext);
     const {hp,wp}=useResponsiveDimensions();
 const styles = useMemo(()=>{
@@ -77,7 +77,7 @@ const styles = useMemo(()=>{
                 <Text style={styles.text}>rs</Text>
             </View>
             <View style={styles.inputContainers}>
-            <TextInput style={styles.input} placeholder='Enter price' placeholderTextColor={appTheme.grey}/>
+            <TextInput style={styles.input} keyboardType={"number-pad"} value={price} placeholder='Enter price' placeholderTextColor={appTheme.grey} onChangeText={val=>handlePrice(val)}/>
             </View>
         </View>
       </View>

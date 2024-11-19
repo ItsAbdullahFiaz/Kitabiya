@@ -11,11 +11,9 @@ export const RemoveSheet = ({
   removeImage,
   index
 }: any) => {
-    console.log("INDEX_ON_REMOVE_SHEET===>",index);
   const {appTheme} = useContext(AppDataContext);
   const {hp, wp} = useResponsiveDimensions();
   const handleSheetChanges = useCallback((index: number) => {
-    console.log('handleSheetChanges', index);
   }, []);
   const bottomSheetRef = useRef<BottomSheet>(null);
 
@@ -36,7 +34,6 @@ export const RemoveSheet = ({
         snapPoints={['25%']}
         enablePanDownToClose
         onClose={() => {
-          console.log('BottomSheet closed');
           handleRemoveModal(false);
         }}
         onChange={handleSheetChanges}
