@@ -1,18 +1,19 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useContext, useEffect, useMemo, useState} from 'react';
-import {AnyIcon, IconType, MainContainer} from '../../../components';
-import {useResponsiveDimensions} from '../../../hooks';
-import {FONT_SIZE, TEXT_STYLE} from '../../../enums';
-import {signOutUser} from '../../../services';
-import {useNavigation} from '@react-navigation/native';
+import { StyleSheet, Text, TouchableOpacity, View, NativeModules, Platform } from 'react-native';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { AnyIcon, IconType, MainContainer } from '../../../components';
+import { useResponsiveDimensions } from '../../../hooks';
+import { FONT_SIZE, TEXT_STYLE } from '../../../enums';
+import { signOutUser } from '../../../services';
+import { useNavigation } from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
-import {ProfileHeader} from './components';
-import {AppDataContext} from '../../../context';
+import { ProfileHeader } from './components';
+import { AppDataContext } from '../../../context';
 
 export const AccountScreen = () => {
   const [userInfo, setUserInfo] = useState<any>('');
-  const {appTheme,appLang} = useContext(AppDataContext);
-  const {hp, wp} = useResponsiveDimensions();
+  const [appVersion, setAppVersion] = useState('1.0.0');
+  const { appTheme, appLang } = useContext(AppDataContext);
+  const { hp, wp } = useResponsiveDimensions();
   const navigation = useNavigation();
   const userDetails = async () => {
     try {
@@ -67,6 +68,13 @@ export const AccountScreen = () => {
         fontSize: hp(FONT_SIZE.h3),
         color: appTheme.primary,
         textTransform: 'capitalize',
+      },
+      versionText: {
+        ...TEXT_STYLE.medium,
+        fontSize: hp(FONT_SIZE.h5),
+        color: appTheme.tertiaryTextColor,
+        textAlign: 'center',
+        marginTop: hp(20),
       },
     });
   }, [hp, wp]);
@@ -132,6 +140,7 @@ export const AccountScreen = () => {
         style={styles.logoutContainer}>
         <Text style={styles.logoutText}>{appLang.logout}</Text>
       </TouchableOpacity>
+      <Text style={styles.versionText}>Version {appVersion}</Text>
     </MainContainer>
   );
 };
