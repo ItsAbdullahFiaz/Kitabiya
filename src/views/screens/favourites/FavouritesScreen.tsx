@@ -7,7 +7,7 @@ import { topTrending } from '../../../utils'
 import { AppDataContext } from '../../../context'
 
 export const FavouritesScreen = () => {
-  const {appTheme}=useContext(AppDataContext);
+  const {appTheme,appLang}=useContext(AppDataContext);
   const { hp, wp } = useResponsiveDimensions();
   const styles = useMemo(() => {
     return StyleSheet.create({
@@ -76,7 +76,7 @@ export const FavouritesScreen = () => {
   }
   return (
     <MainContainer>
-      <Header title="favourites" />
+      <Header title={appLang.favourites} />
       <View style={styles.searchContainer}>
         <AnyIcon
           type={IconType.EvilIcons}
@@ -86,7 +86,7 @@ export const FavouritesScreen = () => {
         />
         <TextInput
           style={styles.input}
-          placeholder="Search here"
+          placeholder={appLang.Searchhere}
           placeholderTextColor={appTheme.inputBorder}
         />
       </View>

@@ -1,4 +1,4 @@
-import { FlatList, Image, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useContext, useMemo } from 'react';
 import { useResponsiveDimensions } from '../../../../hooks';
 import { topTrending } from '../../../../utils';
@@ -75,7 +75,7 @@ export const TopTrending = () => {
     const halfStars = rating - fullStars >= 0.5 ? 1 : 0;
     const emptyStars = 5 - fullStars - halfStars;
     return (
-      <View style={styles.card}>
+      <TouchableOpacity style={styles.card}>
         <View style={styles.leftContainer}>
           <View style={styles.imgContainer}>
             <Image style={styles.img} source={image} />
@@ -121,7 +121,7 @@ export const TopTrending = () => {
           />
           <Text style={styles.views}>237 views</Text>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
   return (

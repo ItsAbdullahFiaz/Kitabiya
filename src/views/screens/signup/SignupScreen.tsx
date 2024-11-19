@@ -133,7 +133,7 @@ export const SignupScreen = () => {
 
   return (
     <MainContainer>
-      <Header title="sign up" />
+      <Header title={appLang.signUp} />
       <View style={styles.contentContainer}>
         <Text style={styles.label}>Name</Text>
         <CustomInput
@@ -145,20 +145,20 @@ export const SignupScreen = () => {
           onChange={() => setWrongNameError('')}
           bottomError={true}
         />
-        <Text style={styles.label}>email</Text>
+        <Text style={styles.label}>{appLang.email}</Text>
         <CustomInput
           value={email}
           setValue={setEmail}
-          placeholder={appLang.email}
+          placeholder={appLang.textemail}
           textWrong={wrongEmailError}
           onChange={() => setWrongEmailError('')}
           bottomError={true}
         />
-        <Text style={[styles.label, { marginTop: hp(20) }]}>password</Text>
+        <Text style={[styles.label, { marginTop: hp(20) }]}>{appLang.password}</Text>
         <CustomInput
           value={password}
           setValue={setPassword}
-          placeholder={appLang.password}
+          placeholder={appLang.textpassword}
           textWrong={wrongPasswordError}
           onChange={() => setWrongPasswordError('')}
           bottomError={true}

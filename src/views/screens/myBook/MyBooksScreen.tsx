@@ -13,7 +13,7 @@ import { BookHeader, Category, ContinueReading } from './components';
 import { AppDataContext } from '../../../context';
 
 export const MyBooksScreen = () => {
-  const {appTheme}=useContext(AppDataContext);
+  const {appTheme,appLang}=useContext(AppDataContext);
   const navigation = useNavigation();
   const { hp, wp } = useResponsiveDimensions();
   const styles = useMemo(() => {
@@ -55,7 +55,7 @@ export const MyBooksScreen = () => {
           />
           <TextInput
             style={styles.input}
-            placeholder="Search here"
+            placeholder={appLang.Searchhere}
             placeholderTextColor={appTheme.inputBorder}
           />
         </View>

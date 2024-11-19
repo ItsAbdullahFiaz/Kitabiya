@@ -58,28 +58,28 @@ const data = [
     numberOfMessages: 0
   },
 ]
-let id='';
+let id = '';
 export const MessagesScreen = () => {
-  const navigation=useNavigation<any>();
-  const [users,setUsers]=useState([]);
-  const { appTheme } = useContext(AppDataContext)
+  const navigation = useNavigation<any>();
+  const [users, setUsers] = useState([]);
+  const { appTheme, appLang } = useContext(AppDataContext)
   const { hp, wp } = useResponsiveDimensions();
-  const getUsers=async()=>{
-    id = await AsyncStorage.getItem("USERID");
-    let tempArr=[];
-    const email=await AsyncStorage.getItem("EMAIL");
-    const res=await firestore().collection("users").where('email','!=',email).get();
-    if(res._docs !== []){
-      res._docs.map((item)=>{
+  const getUsers = async () => {
+    id = await AsyncStorage.getItem("USERID") || '';
+    let tempArr: any[] = [];
+    const email = await AsyncStorage.getItem("EMAIL");
+    const res = await firestore().collection("users").where('email', '!=', email).get();
+    if (res.docs.length > 0) {
+      res.docs.map((item) => {
         tempArr.push(item.data());
       });
     }
-    setUsers(tempArr);
-    console.log("MESSAGE_FIRESTORE_RESPONSE====>",JSON.stringify(res._docs[0].data()));
+    setUsers(tempArr as never[]);
+    console.log("MESSAGE_FIRESTORE_RESPONSE====>", JSON.stringify(res.docs[0].data()));
   }
-  useEffect(()=>{
+  useEffect(() => {
     getUsers();
-  },[])
+  }, [])
   const styles = useMemo(() => {
     return StyleSheet.create({
       title: {
@@ -180,7 +180,7 @@ export const MessagesScreen = () => {
   }
   return (
     <MainContainer>
-      <Text style={styles.title}>message</Text>
+      <Text style={styles.title}>{appLang.message}</Text>
       <View style={styles.searchContainer}>
         <AnyIcon
           type={IconType.EvilIcons}
@@ -190,25 +190,25 @@ export const MessagesScreen = () => {
         />
         <TextInput
           style={styles.input}
-          placeholder="Search here"
+          placeholder={appLang.Searchhere}
           placeholderTextColor={appTheme.inputBorder}
         />
       </View>
       <View style={styles.listContainer}>
         <FlatList
           data={users}
-          renderItem={({item,index})=>{
+          renderItem={({ item, index }: any) => {
             return (
-              <TouchableOpacity style={styles.card} onPress={()=>navigation.navigate(SCREENS.CHAT as never,{data:item,id:id})}>
-        <View style={styles.firstContainer}>
-          <View style={styles.imgContainer}>
-            <Image style={styles.img} source={require("../../../assets/images/user.png")} />
-          </View>
-          <View style={styles.textContainer}>
-            <Text style={styles.name}>{item.userName}</Text>
-          </View>
-        </View>
-      </TouchableOpacity>
+              <TouchableOpacity style={styles.card} onPress={() => navigation.navigate(SCREENS.CHAT as never, { data: item, id: id })}>
+                <View style={styles.firstContainer}>
+                  <View style={styles.imgContainer}>
+                    <Image style={styles.img} source={require("../../../assets/images/user.png")} />
+                  </View>
+                  <View style={styles.textContainer}>
+                    <Text style={styles.name}>{item.userName}</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
             )
           }}
         />

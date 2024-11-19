@@ -14,7 +14,7 @@ import { AnyIcon, IconType } from '../../../../components/AnyIcon';
 import { AppDataContext } from '../../../../context';
 
 export const MaybeYouLike = () => {
-  const {appTheme}=useContext(AppDataContext);
+  const {appTheme,appLang}=useContext(AppDataContext);
   const { hp, wp } = useResponsiveDimensions();
   const styles = useMemo(() => {
     return StyleSheet.create({
@@ -126,9 +126,9 @@ export const MaybeYouLike = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>maybe you like</Text>
+        <Text style={styles.title}>{appLang.maybeyoulike}</Text>
         <TouchableOpacity>
-          <Text style={styles.btnText}>See more</Text>
+          <Text style={styles.btnText}>{appLang.Seemore}</Text>
         </TouchableOpacity>
       </View>
       <View>
