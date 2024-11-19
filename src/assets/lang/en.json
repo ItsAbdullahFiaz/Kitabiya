@@ -79,5 +79,6 @@
   "checkYourEmail": "Check your email",
   "returnToLogin": "Return to login",
   "openEmailApp": "Open email app",
-  "emailInstructions": "We have sent a password recover instructions to your email. If you haven't received it in 5 minutes, check your spam."
+  "emailInstructions": "We have sent a password recover instructions to your email. If you haven't received it in 5 minutes, check your spam.",
+  "version":"Version"
 }

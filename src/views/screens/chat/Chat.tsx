@@ -56,7 +56,7 @@ export const Chat = ({ route }: any) => {
 
   const sendNotification = async (messageText: string) => {
     try {
-      const url = `${NOTIFICATION_SERVER_URL}/send-notification`;
+      const url = `${NOTIFICATION_SERVER_URL}/notifications/send`;
       console.log('Sending notification to:', url);
 
       const requestData = {
