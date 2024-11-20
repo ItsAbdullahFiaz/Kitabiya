@@ -5,7 +5,7 @@ import { FONT, FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../../enums';
 import { AnyIcon, IconType } from '../../../../components';
 import { AppDataContext } from '../../../../context';
 
-export const AdTitle = () => {
+export const AdTitle = ({bookTitle,handleSelectTitle}:any) => {
     const {appTheme} = useContext(AppDataContext);
     const {hp,wp}=useResponsiveDimensions();
 const styles = useMemo(()=>{
@@ -49,7 +49,8 @@ const styles = useMemo(()=>{
         color={appTheme.compulsory}
         />
         </View>
-        <TextInput style={styles.input} placeholder='Enter title' placeholderTextColor={appTheme.primaryTextColor}/>
+        <TextInput style={styles.input} value={bookTitle} placeholder='Enter title' placeholderTextColor={appTheme.primaryTextColor}
+        onChangeText={val=>handleSelectTitle(val)}/>
       </View>
   )
 }
