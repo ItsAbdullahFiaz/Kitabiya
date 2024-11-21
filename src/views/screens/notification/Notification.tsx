@@ -5,7 +5,6 @@ import { NotificationComponent } from './component'
 import { notificationData } from '../../../utils'
 
 export const Notification = () => {
-  // console.log("DATSSSSSSS===>",notificationData)
   return (
     <MainContainer>
       <Header title="notifications"/>

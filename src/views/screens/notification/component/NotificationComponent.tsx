@@ -5,11 +5,10 @@ import {
   View,
   Image,
 } from 'react-native';
-import React, {useMemo, useContext, useEffect, useState} from 'react';
+import React, {useMemo, useContext,} from 'react';
 import {AppDataContext} from '../../../../context';
 import {useResponsiveDimensions} from '../../../../hooks';
-import {FONT_SIZE, TEXT_STYLE} from '../../../../enums';
-import {AnyIcon, IconType} from '../../../../components';
+import {FONT_SIZE, TEXT_STYLE,} from '../../../../enums';
 export const NotificationComponent = ({
   id,
   title,
@@ -22,20 +21,21 @@ export const NotificationComponent = ({
     return StyleSheet.create({
       top222: {
         backgroundColor: appTheme.quaternaryTextColor,
-        height: hp(72),
+        height: hp(79),
         width:"100%",
-        // width: hp(335),
+        // width: hp(380),
         flexDirection: 'row',
         borderWidth: 1,
         borderColor: appTheme.nboder,
         borderRadius: hp(14),
         alignItems: 'center',
-        justifyContent:"space-around",
+        paddingHorizontal:14,
+        paddingVertical:16,
         marginTop: hp(15),
       },
       top1: {
-        width: hp(275),
-        height: hp(40),
+        width: hp(352),
+        height: hp(47),
         flexDirection: 'row',
       },
       top2: {
@@ -43,26 +43,25 @@ export const NotificationComponent = ({
         height: hp(40),
         justifyContent: 'center',
         alignItems: 'center',
+        
       },
       top3: {
-        width: hp(213),
-        height: hp(39),
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginLeft:16
-      },
-      top4: {width: hp(32),
-         height:hp(32), 
-        marginRight:hp(16)
-      },
-      textcolor: {
-        color: appTheme.ngray,
-        fontSize:FONT_SIZE.h5
+        width: hp(290),
+        height: hp(47),
+        paddingLeft:10
+        
       },
       textcolor1: {
+        ...TEXT_STYLE.medium,
         color:appTheme.black,
         fontSize:FONT_SIZE.h4, 
       },
+      textcolor: {
+        ...TEXT_STYLE.regular,
+        color: appTheme.ngray,
+        fontSize:FONT_SIZE.h5,
+      },
+      
       incricle333: {
         width:hp(40),
         height:hp(40),
@@ -84,15 +83,6 @@ export const NotificationComponent = ({
         margin: hp(10),
         borderColor: appTheme.quaternaryTextColor,
         borderWidth: 0.5,
-      },
-      incricle2: {
-        width:hp(40),
-        height:hp(40),
-        borderWidth: 1,
-        borderColor: appTheme.dark,
-        borderRadius: hp(12),
-        justifyContent: 'center',
-        alignItems: 'center',
       },
       img:
         {width: hp(20), height:hp(20),}
@@ -117,16 +107,6 @@ export const NotificationComponent = ({
             </View>
           </View>
         </View>
-        <TouchableOpacity style={styles.top4}>
-          <View style={styles.incricle2}>
-            <AnyIcon
-              type={IconType.SimpleLineIcons}
-              name="options"
-              size={15}
-              color={appTheme.primaryTextColor}
-            />
-          </View>
-        </TouchableOpacity>
       </TouchableOpacity>
     </View>
   );

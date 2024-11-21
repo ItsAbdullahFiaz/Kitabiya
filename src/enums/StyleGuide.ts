@@ -29,7 +29,7 @@ enum PRIMARY_COLORS_LIGHT {
     compulsory = "#d62828",
     ngray='#11111180',
     nboder='#EEEEEE',
-    black='#111111',
+    black='#161616',
     boderc= '#F0F1F4',
     dark='#D2D2D2'
 }
