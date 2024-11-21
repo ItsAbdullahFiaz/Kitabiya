@@ -27,7 +27,11 @@ enum PRIMARY_COLORS_LIGHT {
     imagePlaceholderColor = '#C4C4C4',
     secondaryBlack = '#161616',
     compulsory = "#d62828",
-    
+    ngray='#11111180',
+    nboder='#EEEEEE',
+    black='#111111',
+    boderc= '#F0F1F4',
+    dark='#D2D2D2'
 }
 
 enum PRIMARY_COLORS_DARK {
