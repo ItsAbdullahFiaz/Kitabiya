@@ -144,7 +144,11 @@ export const AddScreen = () => {
 
   const createFormData = async () => {
     const formData = new FormData();
-    const userId = "673f006b9fc60c8346368268";
+    const userId = await AsyncStorage.getItem('BACKEND_USERID');
+
+    if (!userId) {
+      throw new Error('User ID not found');
+    }
 
     // Add images
     imagesList.forEach((uri: string, index: number) => {
