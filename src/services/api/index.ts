@@ -9,10 +9,15 @@ interface UserData {
 }
 
 interface ProductData {
+    userId: string;
+    images: any[];
     title: string;
-    price: number;
-    images: File[];
-    // ... other product fields
+    price: string;
+    condition: string;
+    type: string;
+    language: string;
+    description: string;
+    location: string;
 }
 
 interface NotificationData {
@@ -38,7 +43,7 @@ export const apiService = {
         }),
 
     // Product APIs
-    createProduct: (productData: ProductData) =>
+    createProduct: (productData: FormData) =>
         ApiCall({
             URL: API_ENDPOINTS.PRODUCTS,
             verb: 'POST',
