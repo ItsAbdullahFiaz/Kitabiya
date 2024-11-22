@@ -31,7 +31,8 @@ export const SearchScreen = () => {
             input: {
                 height: "100%",
                 marginTop: hp(5),
-                paddingTop: hp(5)
+                paddingTop: hp(5),
+                color:appTheme.secondaryTextColor
             },
             recent: {
                 flexDirection: "row",

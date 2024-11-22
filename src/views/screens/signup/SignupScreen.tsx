@@ -145,7 +145,7 @@ export const SignupScreen = () => {
           onChange={() => setWrongNameError('')}
           bottomError={true}
         />
-        <Text style={styles.label}>{appLang.email}</Text>
+        <Text style={[styles.label, { marginTop: hp(20) }]}>{appLang.email}</Text>
         <CustomInput
           value={email}
           setValue={setEmail}

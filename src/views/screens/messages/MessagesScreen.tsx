@@ -104,6 +104,7 @@ export const MessagesScreen = () => {
         height: '100%',
         marginTop: hp(5),
         paddingTop: hp(5),
+        color:appTheme.secondaryTextColor
       },
       listContainer: {},
       card: {
