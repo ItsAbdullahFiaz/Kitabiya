@@ -19,53 +19,53 @@ export const NotificationComponent = ({
   const {hp, wp} = useResponsiveDimensions();
   const styles = useMemo(() => {
     return StyleSheet.create({
-      top222: {
+      container: {
         backgroundColor: appTheme.quaternaryTextColor,
         height: hp(79),
         width:"100%",
         // width: hp(380),
         flexDirection: 'row',
         borderWidth: 1,
-        borderColor: appTheme.nboder,
+        borderColor: appTheme.lightBorder,
         borderRadius: hp(14),
         alignItems: 'center',
         paddingHorizontal:14,
         paddingVertical:16,
         marginTop: hp(15),
       },
-      top1: {
+      row: {
         width: hp(352),
         height: hp(47),
         flexDirection: 'row',
       },
-      top2: {
+      iconWrapper: {
         width: hp(50),
         height: hp(40),
         justifyContent: 'center',
         alignItems: 'center',
         
       },
-      top3: {
+      textWrapper: {
         width: hp(290),
         height: hp(47),
         paddingLeft:10
         
       },
-      textcolor1: {
+      titleText: {
         ...TEXT_STYLE.medium,
-        color:appTheme.black,
+        color:appTheme.deepBlack,
         fontSize:FONT_SIZE.h4, 
       },
-      textcolor: {
+      subtitleText: {
         ...TEXT_STYLE.regular,
-        color: appTheme.ngray,
+        color: appTheme.semiTransparentGray,
         fontSize:FONT_SIZE.h5,
       },
       
-      incricle333: {
+      outerCircle: {
         width:hp(40),
         height:hp(40),
-        backgroundColor:appTheme.boderc,
+        backgroundColor:appTheme.lightBackground,
         borderRadius: hp(20),
         justifyContent: 'center',
         alignItems: 'center',
@@ -73,10 +73,10 @@ export const NotificationComponent = ({
         borderColor: appTheme.quaternaryTextColor,
         borderWidth: 1,
       },
-      incricle222: {
+      innerCircle: {
         width: hp(40),
         height: hp(40),
-        backgroundColor:appTheme.boderc,
+        backgroundColor:appTheme.lightBackground,
         borderRadius: hp(20),
         justifyContent: 'center',
         alignItems: 'center',
@@ -84,26 +84,26 @@ export const NotificationComponent = ({
         borderColor: appTheme.quaternaryTextColor,
         borderWidth: 0.5,
       },
-      img:
+      icon:
         {width: hp(20), height:hp(20),}
       
     });
   }, [hp, wp]);
   return (
     <View>
-      <TouchableOpacity style={styles.top222}>
-        <View style={styles.top1}>
-          <View style={styles.top2}>
-            <View style={styles.incricle222}>
-              <View style={styles.incricle333}>
-                <Image style={styles.img} source={image} />
+      <TouchableOpacity style={styles.container}>
+        <View style={styles.row}>
+          <View style={styles.iconWrapper}>
+            <View style={styles.innerCircle}>
+              <View style={styles.outerCircle}>
+                <Image style={styles.icon} source={image} />
               </View>
             </View>
           </View>
-          <View style={styles.top3}>
+          <View style={styles.textWrapper}>
             <View>
-              <Text style={styles.textcolor1}>{title}</Text>
-              <Text style={styles.textcolor}>{opportunities}</Text>
+              <Text style={styles.titleText}>{title}</Text>
+              <Text style={styles.subtitleText}>{opportunities}</Text>
             </View>
           </View>
         </View>
