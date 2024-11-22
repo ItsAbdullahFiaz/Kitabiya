@@ -77,7 +77,7 @@ export const apiService = {
 
     searchProducts: (searchParams: ProductSearchParams) =>
         ApiCall({
-            URL: API_ENDPOINTS.PRODUCTS + '/search',
+            URL: API_ENDPOINTS.PRODUCTS + `/search?query=${searchParams}&page=1&limit=10`,
             verb: 'GET',
             params: searchParams
         }),

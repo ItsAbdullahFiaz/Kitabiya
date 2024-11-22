@@ -1,16 +1,30 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useContext, useMemo } from 'react'
+import React, { useContext, useEffect, useMemo } from 'react'
 import { useResponsiveDimensions } from '../../../../hooks'
 import { FONT, FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE } from '../../../../enums';
 import { FlatList } from 'react-native';
 import { topTrending } from '../../../../utils';
 import { useNavigation } from '@react-navigation/native';
 import { AppDataContext } from '../../../../context';
+import auth from '@react-native-firebase/auth';
 
 export const ContinueReading = () => {
   const {appTheme,appLang}=useContext(AppDataContext);
   const navigation = useNavigation<any>();
   const { hp, wp } = useResponsiveDimensions();
+
+  const getUser=async()=>{
+    try {
+      const res=await auth().currentUser;
+      console.log("USER_ID===>",res?.uid);
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
+  useEffect(()=>{
+    getUser();
+  },[])
   const styles = useMemo(() => {
     return StyleSheet.create({
       header: {
