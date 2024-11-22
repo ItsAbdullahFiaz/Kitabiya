@@ -1,18 +1,21 @@
-import React, { useContext, useEffect, useMemo } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { AnyIcon, IconType } from '../../../components';
 import { AppDataContext } from '../../../context';
-import { Text, View, StyleSheet, StatusBar, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, StatusBar, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { FONT, FONT_SIZE, SCREENS } from '../../../enums';
 import { useResponsiveDimensions } from '../../../hooks';
 import { useNavigation } from '@react-navigation/native';
 import { HeaderButtons, NewlyPublished, TopTrending } from './components';
 import { notificationService } from '../../../services/NotificationService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { apiService } from '../../../services/api';
 
 export const HomeScreen = () => {
     const navigation = useNavigation();
-    const { appTheme,appLang } = useContext(AppDataContext);
+    const { appTheme, appLang } = useContext(AppDataContext);
     const { hp, wp } = useResponsiveDimensions();
+    const [newlyAddedProducts, setNewlyAddedProducts] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const setupNotifications = async () => {
@@ -34,6 +37,41 @@ export const HomeScreen = () => {
 
         setupNotifications();
     }, []);
+
+    useEffect(() => {
+        fetchProducts();
+    }, []);
+
+    const fetchProducts = async () => {
+        try {
+            setLoading(true);
+            const response = await apiService.getProducts();
+
+            if (response.error) {
+                throw new Error(response.message || 'Failed to fetch products');
+            }
+
+            // Assuming the API returns products sorted by createdAt
+            setNewlyAddedProducts(response.data || []);
+        } catch (error) {
+            console.error('Error fetching products:', error);
+            // You might want to show an error toast here
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const renderNewlyPublished = () => {
+        if (loading) {
+            return (
+                <View style={styles.loadingContainer}>
+                    <ActivityIndicator size="large" color={appTheme.primary} />
+                </View>
+            );
+        }
+
+        return <NewlyPublished products={newlyAddedProducts} />;
+    };
 
     const styles = useMemo(() => {
         return StyleSheet.create({
@@ -98,6 +136,11 @@ export const HomeScreen = () => {
                 fontFamily: FONT.PoppinsRegular,
                 color: appTheme.inputBorder,
                 marginLeft: hp(10)
+            },
+            loadingContainer: {
+                padding: 20,
+                alignItems: 'center',
+                justifyContent: 'center'
             }
         })
     }, [hp, wp])
@@ -147,12 +190,12 @@ export const HomeScreen = () => {
             </View>
             <View style={styles.NewlyPublishedHeader}>
                 <Text style={styles.heading}>{appLang.NewlyAdded}</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={fetchProducts}>
                     <Text>{appLang.Seemore}</Text>
                 </TouchableOpacity>
             </View>
             <View style={{ paddingLeft: 16, marginTop: 10 }}>
-                <NewlyPublished />
+                {renderNewlyPublished()}
             </View>
         </View>
     );

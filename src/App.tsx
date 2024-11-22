@@ -9,6 +9,7 @@ import { AppDataContext } from './context';
 import { useResponsiveDimensions } from './hooks';
 import { notificationService } from './services/NotificationService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { subscribeToTopics, unsubscribeFromTopics } from './utils/notifications';
 
 export default function App() {
   const { appTheme } = useContext(AppDataContext);
@@ -32,6 +33,7 @@ export default function App() {
 
     // Handle foreground messages from Firebase
     const unsubscribeForeground = messaging().onMessage(async remoteMessage => {
+      console.log('Foreground message:', remoteMessage);
       if (remoteMessage.data?.type === 'chat') {
         await notificationService.displayChatNotification(
           remoteMessage.notification?.title || 'New Message',
@@ -41,11 +43,21 @@ export default function App() {
             receiverId: remoteMessage.data.receiverId
           }
         );
+      } else {
+        await notificationService.displayNotification(
+          remoteMessage.notification?.title || 'New Message',
+          remoteMessage.notification?.body || ''
+        );
       }
     });
 
+    // Subscribe when app starts
+    subscribeToTopics();
+
     return () => {
       unsubscribeForeground();
+      // Unsubscribe when app is closed (optional)
+      unsubscribeFromTopics();
     };
   }, []);
 

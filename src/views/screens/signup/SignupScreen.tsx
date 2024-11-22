@@ -11,6 +11,7 @@ import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import uuid from 'react-native-uuid';
 import { notificationService } from '../../../services/NotificationService';
+import { apiService } from '../../../services/api';
 
 export const SignupScreen = () => {
   const navigation = useNavigation();
@@ -97,6 +98,19 @@ export const SignupScreen = () => {
         if (permissionGranted) {
           await notificationService.saveFCMToken(userId);
         }
+
+        // Call API for registration
+        const registerApiResponse = await apiService.registerUser({
+          name: userName.trim(),
+          email: normalizedEmail,
+        });
+
+        if (registerApiResponse.error) {
+          throw new Error(registerApiResponse.message || 'Registration failed');
+        }
+
+        // Save API user IDs
+        await AsyncStorage.setItem('BACKEND_USERID', registerApiResponse.user.id);
 
         resetAndGo(navigation, STACK.MAIN, null);
         showToast(appLang.signupSuccess, 'successToast');
