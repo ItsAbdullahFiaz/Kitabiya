@@ -10,6 +10,7 @@ import { loginUser } from '../../../services';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { notificationService } from '../../../services/NotificationService';
+import { apiService } from '../../../services/api';
 
 export const LoginScreen = () => {
   const navigation = useNavigation();
@@ -40,7 +41,6 @@ export const LoginScreen = () => {
       // Normalize email
       const normalizedEmail = email.toLowerCase().trim();
       console.log('Normalized email:', normalizedEmail);
-
       // First check if user exists
       const userQuery = await firestore()
         .collection('users')
@@ -75,6 +75,19 @@ export const LoginScreen = () => {
         userData.userId
       );
       console.log('User data saved to local storage');
+
+      // Call API for login
+      const registerApiResponse = await apiService.registerUser({
+        name: userData.userName.trim(),
+        email: normalizedEmail,
+      });
+
+      if (registerApiResponse.error) {
+        throw new Error(registerApiResponse.message || 'Login failed');
+      }
+
+      // Save API user ID
+      await AsyncStorage.setItem('BACKEND_USERID', registerApiResponse.user.id);
 
       // Request notification permission and save token
       try {

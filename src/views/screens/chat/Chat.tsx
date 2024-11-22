@@ -7,6 +7,7 @@ import { NOTIFICATION_SERVER_URL } from '../../../config';
 import { useResponsiveDimensions } from '../../../hooks';
 import { FONT_SIZE, TEXT_STYLE } from '../../../enums';
 import { AppDataContext } from '../../../context';
+import { apiService } from '../../../services/api';
 
 export const Chat = ({ route }: any) => {
   const {appTheme}=useContext(AppDataContext);
@@ -61,10 +62,7 @@ export const Chat = ({ route }: any) => {
 
   const sendNotification = async (messageText: string) => {
     try {
-      const url = `${NOTIFICATION_SERVER_URL}/notifications/send`;
-      console.log('Sending notification to:', url);
-
-      const requestData = {
+      const notificationData = {
         token: receiverToken,
         title: route.params.data.userName || 'New Message',
         body: messageText,
@@ -76,22 +74,10 @@ export const Chat = ({ route }: any) => {
         }
       };
 
-      console.log('Request data:', requestData);
+      const response = await apiService.sendNotification(notificationData);
 
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify(requestData),
-      });
-
-      console.log('Response status:', response.status);
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        if (errorData.code === 'messaging/registration-token-not-registered') {
+      if (response.error) {
+        if (response.code === 'messaging/registration-token-not-registered') {
           // Remove invalid token from database
           await firestore()
             .collection('users')
@@ -100,11 +86,10 @@ export const Chat = ({ route }: any) => {
               fcmToken: firestore.FieldValue.delete(),
             });
         }
-        throw new Error(errorData.error || 'Failed to send notification');
+        throw new Error(response.message || 'Failed to send notification');
       }
 
-      const result = await response.json();
-      console.log('Notification sent:', result);
+      console.log('Notification sent:', response);
     } catch (error) {
       console.error('Error sending notification:', error);
       if (error instanceof Error) {
@@ -125,24 +110,33 @@ export const Chat = ({ route }: any) => {
       createdAt: new Date(),
     };
 
-    setMessages((previousMessages: IMessage[]) => GiftedChat.append(previousMessages, [myMsg]));
+    setMessages((previousMessages: IMessage[]) =>
+      GiftedChat.append(previousMessages, [myMsg])
+    );
 
-    // Save message to both users' chat collections
-    await firestore()
-      .collection('chats')
-      .doc(route.params.id + '-' + route.params.data.userId)
-      .collection('messages')
-      .add(myMsg);
+    try {
+      // Save message to both users' chat collections
+      await Promise.all([
+        firestore()
+          .collection('chats')
+          .doc(`${route.params.id}-${route.params.data.userId}`)
+          .collection('messages')
+          .add(myMsg),
 
-    await firestore()
-      .collection('chats')
-      .doc(route.params.data.userId + '-' + route.params.id)
-      .collection('messages')
-      .add(myMsg);
+        firestore()
+          .collection('chats')
+          .doc(`${route.params.data.userId}-${route.params.id}`)
+          .collection('messages')
+          .add(myMsg)
+      ]);
 
-    // Send notification to receiver
-    if (receiverToken) {
-      await sendNotification(msg.text);
+      // Send notification to receiver
+      if (receiverToken) {
+        await sendNotification(msg.text);
+      }
+    } catch (error) {
+      console.error('Error in onSend:', error);
+      // You might want to show an error toast here
     }
   }, [route.params.id, route.params.data.userId, receiverToken]);
 
