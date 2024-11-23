@@ -51,9 +51,9 @@ export const AddScreen = ({ route }: any) => {
   const [type, setType] = useState(dataType === 'edit' ? data?.type : "choose");
   const [language, setLanguage] = useState(dataType === 'edit' ? data?.language : "choose");
   const [location, setLocation] = useState(dataType === 'edit' ? data?.locationAddress : "choose");
-  const [bookTitle, setBookTitle] = useState("");
+  const [bookTitle, setBookTitle] = useState(dataType === 'edit' ? data?.title : "");
   const [description, setDescription] = useState(dataType === 'edit' ? data?.description : "");
-  const [price, setPrice] = useState(dataType === 'edit' ? data?.price : "");
+  const [price, setPrice] = useState(dataType === 'edit' ? data?.price?.toString() : "");
   const [loading, setLoading] = useState(false);
   const showToast = useToast();
   const navigation = useNavigation<any>();
@@ -435,7 +435,7 @@ export const AddScreen = ({ route }: any) => {
         <Type handleSelectType={handleSelectType} type={type} />
         <Language handleSelectLanguage={handleSelectLanguage} language={language} />
         <View style={styles.border} />
-        <AdTitle bookTitlt={bookTitle} handleSelectTitle={handleSelectTitle} />
+        <AdTitle bookTitle={bookTitle} handleSelectTitle={handleSelectTitle} />
         <Description handleDescription={handleDescription} description={description} />
         <Location handleSelectLocation={handleSelectLocation} location={location} />
         <View style={styles.border} />
