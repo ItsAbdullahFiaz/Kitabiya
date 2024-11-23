@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 import React, { useContext, useMemo, useState } from 'react';
-import { FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../enums';
+import { FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE } from '../../../enums';
 import { useResponsiveDimensions, useToast } from '../../../hooks';
 import {
   AdTitle,
@@ -57,6 +57,27 @@ export const AddScreen = ({ route }: any) => {
   const [loading, setLoading] = useState(false);
   const showToast = useToast();
   const navigation = useNavigation<any>();
+
+  const updateProduct = async (productId:any) => {
+    try {
+      setLoading(true);
+      const formData = await createFormData();
+      const response = await apiService.updateProduct(productId,formData);
+      console.log(
+        'PRODUCTS_BY_USERID_RESPONSE===>',
+        JSON.stringify(response.data),
+      );
+      navigation.navigate(SCREENS.MY_BOOK as never);
+      if (response.error) {
+        throw new Error(response.message || 'Failed to fetch products');
+      }
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      // You might want to show an error toast here
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSelect = (type: any) => {
     setSelected(type);
@@ -443,7 +464,7 @@ export const AddScreen = ({ route }: any) => {
         <View style={styles.nextBtnContainer}>
           {dataType === 'edit' ? (
             <MainButton
-              onPress={handleSubmit}
+              onPress={()=>updateProduct(data?._id)}
               buttonText="Update"
               isLoading={loading}
               disableBtn={loading}
