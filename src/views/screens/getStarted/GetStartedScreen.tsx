@@ -48,6 +48,7 @@ export const GetStartedScreen = () => {
         fontSize: 14,
         fontWeight: 'regular',
         marginTop: hp(20),
+        color:appTheme.tertiaryTextColor
       },
       btnContainer: {
         height: hp(48),
