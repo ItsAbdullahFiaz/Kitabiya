@@ -38,20 +38,22 @@ import { useNavigation } from '@react-navigation/native';
 
 export const AddScreen = ({route}:any) => {
   const { dataType } = route.params || 'add';
+  const {data} = route.params || [];
   console.log("TYPE===>",dataType);
-  const [imagesList, setImagesList] = useState<any>([]);
+  console.log("TYPE_DATA===>",data);
+  const [imagesList, setImagesList] = useState<any>(dataType==='edit' ? data?.images : []);
   const { appTheme } = useContext(AppDataContext);
   const { hp, wp } = useResponsiveDimensions();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
   const [myIndex, setMyIndex] = useState<any>("");
-  const [selected, setSelected] = useState(null);
-  const [type, setType] = useState("choose");
-  const [language, setLanguage] = useState("choose");
-  const [location, setLocation] = useState("choose");
+  const [selected, setSelected] = useState(dataType==='edit' ? data?.condition : null);
+  const [type, setType] = useState(dataType==='edit' ? data?.type : "choose");
+  const [language, setLanguage] = useState(dataType==='edit' ? data?.language : "choose");
+  const [location, setLocation] = useState(dataType==='edit' ? data?.locationAddress : "choose");
   const [bookTitle, setBookTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
+  const [description, setDescription] = useState(dataType==='edit' ? data?.description : "");
+  const [price, setPrice] = useState(dataType==='edit' ? data?.price : "");
   const [loading, setLoading] = useState(false);
   const showToast = useToast();
   const navigation = useNavigation<any>();
@@ -358,8 +360,8 @@ export const AddScreen = ({route}:any) => {
   return (
     <MainContainer>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        {/* <Header title={dataType === 'edit' ? 'edit ad details' : 'ad Details'} /> */}
-        <Header title="ad details"/>
+        <Header title={dataType === 'edit' ? 'edit ad details' : 'ad Details'} />
+        {/* <Header title="ad details"/> */}
         <View style={styles.categoryContainer}>
           <View style={styles.titleContainer}>
             <Text style={styles.title}>Category</Text>
@@ -439,12 +441,21 @@ export const AddScreen = ({route}:any) => {
         <View style={styles.border} />
         <Price handlePrice={handlePrice} price={price} />
         <View style={styles.nextBtnContainer}>
-          <MainButton
+          {dataType==='edit' ? (
+            <MainButton
+            onPress={handleSubmit}
+            buttonText="Update"
+            isLoading={loading}
+            disableBtn={loading}
+          />
+          ):(
+            <MainButton
             onPress={handleSubmit}
             buttonText="Next"
             isLoading={loading}
             disableBtn={loading}
           />
+          )}
         </View>
         <Modal visible={isModalOpen} transparent>
           <BottomSheetComponent
