@@ -14,7 +14,7 @@ import { AnyIcon, IconType } from '../../../../components/AnyIcon';
 import { AppDataContext } from '../../../../context';
 
 export const MaybeYouLike = () => {
-  const {appTheme,appLang}=useContext(AppDataContext);
+  const { appTheme, appLang } = useContext(AppDataContext);
   const { hp, wp } = useResponsiveDimensions();
   const styles = useMemo(() => {
     return StyleSheet.create({
@@ -35,7 +35,7 @@ export const MaybeYouLike = () => {
       btnText: {
         ...TEXT_STYLE.regular,
         fontSize: hp(FONT_SIZE.h4),
-        color: appTheme.link,
+        color: appTheme.interactive,
       },
       card: {
         height: hp(70),
@@ -65,13 +65,13 @@ export const MaybeYouLike = () => {
       name: {
         ...TEXT_STYLE.medium,
         fontSize: hp(FONT_SIZE.h4),
-        color: appTheme.secondaryBlack,
+        color: appTheme.secondaryTextColor,
         textTransform: 'capitalize',
       },
       author: {
         ...TEXT_STYLE.regular,
         fontSize: hp(FONT_SIZE.h5),
-        color: appTheme.grey,
+        color: appTheme.tertiaryTextColor,
         textTransform: 'capitalize',
       },
       columnWrapper: {
@@ -99,7 +99,7 @@ export const MaybeYouLike = () => {
                 key={index}
                 name="star"
                 size={hp(FONT_SIZE.h6)}
-                color={appTheme.star}
+                color={OTHER_COLORS.yellow}
               />
             ))}
             {halfStars === 1 && (
@@ -107,7 +107,7 @@ export const MaybeYouLike = () => {
                 type={IconType.FontAwesome}
                 name="star-half"
                 size={hp(FONT_SIZE.h6)}
-                color={appTheme.star}
+                color={OTHER_COLORS.yellow}
               />
             )}
             {[...Array(emptyStars)].map((_, index) => (
@@ -115,7 +115,7 @@ export const MaybeYouLike = () => {
                 type={IconType.FontAwesome}
                 name="star-o"
                 size={hp(FONT_SIZE.h6)}
-                color={appTheme.star}
+                color={OTHER_COLORS.yellow}
               />
             ))}
           </View>

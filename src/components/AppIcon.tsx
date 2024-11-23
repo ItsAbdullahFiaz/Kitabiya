@@ -3,7 +3,6 @@ import React, { useMemo } from 'react'
 import { useResponsiveDimensions } from '../hooks';
 
 export const AppIcon = () => {
-
     const { wp, hp } = useResponsiveDimensions()
 
     const styles = useMemo(() => {

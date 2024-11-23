@@ -2,7 +2,6 @@ import messaging from '@react-native-firebase/messaging';
 import { Platform, PermissionsAndroid } from 'react-native';
 import notifee, { AndroidImportance, AndroidVisibility } from '@notifee/react-native';
 import firestore from '@react-native-firebase/firestore';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class NotificationService {
     async requestUserPermission() {

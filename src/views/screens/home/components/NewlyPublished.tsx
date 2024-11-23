@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { AppDataContext } from '../../../../context';
+import { SCREENS } from '../../../../enums';
 
 interface Product {
   _id: string;
@@ -31,7 +32,7 @@ export const NewlyPublished = ({ products }: NewlyPublishedProps) => {
   const renderItem = ({ item }: { item: Product }) => (
     <TouchableOpacity
       style={styles.productCard}
-      onPress={() => navigation.navigate('ProductDetails', { product: item })}
+      onPress={() => navigation.navigate(SCREENS.BOOK_DETAIL, { product: item })}
     >
       <Image
         source={getImageSource(item.images)}

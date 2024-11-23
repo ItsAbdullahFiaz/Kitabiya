@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 import React, { useContext, useMemo, useState } from 'react';
-import { FONT_SIZE, TEXT_STYLE } from '../../../enums';
+import { FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../enums';
 import { useResponsiveDimensions, useToast } from '../../../hooks';
 import {
   AdTitle,
@@ -36,9 +36,9 @@ import { apiService } from '../../../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
-export const AddScreen = ({route}:any) => {
+export const AddScreen = ({ route }: any) => {
   const { dataType } = route.params || 'add';
-  console.log("TYPE===>",dataType);
+  console.log("TYPE===>", dataType);
   const [imagesList, setImagesList] = useState<any>([]);
   const { appTheme } = useContext(AppDataContext);
   const { hp, wp } = useResponsiveDimensions();
@@ -279,7 +279,7 @@ export const AddScreen = ({route}:any) => {
         width: '100%',
         height: hp(252),
         borderWidth: 0.5,
-        borderColor: appTheme.grey,
+        borderColor: appTheme.borderDefault,
         borderRadius: hp(8),
         justifyContent: 'center',
         alignItems: 'center',
@@ -290,7 +290,7 @@ export const AddScreen = ({route}:any) => {
         width: '100%',
         height: hp(152),
         borderWidth: 0.5,
-        borderColor: appTheme.grey,
+        borderColor: appTheme.borderDefault,
         borderRadius: hp(8),
         justifyContent: "space-between"
       },
@@ -359,7 +359,7 @@ export const AddScreen = ({route}:any) => {
     <MainContainer>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         {/* <Header title={dataType === 'edit' ? 'edit ad details' : 'ad Details'} /> */}
-        <Header title="ad details"/>
+        <Header title="ad details" />
         <View style={styles.categoryContainer}>
           <View style={styles.titleContainer}>
             <Text style={styles.title}>Category</Text>
@@ -367,7 +367,7 @@ export const AddScreen = ({route}:any) => {
               type={IconType.FontAwesome5}
               name="star-of-life"
               size={hp(8)}
-              color={appTheme.compulsory}
+              color={OTHER_COLORS.red}
             />
           </View>
           <View style={styles.booksContainer}>

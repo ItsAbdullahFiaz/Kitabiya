@@ -1,7 +1,7 @@
 import React, { useContext, useMemo } from 'react';
 import { TouchableOpacity, View, StyleSheet } from "react-native";
 import PropTypes from 'prop-types';
-import { FONT_SIZE, OTHER_COLORS, SCREENS } from '../enums';
+import { FONT_SIZE, SCREENS } from '../enums';
 import { AnyIcon, IconType } from './AnyIcon';
 import { AppDataContext } from '../context';
 import { useResponsiveDimensions } from '../hooks';
@@ -9,13 +9,13 @@ import { useResponsiveDimensions } from '../hooks';
 const SIZE = 41;
 
 export const AddButton = ({ navigation }: any) => {
-    const {appTheme}=useContext(AppDataContext);
-    const {hp,wp}=useResponsiveDimensions();
+    const { appTheme } = useContext(AppDataContext);
+    const { hp, wp } = useResponsiveDimensions();
     const toggleView = () => {
         navigation.navigate(SCREENS.ADD_SCREEN);
     };
 
-    const styles=useMemo(()=>{
+    const styles = useMemo(() => {
         return StyleSheet.create({
             container: {
                 alignItems: 'center',
@@ -31,7 +31,7 @@ export const AddButton = ({ navigation }: any) => {
                 backgroundColor: appTheme.primary
             },
         })
-    },[hp,wp])
+    }, [hp, wp])
 
     return (
         <View style={styles.container}>
@@ -52,9 +52,9 @@ export const AddButton = ({ navigation }: any) => {
 };
 
 const SubAddButton = ({ style, icon, onPress }: any) => {
-    const {appTheme}=useContext(AppDataContext);
-    const {hp,wp}=useResponsiveDimensions();
-    const styles=useMemo(()=>{
+    const { appTheme } = useContext(AppDataContext);
+    const { hp, wp } = useResponsiveDimensions();
+    const styles = useMemo(() => {
         return StyleSheet.create({
             subButton: {
                 position: 'absolute',
@@ -67,27 +67,26 @@ const SubAddButton = ({ style, icon, onPress }: any) => {
                 width: SIZE / 2,
                 height: SIZE / 2,
                 borderRadius: SIZE / 4,
-                backgroundColor: '#42A045',
             },
             icon: {
                 padding: hp(10),
             },
         })
-    },[hp,wp])
+    }, [hp, wp])
     return (
         <View style={[styles.subButton, style]}>
-        <TouchableOpacity onPress={onPress} style={styles.subButtonInner}>
-            <AnyIcon
-                type={IconType.Ionicons}
-                name="add"
-                color={appTheme.primaryBackground}
-                size={hp(FONT_SIZE.h2)}
-            />
-        </TouchableOpacity>
-    </View>
-);
+            <TouchableOpacity onPress={onPress} style={styles.subButtonInner}>
+                <AnyIcon
+                    type={IconType.Ionicons}
+                    name="add"
+                    color={appTheme.primaryBackground}
+                    size={hp(FONT_SIZE.h2)}
+                />
+            </TouchableOpacity>
+        </View>
+    );
 }
-    
+
 
 SubAddButton.propTypes = {
     icon: PropTypes.string.isRequired,

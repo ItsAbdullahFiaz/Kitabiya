@@ -5,7 +5,7 @@ import { useResponsiveDimensions } from '../../../../hooks';
 import { AppDataContext } from '../../../../context';
 
 export const ProfileHeader = ({ userInfo }: any) => {
-  const {appTheme}=useContext(AppDataContext);
+  const { appTheme } = useContext(AppDataContext);
   const { hp, wp } = useResponsiveDimensions();
   const styles = useMemo(() => {
     return StyleSheet.create({
@@ -19,7 +19,7 @@ export const ProfileHeader = ({ userInfo }: any) => {
         height: hp(88),
         width: hp(88),
         borderRadius: hp(44),
-        backgroundColor: appTheme.imagePlaceholderColor,
+        backgroundColor: appTheme.disabled,
         overflow: "hidden"
       },
       img: {

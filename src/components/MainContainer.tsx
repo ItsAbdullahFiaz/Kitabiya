@@ -2,7 +2,6 @@ import { StyleSheet, View } from 'react-native'
 import React, { useContext, useMemo } from 'react'
 import { useResponsiveDimensions } from '../hooks';
 import { StatusBar } from 'react-native';
-import { OTHER_COLORS } from '../enums';
 import { AppDataContext } from '../context';
 
 interface MainContainerProps {
@@ -11,7 +10,7 @@ interface MainContainerProps {
 }
 
 export const MainContainer = (props: MainContainerProps) => {
-    const {appTheme}=useContext(AppDataContext);
+    const { appTheme } = useContext(AppDataContext);
     const { children, disableJustifyContent } = props
     const { wp, hp } = useResponsiveDimensions();
 
@@ -23,11 +22,11 @@ export const MainContainer = (props: MainContainerProps) => {
                 padding: hp(16),
             },
         });
-    }, [hp, wp]);
+    }, [hp, wp, appTheme]);
 
     return (
         <View style={styles.container}>
-            <StatusBar barStyle={"dark-content"} backgroundColor={appTheme.primaryBackground}/>
+            <StatusBar barStyle={"dark-content"} backgroundColor={appTheme.primaryBackground} />
             {children}
         </View>
     )

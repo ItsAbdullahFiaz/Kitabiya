@@ -9,7 +9,7 @@ import { AppDataContext } from '../../../../context';
 import auth from '@react-native-firebase/auth';
 
 export const ContinueReading = () => {
-  const {appTheme,appLang}=useContext(AppDataContext);
+  const { appTheme, appLang } = useContext(AppDataContext);
   const navigation = useNavigation<any>();
   const { hp, wp } = useResponsiveDimensions();
 
@@ -50,13 +50,13 @@ export const ContinueReading = () => {
       name: {
         ...TEXT_STYLE.medium,
         fontSize: hp(FONT_SIZE.h4),
-        color: appTheme.darkBlack,
+        color: appTheme.primaryTextColor,
         textTransform: "capitalize"
       },
       author: {
         ...TEXT_STYLE.regular,
         fontSize: hp(FONT_SIZE.h5),
-        color: appTheme.grey,
+        color: appTheme.tertiaryTextColor,
         textTransform: "capitalize"
       },
       chap: {

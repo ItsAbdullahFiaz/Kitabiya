@@ -3,15 +3,14 @@ import React, { useCallback, useContext, useEffect, useMemo, useState } from 're
 import { Header, MainContainer } from '../../../components';
 import { GiftedChat, IMessage } from 'react-native-gifted-chat';
 import firestore from '@react-native-firebase/firestore';
-import { NOTIFICATION_SERVER_URL } from '../../../config';
 import { useResponsiveDimensions } from '../../../hooks';
-import { FONT_SIZE, TEXT_STYLE } from '../../../enums';
+import { FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../enums';
 import { AppDataContext } from '../../../context';
 import { apiService } from '../../../services/api';
 
 export const Chat = ({ route }: any) => {
-  const {appTheme}=useContext(AppDataContext);
-  const {hp,wp}=useResponsiveDimensions();
+  const { appTheme } = useContext(AppDataContext);
+  const { hp, wp } = useResponsiveDimensions();
   const [messages, setMessages] = useState<any>([]);
   const [receiverToken, setReceiverToken] = useState<string>('');
 
@@ -140,67 +139,67 @@ export const Chat = ({ route }: any) => {
     }
   }, [route.params.id, route.params.data.userId, receiverToken]);
 
-  const styles = useMemo(()=>{
+  const styles = useMemo(() => {
     return StyleSheet.create({
-      headerContainer:{
-        flexDirection:"row",
-        justifyContent:"flex-start",
-        alignItems:"center",
-        borderBottomWidth:0.5,
-        borderBottomColor:appTheme.inputBorder,
-        paddingBottom:hp(20)
+      headerContainer: {
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        alignItems: "center",
+        borderBottomWidth: 0.5,
+        borderBottomColor: appTheme.borderDefault,
+        paddingBottom: hp(20)
       },
-      imgContainer:{
-        height:hp(50),
-        width:hp(50),
-        borderRadius:hp(25),
-        justifyContent:"center",
-        alignItems:"center",
-        backgroundColor:appTheme.green
+      imgContainer: {
+        height: hp(50),
+        width: hp(50),
+        borderRadius: hp(25),
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: OTHER_COLORS.green
       },
-      img:{
-        height:hp(48),
-        width:hp(48),
-        borderRadius:hp(24)
+      img: {
+        height: hp(48),
+        width: hp(48),
+        borderRadius: hp(24)
       },
-      userName:{
+      userName: {
         ...TEXT_STYLE.medium,
-        fontSize:hp(FONT_SIZE.h3),
-        color:appTheme.secondaryBlack
+        fontSize: hp(FONT_SIZE.h3),
+        color: appTheme.secondaryTextColor
       },
-      status:{
+      status: {
         ...TEXT_STYLE.regular,
-        fontSize:hp(FONT_SIZE.h4),
-        color:appTheme.green
+        fontSize: hp(FONT_SIZE.h4),
+        color: OTHER_COLORS.green
       },
-      greenDot:{
-        height:hp(10),
-        width:hp(10),
-        borderRadius:hp(5),
-        backgroundColor:appTheme.green,
-        position:"absolute",
-        top:hp(5),
-        right:hp(0),
-        zIndex:1
+      greenDot: {
+        height: hp(10),
+        width: hp(10),
+        borderRadius: hp(5),
+        backgroundColor: OTHER_COLORS.green,
+        position: "absolute",
+        top: hp(5),
+        right: hp(0),
+        zIndex: 1
       },
-      textContainer:{
-        marginLeft:hp(15)
+      textContainer: {
+        marginLeft: hp(15)
       }
     });
-  },[])
+  }, [])
   return (
     <MainContainer>
       {/* <Header title="chat" /> */}
       <View style={styles.headerContainer}>
         <View style={styles.imgContainer}>
           <View style={styles.greenDot}></View>
-          <Image style={styles.img} resizeMode={"cover"} source={require("../../../assets/images/user.png")}/>
-          </View>
-          <View style={styles.textContainer}>
-            <Text style={styles.userName}>{route?.params?.data.userName}</Text>
-            <Text style={styles.status}>online</Text>
-          </View>
+          <Image style={styles.img} resizeMode={"cover"} source={require("../../../assets/images/user.png")} />
         </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.userName}>{route?.params?.data.userName}</Text>
+          <Text style={styles.status}>online</Text>
+        </View>
+      </View>
       <GiftedChat
         messages={messages}
         onSend={messages => onSend(messages as any)}
@@ -208,7 +207,7 @@ export const Chat = ({ route }: any) => {
           _id: route.params.id,
         }}
         textInputStyle={{
-          color: appTheme.secondaryBlack,
+          color: appTheme.secondaryTextColor,
         }}
       />
     </MainContainer>

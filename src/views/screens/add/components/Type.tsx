@@ -6,17 +6,17 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useContext, useMemo, useRef, useState} from 'react';
-import {AppDataContext} from '../../../../context';
-import {useResponsiveDimensions} from '../../../../hooks';
-import {FONT_SIZE, TEXT_STYLE} from '../../../../enums';
-import {AnyIcon, IconType} from '../../../../components';
-import {dropdownItems} from '../../../../utils';
+import React, { useContext, useMemo, useRef, useState } from 'react';
+import { AppDataContext } from '../../../../context';
+import { useResponsiveDimensions } from '../../../../hooks';
+import { FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../../enums';
+import { AnyIcon, IconType } from '../../../../components';
+import { dropdownItems } from '../../../../utils';
 
 const genres = ['Horror', 'Comedy', 'Fantasy', 'Action', 'Romance', 'Drama'];
-export const Type = ({handleSelectType,type}:any) => {
-  const {appTheme} = useContext(AppDataContext);
-  const {hp, wp} = useResponsiveDimensions();
+export const Type = ({ handleSelectType, type }: any) => {
+  const { appTheme } = useContext(AppDataContext);
+  const { hp, wp } = useResponsiveDimensions();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleSelect = (genre: any) => {
@@ -51,7 +51,7 @@ export const Type = ({handleSelectType,type}:any) => {
         alignItems: 'center',
         justifyContent: 'space-between',
         borderWidth: 0.5,
-        borderColor: appTheme.grey,
+        borderColor: appTheme.borderDefault,
         paddingHorizontal: 15,
         height: hp(50),
         borderRadius: 5,
@@ -60,7 +60,7 @@ export const Type = ({handleSelectType,type}:any) => {
       buttonText: {
         color: appTheme.primaryTextColor,
         fontSize: hp(FONT_SIZE.h3),
-        textTransform:"capitalize"
+        textTransform: "capitalize"
       },
       modalContainer: {
         flex: 1,
@@ -94,7 +94,7 @@ export const Type = ({handleSelectType,type}:any) => {
       searchHere: {
         ...TEXT_STYLE.regular,
         fontSize: FONT_SIZE.h5,
-        color: appTheme.inputBorder,
+        color: appTheme.borderDefault,
         marginLeft: hp(10),
       },
       listContainer: {
@@ -112,7 +112,7 @@ export const Type = ({handleSelectType,type}:any) => {
           type={IconType.FontAwesome5}
           name="star-of-life"
           size={hp(8)}
-          color={appTheme.compulsory}
+          color={OTHER_COLORS.red}
         />
       </View>
       <View style={styles.container}>
@@ -149,7 +149,7 @@ export const Type = ({handleSelectType,type}:any) => {
                 <AnyIcon
                   type={IconType.EvilIcons}
                   name="search"
-                  color={appTheme.inputBorder}
+                  color={appTheme.borderDefault}
                   size={20}
                 />
                 <Text style={styles.searchHere}>search here</Text>
@@ -159,7 +159,7 @@ export const Type = ({handleSelectType,type}:any) => {
               <FlatList
                 data={dropdownItems}
                 keyExtractor={(item, index) => `${item}-${index}`}
-                renderItem={({item}) => (
+                renderItem={({ item }) => (
                   <TouchableOpacity
                     onPress={() => handleSelect(item)}
                     style={{

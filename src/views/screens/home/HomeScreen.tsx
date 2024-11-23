@@ -134,7 +134,7 @@ export const HomeScreen = () => {
             searchHere: {
                 fontSize: FONT_SIZE.h5,
                 fontFamily: FONT.PoppinsRegular,
-                color: appTheme.inputBorder,
+                color: appTheme.tertiaryTextColor,
                 marginLeft: hp(10)
             },
             loadingContainer: {
@@ -176,10 +176,9 @@ export const HomeScreen = () => {
                         <AnyIcon
                             type={IconType.EvilIcons}
                             name="search"
-                            color={appTheme.inputBorder}
+                            color={appTheme.tertiaryTextColor}
                             size={16}
                         />
-                        {/* <TextInput style={{height:"100%"}} placeholder='Search here' placeholderTextColor={OTHER_COLORS.border}/> */}
                         <Text style={styles.searchHere}>{appLang.Searchhere}</Text>
                     </TouchableOpacity>
                 </View>

@@ -1,7 +1,8 @@
 import { View, Text, StyleSheet } from "react-native";
-import React, { useMemo } from "react";
+import React, { useContext, useMemo } from "react";
 import { useResponsiveDimensions } from "../hooks";
-import { GREYSCALE_COLORS, OTHER_COLORS, STATUS_COLORS } from "../enums";
+import { OTHER_COLORS } from "../enums";
+import { AppDataContext } from "../context";
 
 interface LeaderboardToastProps {
     text1: string,
@@ -12,6 +13,7 @@ interface LeaderboardToastProps {
 export const LeaderboardToast = (props: LeaderboardToastProps) => {
     const { text1, text2, type } = props
     const { hp, wp } = useResponsiveDimensions();
+    const { appTheme } = useContext(AppDataContext);
 
     const styles = useMemo(() => {
         return StyleSheet.create({
@@ -25,13 +27,13 @@ export const LeaderboardToast = (props: LeaderboardToastProps) => {
             },
             toast_text: {
                 fontSize: hp(14),
-                color: GREYSCALE_COLORS.grey50,
+                color: appTheme.quaternaryTextColor,
                 fontFamily: "Poppins-Medium",
                 paddingLeft: hp(16),
             },
             toast_textTwo: {
                 fontSize: hp(13),
-                color: GREYSCALE_COLORS.grey50,
+                color: appTheme.quaternaryTextColor,
                 fontFamily: "Poppins",
                 paddingLeft: hp(16),
                 paddingTop: hp(9),
@@ -39,7 +41,7 @@ export const LeaderboardToast = (props: LeaderboardToastProps) => {
         });
     }, [wp, hp]);
 
-    const boxColor = type == "successLeaderboard" ? STATUS_COLORS.success : STATUS_COLORS.error;
+    const boxColor = type == "successLeaderboard" ? OTHER_COLORS.success : OTHER_COLORS.error;
     const isSuccess = type == "successLeaderboard";
     return (
         <View style={[styles.box_style, { backgroundColor: boxColor }]}>

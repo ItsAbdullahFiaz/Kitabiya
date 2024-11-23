@@ -104,7 +104,7 @@ export const MessagesScreen = () => {
         height: '100%',
         marginTop: hp(5),
         paddingTop: hp(5),
-        color:appTheme.secondaryTextColor
+        color: appTheme.secondaryTextColor
       },
       listContainer: {},
       card: {
@@ -146,7 +146,7 @@ export const MessagesScreen = () => {
         height: hp(24),
         width: hp(24),
         borderRadius: hp(12),
-        backgroundColor: appTheme.green,
+        backgroundColor: OTHER_COLORS.green,
         justifyContent: "center",
         alignItems: "center"
       },
@@ -186,13 +186,13 @@ export const MessagesScreen = () => {
         <AnyIcon
           type={IconType.EvilIcons}
           name="search"
-          color={appTheme.inputBorder}
+          color={appTheme.tertiaryTextColor}
           size={16}
         />
         <TextInput
           style={styles.input}
           placeholder={appLang.Searchhere}
-          placeholderTextColor={appTheme.inputBorder}
+          placeholderTextColor={appTheme.tertiaryTextColor}
         />
       </View>
       <View style={styles.listContainer}>

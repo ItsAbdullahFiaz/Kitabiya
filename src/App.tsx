@@ -1,18 +1,16 @@
-import { SafeAreaView, StatusBar, StyleSheet } from 'react-native'
-import React, { useContext, useEffect, useMemo } from 'react'
+import { SafeAreaView, StyleSheet } from 'react-native'
+import React, { useEffect, useMemo } from 'react'
 import Toast from 'react-native-toast-message'
 import messaging from '@react-native-firebase/messaging';
-import notifee, { EventType, AndroidStyle } from '@notifee/react-native';
+import notifee from '@notifee/react-native';
 import { RootNavigator } from './navigation';
 import { LeaderboardToast } from './components';
-import { AppDataContext } from './context';
 import { useResponsiveDimensions } from './hooks';
 import { notificationService } from './services/NotificationService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { subscribeToTopics, unsubscribeFromTopics } from './utils/notifications';
 
 export default function App() {
-  const { appTheme } = useContext(AppDataContext);
   const { wp, hp } = useResponsiveDimensions();
 
   useEffect(() => {
@@ -65,23 +63,21 @@ export default function App() {
     return StyleSheet.create({
       container: {
         flex: 1,
-        backgroundColor: appTheme.primaryBackground
       },
     });
-  }, [hp, wp, appTheme]);
+  }, [hp, wp]);
 
   const toastConfig = {
-    successToast: ({ text1, text2 }: { text1: string, text2: string }) => (
-      <LeaderboardToast text1={text1} text2={text2} type="successLeaderboard" />
+    successToast: ({ text1, text2 }: { text1?: string, text2?: string }) => (
+      <LeaderboardToast text1={text1 || ''} text2={text2 || ''} type="successLeaderboard" />
     ),
-    errorToast: ({ text1, text2 }: { text1: string, text2: string }) => (
-      <LeaderboardToast text1={text1} text2={text2} type="errorLeaderboard" />
+    errorToast: ({ text1, text2 }: { text1?: string, text2?: string }) => (
+      <LeaderboardToast text1={text1 || ''} text2={text2 || ''} type="errorLeaderboard" />
     ),
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle={appTheme.primary == '#1b2c3d' ? 'dark-content' : 'light-content'} backgroundColor={appTheme.primaryBackground} />
       <RootNavigator />
       <Toast config={toastConfig} />
     </SafeAreaView>

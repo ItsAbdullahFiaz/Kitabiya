@@ -1,13 +1,12 @@
-import { Share, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useContext, useMemo } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { useResponsiveDimensions } from '../hooks'
 import { AnyIcon, IconType } from './AnyIcon'
-import { FONT, OTHER_COLORS } from '../enums'
 import { AppDataContext } from '../context'
 
-export const BackButton = ({ title }: any) => {
-    const {appTheme}=useContext(AppDataContext);
+export const BackButton = () => {
+    const { appTheme } = useContext(AppDataContext);
     const navigation = useNavigation<any>()
     const { wp, hp } = useResponsiveDimensions();
 

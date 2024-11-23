@@ -1,7 +1,7 @@
-import { View, TextInput, TouchableOpacity, Text, StyleSheet, NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, NativeSyntheticEvent, TextInputChangeEventData, KeyboardTypeOptions } from 'react-native';
 import React, { useContext, useMemo, useState } from 'react';
 import { useResponsiveDimensions } from '../hooks';
-import { STATUS_COLORS, TEXT_STYLE } from '../enums';
+import { OTHER_COLORS, TEXT_STYLE } from '../enums';
 import { AppDataContext } from '../context';
 import { AnyIcon, IconType } from '.';
 
@@ -15,7 +15,7 @@ interface CustomInputProps {
     bottomError?: boolean,
     twoLinesError?: boolean,
     pasteButton?: boolean,
-    keyboardType?: string,
+    keyboardType?: KeyboardTypeOptions,
 }
 
 export const CustomInput = (props: CustomInputProps) => {
@@ -35,7 +35,7 @@ export const CustomInput = (props: CustomInputProps) => {
                 alignItems: 'center',
                 borderRadius: hp(8),
                 borderWidth: 1,
-                borderColor: appTheme.inputBorder,
+                borderColor: appTheme.borderDefault,
             },
             input: {
                 ...TEXT_STYLE.regular,
@@ -51,7 +51,7 @@ export const CustomInput = (props: CustomInputProps) => {
             },
             titleWrong: {
                 ...TEXT_STYLE.regular,
-                color: STATUS_COLORS.error,
+                color: OTHER_COLORS.error,
                 marginTop: hp(3),
                 fontSize: hp(12)
             },

@@ -6,7 +6,7 @@ import { useResponsiveDimensions } from '../../../hooks';
 import { AppDataContext } from '../../../context';
 
 export const BookDetailScreen = ({ route }: any) => {
-  const {appTheme,appLang}=useContext(AppDataContext);
+  const { appTheme, appLang } = useContext(AppDataContext);
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleText = () => setIsExpanded(!isExpanded);
@@ -59,7 +59,7 @@ export const BookDetailScreen = ({ route }: any) => {
         ...TEXT_STYLE.regular,
         marginVertical: hp(5),
         fontSize: hp(FONT_SIZE.h5),
-        color: appTheme.grey,
+        color: appTheme.tertiaryTextColor,
         textTransform: 'capitalize',
       },
       price: {
@@ -80,7 +80,7 @@ export const BookDetailScreen = ({ route }: any) => {
       free: {
         ...TEXT_STYLE.medium,
         fontSize: hp(FONT_SIZE.h4),
-        color: appTheme.green,
+        color: OTHER_COLORS.green,
         textTransform: 'capitalize',
         marginTop: hp(3),
         marginVertical: hp(5),
@@ -110,7 +110,7 @@ export const BookDetailScreen = ({ route }: any) => {
       },
       readMore: {
         ...TEXT_STYLE.regular,
-        color: appTheme.link,
+        color: appTheme.interactive,
         fontSize: hp(FONT_SIZE.h4),
       },
       chatBtnContainer: {
@@ -139,7 +139,7 @@ export const BookDetailScreen = ({ route }: any) => {
                 key={index}
                 name="star"
                 size={hp(FONT_SIZE.h6)}
-                color={appTheme.star}
+                color={OTHER_COLORS.yellow}
               />
             ))}
             {halfStars === 1 && (
@@ -147,7 +147,7 @@ export const BookDetailScreen = ({ route }: any) => {
                 type={IconType.FontAwesome}
                 name="star-half"
                 size={hp(FONT_SIZE.h6)}
-                color={appTheme.star}
+                color={OTHER_COLORS.yellow}
               />
             )}
             {[...Array(emptyStars)].map((_, index) => (
@@ -155,7 +155,7 @@ export const BookDetailScreen = ({ route }: any) => {
                 type={IconType.FontAwesome}
                 name="star-o"
                 size={hp(FONT_SIZE.h6)}
-                color={appTheme.star}
+                color={OTHER_COLORS.yellow}
               />
             ))}
           </View>

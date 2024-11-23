@@ -16,7 +16,7 @@ interface MainButtonProps {
 export const MainButton = (props: MainButtonProps) => {
     const { onPress, buttonText, disableBtn, isLoading, dismissiveButton } = props
     const { wp, hp } = useResponsiveDimensions();
-    const { appLang, appTheme } = useContext(AppDataContext);
+    const { appTheme } = useContext(AppDataContext);
 
     const styles = useMemo(() => {
         return StyleSheet.create({
@@ -40,7 +40,7 @@ export const MainButton = (props: MainButtonProps) => {
                 marginHorizontal: wp(8),
                 flexGrow: 0,
                 flexShrink: 0,
-                textTransform:"capitalize"
+                textTransform: "capitalize"
             }
         });
     }, [hp, wp, isLoading, disableBtn, appTheme]);

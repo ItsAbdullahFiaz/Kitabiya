@@ -1,13 +1,14 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useContext, useEffect, useMemo } from 'react'
 import { StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 import { AppIcon, MainContainer } from '../../../components';
 import { resetAndGo } from '../../../utils';
 import { STACK } from '../../../enums';
+import { AppDataContext } from '../../../context';
 
 export const SplashScreen = () => {
-
+    const { appTheme } = useContext(AppDataContext);
     const navigation = useNavigation()
 
     function onAuthStateChanged(user: any) {
@@ -27,7 +28,7 @@ export const SplashScreen = () => {
             container: {
                 flex: 1,
                 justifyContent: "center",
-                alignItems: "center"
+                alignItems: "center",
             }
         })
     }, [])

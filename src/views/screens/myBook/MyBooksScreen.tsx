@@ -7,25 +7,25 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useContext, useEffect, useMemo, useState} from 'react';
-import {AnyIcon, IconType, MainContainer} from '../../../components';
-import {FONT_SIZE, SCREENS, TEXT_STYLE} from '../../../enums';
-import {useResponsiveDimensions} from '../../../hooks';
-import {AppDataContext} from '../../../context';
-import {apiService} from '../../../services/api';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { AnyIcon, IconType, MainContainer } from '../../../components';
+import { FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE } from '../../../enums';
+import { useResponsiveDimensions } from '../../../hooks';
+import { AppDataContext } from '../../../context';
+import { apiService } from '../../../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { convertDate } from '../../../utils';
 import { RemoveAd } from './components';
 import { useNavigation } from '@react-navigation/native';
 
 export const MyBooksScreen = () => {
-  const navigation=useNavigation<any>();
+  const navigation = useNavigation<any>();
   const [loading, setLoading] = useState(false);
   const [myAdsList, setMyAdsList] = useState([]);
-  const [index,setIndex]=useState<any>("");
-  const [isModalVisible,setIsModalVisible]=useState(false);
-  const {hp, wp} = useResponsiveDimensions();
-  const {appTheme, appLang} = useContext(AppDataContext);
+  const [index, setIndex] = useState<any>("");
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const { hp, wp } = useResponsiveDimensions();
+  const { appTheme, appLang } = useContext(AppDataContext);
   const fetchProducts = async () => {
     try {
       setLoading(true);
@@ -52,7 +52,7 @@ export const MyBooksScreen = () => {
   useEffect(() => {
     fetchProducts();
   }, [isModalVisible]);
-  const handleOpenModal=(id:any)=>{
+  const handleOpenModal = (id: any) => {
     setIndex(id);
     setIsModalVisible(true);
   }
@@ -69,13 +69,13 @@ export const MyBooksScreen = () => {
         textTransform: 'capitalize',
       },
       listContainer: {
-        flex:1,
-        marginTop:hp(30),
+        flex: 1,
+        marginTop: hp(30),
       },
       adContainer: {
         width: '100%',
         borderWidth: 1,
-        borderColor: appTheme.inputBorder,
+        borderColor: appTheme.borderDefault,
         marginTop: hp(10),
         borderRadius: hp(8),
         overflow: 'hidden',
@@ -101,49 +101,49 @@ export const MyBooksScreen = () => {
         overflow: 'hidden',
         marginRight: hp(10),
       },
-      img: {height: '100%', width: '100%'},
-      adTitle:{
+      img: { height: '100%', width: '100%' },
+      adTitle: {
         ...TEXT_STYLE.medium,
-        fontSize:hp(FONT_SIZE.h3),
-        color:appTheme.primaryTextColor
+        fontSize: hp(FONT_SIZE.h3),
+        color: appTheme.primaryTextColor
       },
-      textContainer:{
-        justifyContent:"space-between",
-        alignItems:"flex-start",
-        height:"100%"
+      textContainer: {
+        justifyContent: "space-between",
+        alignItems: "flex-start",
+        height: "100%"
       },
-      bottomContainer:{
-        padding:hp(10)
+      bottomContainer: {
+        padding: hp(10)
       },
-      viewsContainer:{
-        flexDirection:"row",
-        justifyContent:"flex-start",
-        alignItems:"center"
+      viewsContainer: {
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        alignItems: "center"
       },
-      active:{
+      active: {
         ...TEXT_STYLE.medium,
-        fontSize:hp(FONT_SIZE.h3),
-        color:appTheme.primaryTextColor,
-        backgroundColor:appTheme.green,
-        paddingHorizontal:hp(10),
-        borderRadius:hp(3),
-        width:hp(75)
+        fontSize: hp(FONT_SIZE.h3),
+        color: appTheme.primaryTextColor,
+        backgroundColor: OTHER_COLORS.green,
+        paddingHorizontal: hp(10),
+        borderRadius: hp(3),
+        width: hp(75)
       },
-      editContainer:{
-        height:hp(45),
-        width:"50%",
-        borderWidth:1,
-        borderColor:appTheme.primaryTextColor,
-        borderRadius:hp(5),
-        marginTop:hp(8),
-        justifyContent:"center",
-        alignItems:"center"
+      editContainer: {
+        height: hp(45),
+        width: "50%",
+        borderWidth: 1,
+        borderColor: appTheme.primaryTextColor,
+        borderRadius: hp(5),
+        marginTop: hp(8),
+        justifyContent: "center",
+        alignItems: "center"
       },
-      edit:{
+      edit: {
         ...TEXT_STYLE.regular,
-        fontSize:hp(FONT_SIZE.h3),
-        color:appTheme.primaryTextColor,
-        textTransform:"capitalize"
+        fontSize: hp(FONT_SIZE.h3),
+        color: appTheme.primaryTextColor,
+        textTransform: "capitalize"
       }
     });
   }, [hp, wp]);
@@ -153,7 +153,7 @@ export const MyBooksScreen = () => {
       <View style={styles.listContainer}>
         <FlatList
           data={myAdsList}
-          renderItem={({item}) => {
+          renderItem={({ item }) => {
             console.log('MY_ADS===>', item);
             return (
               <TouchableOpacity style={styles.adContainer}>
@@ -162,37 +162,37 @@ export const MyBooksScreen = () => {
                     <View style={styles.imgContainer}>
                       <Image
                         style={styles.img}
-                        source={{uri: item.images[0]}}
+                        source={{ uri: item.images[0] }}
                       />
                     </View>
                     <View style={styles.textContainer}>
                       <Text style={styles.adTitle}>{item.title}</Text>
-                      <Text style={[styles.adTitle,{...TEXT_STYLE.regular}]}>{`Rs ${item.price}`}</Text>
-                      <Text style={[styles.adTitle,{...TEXT_STYLE.regular}]}>{item.type}</Text>
+                      <Text style={[styles.adTitle, { ...TEXT_STYLE.regular }]}>{`Rs ${item.price}`}</Text>
+                      <Text style={[styles.adTitle, { ...TEXT_STYLE.regular }]}>{item.type}</Text>
                     </View>
                   </View>
-                  <TouchableOpacity onPress={()=>handleOpenModal(item._id)}>
+                  <TouchableOpacity onPress={() => handleOpenModal(item._id)}>
                     <AnyIcon
                       type={IconType.SimpleLineIcons}
                       name="options-vertical"
                       size={hp(FONT_SIZE.h1)}
-                      color={appTheme.darkBlack}
+                      color={appTheme.primaryTextColor}
                     />
                   </TouchableOpacity>
                 </View>
                 <View style={styles.bottomContainer}>
-                <Text style={[styles.adTitle,{...TEXT_STYLE.regular}]}>{`Active from ${convertDate(item.createdAt)}`}</Text>
-                <View style={styles.viewsContainer}>
-                  <AnyIcon 
-                  type={IconType.Ionicons}
-                  name='eye-outline'
-                  size={hp(FONT_SIZE.h3)}
-                  color={appTheme.primaryTextColor}
-                  />
-                  <Text style={[styles.adTitle,{...TEXT_STYLE.regular,marginLeft:hp(10)}]}>{`0 Views`}</Text>
-                </View>
+                  <Text style={[styles.adTitle, { ...TEXT_STYLE.regular }]}>{`Active from ${convertDate(item.createdAt)}`}</Text>
+                  <View style={styles.viewsContainer}>
+                    <AnyIcon
+                      type={IconType.Ionicons}
+                      name='eye-outline'
+                      size={hp(FONT_SIZE.h3)}
+                      color={appTheme.primaryTextColor}
+                    />
+                    <Text style={[styles.adTitle, { ...TEXT_STYLE.regular, marginLeft: hp(10) }]}>{`0 Views`}</Text>
+                  </View>
                   <Text style={styles.active}>Active</Text>
-                  <TouchableOpacity style={styles.editContainer} onPress={()=>navigation.navigate(SCREENS.ADD_SCREEN as never,{dataType:"edit"})}>
+                  <TouchableOpacity style={styles.editContainer} onPress={() => navigation.navigate(SCREENS.ADD_SCREEN as never, { dataType: "edit" })}>
                     <Text style={styles.edit}>edit</Text>
                   </TouchableOpacity>
                 </View>
@@ -202,11 +202,11 @@ export const MyBooksScreen = () => {
         />
       </View>
       <Modal visible={isModalVisible} transparent>
-          <RemoveAd
-            handleRemoveModal={handleRemoveModal}
-            index={index}
-          />
-        </Modal>
+        <RemoveAd
+          handleRemoveModal={handleRemoveModal}
+          index={index}
+        />
+      </Modal>
     </MainContainer>
   );
 };

@@ -2,8 +2,8 @@ import React, { useContext, useMemo } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { TouchableWithoutFeedback, View, Text, StyleSheet } from 'react-native';
 import { AddButton, AnyIcon, IconType } from '../components';
-import { FONT_SIZE, OTHER_COLORS, TEXT_STYLE, SCREENS, SIZES } from '../enums';
-import { HomeScreen, MyBooksScreen, MessagesScreen, AccountScreen, AddScreen } from '../views/screens';
+import { FONT_SIZE, TEXT_STYLE, SCREENS } from '../enums';
+import { HomeScreen, MyBooksScreen, MessagesScreen, AccountScreen } from '../views/screens';
 import { useResponsiveDimensions } from '../hooks';
 import { AppDataContext } from '../context';
 
@@ -48,8 +48,8 @@ const BottomStack = () => {
             screenOptions={{
                 headerShown: false,
                 tabBarShowLabel: true,
-                tabBarActiveTintColor: OTHER_COLORS.primary,
-                tabBarInactiveTintColor: OTHER_COLORS.secondaryText,
+                tabBarActiveTintColor: appTheme.primary,
+                tabBarInactiveTintColor: appTheme.tertiaryTextColor,
                 tabBarStyle: styles.tabBar
             }}
             tabBar={(props) => {

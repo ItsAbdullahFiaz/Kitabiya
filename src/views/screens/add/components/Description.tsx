@@ -2,11 +2,11 @@ import { StyleSheet, Text, TextInput, View } from 'react-native';
 import React, { useContext, useMemo } from 'react';
 import { AppDataContext } from '../../../../context';
 import { useResponsiveDimensions } from '../../../../hooks';
-import { FONT, FONT_SIZE, TEXT_STYLE } from '../../../../enums';
+import { FONT, FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../../enums';
 import { AnyIcon, IconType } from '../../../../components';
 
-export const Description = ({description,handleDescription}:any) => {
-    const {appTheme} = useContext(AppDataContext);
+export const Description = ({ description, handleDescription }: any) => {
+  const { appTheme } = useContext(AppDataContext);
   const { hp, wp } = useResponsiveDimensions();
 
   const styles = useMemo(() => {
@@ -33,7 +33,7 @@ export const Description = ({description,handleDescription}:any) => {
         paddingHorizontal: hp(15),
         height: hp(150),
         borderWidth: 0.5,
-        borderColor: appTheme.grey,
+        borderColor: appTheme.borderDefault,
         paddingTop: hp(10),
         borderRadius: hp(8),
         textAlignVertical: 'top', // Ensures text starts at the top
@@ -49,7 +49,7 @@ export const Description = ({description,handleDescription}:any) => {
           type={IconType.FontAwesome5}
           name="star-of-life"
           size={8}
-          color={appTheme.compulsory}
+          color={OTHER_COLORS.red}
         />
       </View>
       <TextInput
@@ -59,7 +59,7 @@ export const Description = ({description,handleDescription}:any) => {
         style={styles.input}
         placeholder="Describe the item you are selling"
         placeholderTextColor={appTheme.primaryTextColor}
-        onChangeText={val=>handleDescription(val)}
+        onChangeText={val => handleDescription(val)}
       />
     </View>
   );

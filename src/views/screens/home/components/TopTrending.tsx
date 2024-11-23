@@ -7,7 +7,7 @@ import { FONT, FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../../enums';
 import { AppDataContext } from '../../../../context';
 
 export const TopTrending = () => {
-  const {appTheme}=useContext(AppDataContext);
+  const { appTheme } = useContext(AppDataContext);
   const { hp, wp } = useResponsiveDimensions();
   const styles = useMemo(() => {
     return StyleSheet.create({
@@ -29,7 +29,7 @@ export const TopTrending = () => {
       },
       imgContainer: {
         width: hp(70),
-        backgroundColor: appTheme.imagePlaceholderColor,
+        backgroundColor: appTheme.disabled,
         height: '100%',
         borderRadius: hp(8),
         overflow: 'hidden',
@@ -57,13 +57,13 @@ export const TopTrending = () => {
       name: {
         ...TEXT_STYLE.medium,
         fontSize: hp(FONT_SIZE.h4),
-        color: appTheme.secondaryBlack,
+        color: appTheme.secondaryTextColor,
         textTransform: 'capitalize',
       },
       author: {
         ...TEXT_STYLE.regular,
         fontSize: hp(FONT_SIZE.h5),
-        color: appTheme.grey,
+        color: appTheme.tertiaryTextColor,
         textTransform: 'capitalize',
       },
     });
@@ -90,7 +90,7 @@ export const TopTrending = () => {
                   key={index}
                   name="star"
                   size={hp(FONT_SIZE.h6)}
-                  color={appTheme.star}
+                  color={OTHER_COLORS.yellow}
                 />
               ))}
               {halfStars === 1 && (
@@ -98,7 +98,7 @@ export const TopTrending = () => {
                   type={IconType.FontAwesome}
                   name="star-half"
                   size={hp(FONT_SIZE.h6)}
-                  color={appTheme.star}
+                  color={OTHER_COLORS.yellow}
                 />
               )}
               {[...Array(emptyStars)].map((_, index) => (
@@ -106,7 +106,7 @@ export const TopTrending = () => {
                   type={IconType.FontAwesome}
                   name="star-o"
                   size={hp(FONT_SIZE.h6)}
-                  color={appTheme.star}
+                  color={OTHER_COLORS.yellow}
                 />
               ))}
             </View>

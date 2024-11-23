@@ -9,7 +9,7 @@ import { FONT_SIZE, STACK } from '../enums';
 import { AppDataContext } from '../context';
 
 export const SocialLogins = () => {
-const {appTheme,appLang}=useContext(AppDataContext);
+  const { appTheme, appLang } = useContext(AppDataContext);
   const navigation = useNavigation<any>();
   const { hp, wp } = useResponsiveDimensions();
   const [loading, setLoading] = useState(false);
@@ -110,7 +110,7 @@ const {appTheme,appLang}=useContext(AppDataContext);
         alignItems: 'center',
       },
     })
-  }, [hp,wp])
+  }, [hp, wp])
   return (
     <View>
       {loading && (
