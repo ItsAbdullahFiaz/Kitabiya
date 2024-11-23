@@ -192,7 +192,7 @@ export const MyBooksScreen = () => {
                     <Text style={[styles.adTitle, { ...TEXT_STYLE.regular, marginLeft: hp(10) }]}>{`0 Views`}</Text>
                   </View>
                   <Text style={styles.active}>Active</Text>
-                  <TouchableOpacity style={styles.editContainer} onPress={() => navigation.navigate(SCREENS.ADD_SCREEN as never, { dataType: "edit" })}>
+                  <TouchableOpacity style={styles.editContainer} onPress={() => navigation.navigate(SCREENS.ADD_SCREEN as never, { data: item, dataType: "edit" })}>
                     <Text style={styles.edit}>edit</Text>
                   </TouchableOpacity>
                 </View>
