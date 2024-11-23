@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { TouchableWithoutFeedback, View, Text, StyleSheet } from 'react-native';
 import { AddButton, AnyIcon, IconType } from '../components';
 import { FONT_SIZE, OTHER_COLORS, TEXT_STYLE, SCREENS, SIZES } from '../enums';
-import { HomeScreen, MyBooksScreen, MessagesScreen, AccountScreen } from '../views/screens';
+import { HomeScreen, MyBooksScreen, MessagesScreen, AccountScreen, AddScreen } from '../views/screens';
 import { useResponsiveDimensions } from '../hooks';
 import { AppDataContext } from '../context';
 
@@ -142,6 +142,7 @@ const BottomStack = () => {
             >
                 {() => null}
             </Bottom.Screen>
+
             <Bottom.Screen
                 name={SCREENS.MESSAGE}
                 component={MessagesScreen}

@@ -36,7 +36,9 @@ import { apiService } from '../../../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
-export const AddScreen = () => {
+export const AddScreen = ({route}:any) => {
+  const { dataType } = route.params || 'add';
+  console.log("TYPE===>",dataType);
   const [imagesList, setImagesList] = useState<any>([]);
   const { appTheme } = useContext(AppDataContext);
   const { hp, wp } = useResponsiveDimensions();
@@ -356,7 +358,8 @@ export const AddScreen = () => {
   return (
     <MainContainer>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <Header title="Ad Details" />
+        {/* <Header title={dataType === 'edit' ? 'edit ad details' : 'ad Details'} /> */}
+        <Header title="ad details"/>
         <View style={styles.categoryContainer}>
           <View style={styles.titleContainer}>
             <Text style={styles.title}>Category</Text>

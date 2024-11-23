@@ -13,18 +13,6 @@ export const ContinueReading = () => {
   const navigation = useNavigation<any>();
   const { hp, wp } = useResponsiveDimensions();
 
-  const getUser=async()=>{
-    try {
-      const res=await auth().currentUser;
-      console.log("USER_ID===>",res?.uid);
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
-
-  useEffect(()=>{
-    getUser();
-  },[])
   const styles = useMemo(() => {
     return StyleSheet.create({
       header: {

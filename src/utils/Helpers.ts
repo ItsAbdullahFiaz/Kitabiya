@@ -643,5 +643,11 @@ const topTrending=[
     },
 ];
 
+const convertDate = (isoString:any) => {
+    const date = new Date(isoString); // Parse the ISO string into a Date object
+    const options = { day: '2-digit', month: 'short' }; // Options for formatting the date
+    return new Intl.DateTimeFormat('en-US', options).format(date); // Format the date
+  };
+
 const dropdownItems=['acer','alcatel','apple iphone','asus','black berry','calme','club',"g'give",'google','gright','haier','oppo','redmi','realme','infinix'];
-export { resetAndGo, isEmptyString, storeStringValue, getStoredStringValue, topTrending, validateEmail, validatePassword,validateName, setEmailError, setPasswordError,setNameError,dropdownItems }
+export {convertDate, resetAndGo, isEmptyString, storeStringValue, getStoredStringValue, topTrending, validateEmail, validatePassword,validateName, setEmailError, setPasswordError,setNameError,dropdownItems }

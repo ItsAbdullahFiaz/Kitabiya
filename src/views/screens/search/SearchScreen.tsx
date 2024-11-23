@@ -1,8 +1,8 @@
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View,FlatList } from 'react-native'
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import React, { useContext, useMemo, useState } from 'react'
 import { AnyIcon, BackButton, IconType, MainContainer } from '../../../components'
 import { useResponsiveDimensions } from '../../../hooks'
-import { FONT, FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../enums'
+import { FONT_SIZE, TEXT_STYLE } from '../../../enums'
 import { MaybeYouLike } from './components'
 import { AppDataContext } from '../../../context'
 import { apiService } from '../../../services/api'
@@ -12,6 +12,7 @@ import { useNavigation } from '@react-navigation/native'
 const data = ['history', 'science fiction', 'families', 'humor', 'thriller', 'self-help', 'personal', 'the wood', 'adventure'];
 export const SearchScreen = () => {
     const navigation=useNavigation<any>();
+    const [recent,setRecent]=useState<any>([]);
     const [searchValue,setSearchValue]=useState("");
     const [loading, setLoading] = useState(false);
     const [searchedProduct,setSearchedProduct]=useState<any>([]);
@@ -28,6 +29,7 @@ export const SearchScreen = () => {
 
             // Assuming the API returns products sorted by createdAt
             setSearchedProduct(response.data || []);
+            setRecent(prev=>[...prev,search]);
         } catch (error) {
             console.error('Error fetching products:', error);
             // You might want to show an error toast here
@@ -76,7 +78,8 @@ export const SearchScreen = () => {
                 ...TEXT_STYLE.medium,
                 fontSize: hp(FONT_SIZE.h5),
                 color: appTheme.darkBlack,
-                textTransform: "capitalize"
+                textTransform: "capitalize",
+                marginBottom:hp(10)
             },
             textContainer: {
                 height: hp(26),
@@ -165,6 +168,33 @@ export const SearchScreen = () => {
                     <TextInput style={styles.input} value={searchValue} placeholder={appLang.Searchhere} placeholderTextColor={appTheme.inputBorder} onChangeText={val=>setSearchValue(val)}/>
                 </View>
             </View>
+            {recent.length>0 && (
+                <>
+            <View style={styles.recent}>
+                <Text style={styles.text}>{appLang.recently}</Text>
+                <TouchableOpacity>
+                    <Text style={styles.btnText}>{appLang.Deleteall}</Text>
+                </TouchableOpacity>
+            </View>
+            <View style={styles.listContainer}>
+                {recent.map((item, index) => {
+                    return (
+                        <View key={index} style={styles.textContainer}>
+                            <Text style={styles.searchedText}>{item}</Text>
+                            <TouchableOpacity>
+                                <AnyIcon
+                                    type={IconType.EvilIcons}
+                                    name='close'
+                                    size={16}
+                                    color={appTheme.primary}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                    )
+                })}
+            </View>
+                </>
+            )}
             {/* Searched Iten */}
             {searchedProduct.length>0 && (
             <View>
@@ -200,29 +230,6 @@ export const SearchScreen = () => {
                 />
                 </View>
             )}
-            <View style={styles.recent}>
-                <Text style={styles.text}>{appLang.recently}</Text>
-                <TouchableOpacity>
-                    <Text style={styles.btnText}>{appLang.Deleteall}</Text>
-                </TouchableOpacity>
-            </View>
-            <View style={styles.listContainer}>
-                {data.map((item, index) => {
-                    return (
-                        <View key={index} style={styles.textContainer}>
-                            <Text style={styles.searchedText}>{item}</Text>
-                            <TouchableOpacity>
-                                <AnyIcon
-                                    type={IconType.EvilIcons}
-                                    name='close'
-                                    size={16}
-                                    color={appTheme.primary}
-                                />
-                            </TouchableOpacity>
-                        </View>
-                    )
-                })}
-            </View>
             <MaybeYouLike />
         </MainContainer>
     )
