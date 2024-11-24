@@ -1,12 +1,13 @@
 import auth from '@react-native-firebase/auth';
 import { STACK } from '../enums';
 import { resetAndGo } from '../utils';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 const registerUser = async (email: string, password: string) => {
     try {
         await auth().createUserWithEmailAndPassword(email, password);
-        return { success: true };
+        const token = await getAuthToken(true);
+        return { success: true, token };
     } catch (error: any) {
         console.log(error)
         let errorMessage = 'An error occurred. Please try again.';
@@ -24,7 +25,8 @@ const registerUser = async (email: string, password: string) => {
 const loginUser = async (email: string, password: string) => {
     try {
         await auth().signInWithEmailAndPassword(email, password);
-        return { success: true };
+        const token = await getAuthToken(true);
+        return { success: true, token };
     } catch (error: any) {
         console.log(error.code)
         let errorMessage = 'An error occurred. Please try again.';
@@ -60,6 +62,20 @@ const resetPassword = async (email: string) => {
     }
 };
 
-  
+const getAuthToken = async (forceRefresh = false): Promise<string | null> => {
+    try {
+        const currentUser = auth().currentUser;
+        if (!currentUser) {
+            console.log('No user is currently signed in');
+            return null;
+        }
 
-export { registerUser, loginUser, signOutUser, resetPassword };
+        const token = await currentUser.getIdToken(forceRefresh);
+        return token;
+    } catch (error) {
+        console.error('Error getting auth token:', error);
+        return null;
+    }
+};
+
+export { registerUser, loginUser, signOutUser, resetPassword, getAuthToken };

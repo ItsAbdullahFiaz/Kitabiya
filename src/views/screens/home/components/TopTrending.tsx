@@ -1,4 +1,4 @@
-import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import React, { useContext, useMemo } from 'react';
 import { useResponsiveDimensions } from '../../../../hooks';
 import { topTrending } from '../../../../utils';
@@ -6,7 +6,31 @@ import { AnyIcon, IconType } from '../../../../components/AnyIcon';
 import { FONT, FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../../enums';
 import { AppDataContext } from '../../../../context';
 
-export const TopTrending = () => {
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+interface Product {
+  _id: string;
+  title: string;
+  price: number;
+  description: string;
+  images: string[];
+  condition: string;
+  type: string;
+  language: string;
+  user: User;
+  createdAt: string;
+}
+
+interface TopTrendingProps {
+  products: Product[];
+  loading: boolean;
+}
+
+export const TopTrending = ({ products, loading }: TopTrendingProps) => {
   const { appTheme } = useContext(AppDataContext);
   const { hp, wp } = useResponsiveDimensions();
   const styles = useMemo(() => {
@@ -46,7 +70,7 @@ export const TopTrending = () => {
       },
       views: {
         ...TEXT_STYLE.medium,
-        fontSize: hp(FONT_SIZE.h5),
+        fontSize: hp(FONT_SIZE.h4),
         color: appTheme.primary,
         marginLeft: hp(5),
       },
@@ -69,64 +93,48 @@ export const TopTrending = () => {
     });
   }, [hp, wp]);
 
-  const renderItems = ({ item }: any) => {
-    const { image, name, author, rating } = item;
-    const fullStars = Math.floor(rating);
-    const halfStars = rating - fullStars >= 0.5 ? 1 : 0;
-    const emptyStars = 5 - fullStars - halfStars;
+  if (loading) {
+    return (
+      <View style={[styles.container, { alignItems: 'center', justifyContent: 'center' }]}>
+        <ActivityIndicator size="large" color={appTheme.primary} />
+      </View>
+    );
+  }
+
+  const renderItems = ({ item }: { item: Product }) => {
     return (
       <TouchableOpacity style={styles.card}>
         <View style={styles.leftContainer}>
           <View style={styles.imgContainer}>
-            <Image style={styles.img} source={image} />
+            <Image
+              style={styles.img}
+              source={{ uri: item.images[0] }}
+              defaultSource={require('../../../../assets/images/person.jpg')}
+            />
           </View>
           <View>
-            <Text style={styles.name}>{name}</Text>
-            <Text style={styles.author}>{author}</Text>
+            <Text style={styles.name}>{item.title}</Text>
+            <Text style={styles.author}>{item.user?.name || 'Unknown Author'}</Text>
             <View style={styles.starsContainer}>
-              {[...Array(fullStars)].map((_, index) => (
-                <AnyIcon
-                  type={IconType.FontAwesome}
-                  key={index}
-                  name="star"
-                  size={hp(FONT_SIZE.h6)}
-                  color={OTHER_COLORS.yellow}
-                />
-              ))}
-              {halfStars === 1 && (
-                <AnyIcon
-                  type={IconType.FontAwesome}
-                  name="star-half"
-                  size={hp(FONT_SIZE.h6)}
-                  color={OTHER_COLORS.yellow}
-                />
-              )}
-              {[...Array(emptyStars)].map((_, index) => (
-                <AnyIcon
-                  type={IconType.FontAwesome}
-                  name="star-o"
-                  size={hp(FONT_SIZE.h6)}
-                  color={OTHER_COLORS.yellow}
-                />
-              ))}
+              <Text style={styles.author}>{item.condition}</Text>
             </View>
           </View>
         </View>
         <View style={styles.viewContainer}>
-          <AnyIcon
-            type={IconType.Ionicons}
-            name="eye-outline"
-            size={hp(FONT_SIZE.h3)}
-            color={appTheme.primary}
-          />
-          <Text style={styles.views}>237 views</Text>
+          <Text style={styles.views}>${item.price}</Text>
         </View>
       </TouchableOpacity>
     );
   };
+
   return (
     <View style={styles.container}>
-      <FlatList data={topTrending} renderItem={renderItems} />
+      <FlatList
+        data={products}
+        renderItem={renderItems}
+        keyExtractor={(item) => item._id}
+        showsVerticalScrollIndicator={false}
+      />
     </View>
   );
 };

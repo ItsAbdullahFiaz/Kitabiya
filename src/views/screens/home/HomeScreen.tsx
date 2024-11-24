@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { AnyIcon, IconType } from '../../../components';
 import { AppDataContext } from '../../../context';
-import { Text, View, StyleSheet, StatusBar, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { Text, View, StyleSheet, StatusBar, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import { FONT, FONT_SIZE, SCREENS } from '../../../enums';
 import { useResponsiveDimensions } from '../../../hooks';
 import { useNavigation } from '@react-navigation/native';
@@ -15,6 +15,7 @@ export const HomeScreen = () => {
     const { appTheme, appLang } = useContext(AppDataContext);
     const { hp, wp } = useResponsiveDimensions();
     const [newlyAddedProducts, setNewlyAddedProducts] = useState([]);
+    const [popularProducts, setPopularProducts] = useState([]);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -40,6 +41,7 @@ export const HomeScreen = () => {
 
     useEffect(() => {
         fetchProducts();
+        fetchPopularProducts();
     }, []);
 
     const fetchProducts = async () => {
@@ -51,13 +53,26 @@ export const HomeScreen = () => {
                 throw new Error(response.message || 'Failed to fetch products');
             }
 
-            // Assuming the API returns products sorted by createdAt
             setNewlyAddedProducts(response.data || []);
         } catch (error) {
             console.error('Error fetching products:', error);
-            // You might want to show an error toast here
         } finally {
             setLoading(false);
+        }
+    };
+
+    const fetchPopularProducts = async () => {
+        try {
+            const response = await apiService.getPopularProducts();
+
+            if (response.error) {
+                throw new Error(response.message || 'Failed to fetch popular products');
+            }
+
+            setPopularProducts(response.data || []);
+            console.log('popularProducts', response.data);
+        } catch (error) {
+            console.error('Error fetching popular products:', error);
         }
     };
 
@@ -70,7 +85,7 @@ export const HomeScreen = () => {
             );
         }
 
-        return <NewlyPublished products={newlyAddedProducts} />;
+        return <NewlyPublished products={popularProducts} />;
     };
 
     const styles = useMemo(() => {
@@ -116,7 +131,7 @@ export const HomeScreen = () => {
             topTrendingContainer: {
                 paddingHorizontal: hp(16),
                 marginTop: hp(20),
-                height: hp(342),
+                // height: hp(342),
                 overflow: "hidden"
             },
             heading: {
@@ -127,6 +142,7 @@ export const HomeScreen = () => {
             },
             NewlyPublishedHeader: {
                 paddingHorizontal: hp(16),
+                marginTop: hp(20),
                 flexDirection: "row",
                 justifyContent: "space-between",
                 alignItems: "center"
@@ -183,19 +199,21 @@ export const HomeScreen = () => {
                     </TouchableOpacity>
                 </View>
             </View>
-            <View style={styles.topTrendingContainer}>
-                <Text style={styles.heading}>{appLang.Foryou}</Text>
-                <TopTrending />
-            </View>
-            <View style={styles.NewlyPublishedHeader}>
-                <Text style={styles.heading}>{appLang.NewlyAdded}</Text>
-                <TouchableOpacity onPress={fetchProducts}>
-                    <Text>{appLang.Seemore}</Text>
-                </TouchableOpacity>
-            </View>
-            <View style={{ paddingLeft: 16, marginTop: 10 }}>
-                {renderNewlyPublished()}
-            </View>
+            <ScrollView>
+                <View style={styles.NewlyPublishedHeader}>
+                    <Text style={styles.heading}>{'Popular'}</Text>
+                    <TouchableOpacity onPress={fetchPopularProducts}>
+                        <Text>{appLang.Seemore}</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={{ paddingLeft: 16, marginTop: 10 }}>
+                    {renderNewlyPublished()}
+                </View>
+                <View style={styles.topTrendingContainer}>
+                    <Text style={styles.heading}>{'Top Trending'}</Text>
+                    <TopTrending products={newlyAddedProducts} loading={loading} />
+                </View>
+            </ScrollView>
         </View>
     );
 };

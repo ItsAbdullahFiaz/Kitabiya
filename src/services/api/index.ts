@@ -143,7 +143,13 @@ export const apiService = {
         ApiCall({
             URL: `${API_ENDPOINTS.PRODUCTS}/recent-searches?userId=${userId}`,
             verb: 'DELETE'
-        })
+        }),
+
+    getPopularProducts: () =>
+        ApiCall({
+            URL: `${API_ENDPOINTS.PRODUCTS}/popular`,
+            verb: 'GET'
+        }),
 };
 
 // New response types
