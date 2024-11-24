@@ -58,25 +58,65 @@ export const AddScreen = ({ route }: any) => {
   const showToast = useToast();
   const navigation = useNavigation<any>();
 
-  const updateProduct = async (productId:any) => {
+  const updateProduct = async (productId: string) => {
     try {
+      if (!validateInputs()) return;
+
       setLoading(true);
       const formData = await createFormData();
-      const response = await apiService.updateProduct(productId,formData);
-      console.log(
-        'PRODUCTS_BY_USERID_RESPONSE===>',
-        JSON.stringify(response.data),
-      );
-      navigation.navigate(SCREENS.MY_BOOK as never);
+      const response = await apiService.updateProduct(productId, formData);
+
       if (response.error) {
-        throw new Error(response.message || 'Failed to fetch products');
+        throw new Error(response.message || 'Failed to update product');
       }
+
+      showToast('Product updated successfully', 'successToast');
+      navigation.navigate(SCREENS.MY_BOOK as never);
     } catch (error) {
-      console.error('Error fetching products:', error);
-      // You might want to show an error toast here
+      console.error('Error updating product:', error);
+      showToast(
+        error instanceof Error ? error.message : 'Failed to update product',
+        'errorToast'
+      );
     } finally {
       setLoading(false);
     }
+  };
+
+  const validateInputs = () => {
+    if (!imagesList.length) {
+      showToast('Please add at least one image', 'errorToast');
+      return false;
+    }
+    if (!selected || selected === 'choose') {
+      showToast('Please select condition', 'errorToast');
+      return false;
+    }
+    if (!type || type === 'choose') {
+      showToast('Please select type', 'errorToast');
+      return false;
+    }
+    if (!language || language === 'choose') {
+      showToast('Please select language', 'errorToast');
+      return false;
+    }
+    if (!bookTitle.trim()) {
+      showToast('Please enter book title', 'errorToast');
+      return false;
+    }
+    if (!description.trim()) {
+      showToast('Please enter description', 'errorToast');
+      return false;
+    }
+    if (!location || location === 'choose') {
+      showToast('Please select location', 'errorToast');
+      return false;
+    }
+    if (!price.trim()) {
+      showToast('Please enter price', 'errorToast');
+      return false;
+    }
+    return true;
   };
 
   const handleSelect = (type: any) => {
@@ -169,11 +209,6 @@ export const AddScreen = ({ route }: any) => {
 
   const createFormData = async () => {
     const formData = new FormData();
-    const userId = await AsyncStorage.getItem('BACKEND_USERID');
-
-    if (!userId) {
-      throw new Error('User ID not found');
-    }
 
     // Add images
     imagesList.forEach((uri: string, index: number) => {
@@ -184,19 +219,14 @@ export const AddScreen = ({ route }: any) => {
       });
     });
 
-    // Add all required fields
-    formData.append('userId', userId);
+    // Add only the required fields that match the API
     formData.append('title', bookTitle);
     formData.append('price', price);
     formData.append('condition', selected);
     formData.append('type', type);
     formData.append('language', language);
     formData.append('description', description);
-    formData.append('categoryId', 'cat1');
-    formData.append('categorySubId', 'subcat1');
-    formData.append('locationLatitude', '31.5204');
-    formData.append('locationLongitude', '74.3587');
-    formData.append('locationAddress', location || 'Lahore, Pakistan');
+    formData.append('locationAddress', location);
 
     console.log('FormData:', formData);
     return formData;
@@ -204,42 +234,16 @@ export const AddScreen = ({ route }: any) => {
 
   const handleSubmit = async () => {
     try {
-      // Validation
-      if (!imagesList.length) {
-        return showToast('Please add at least one image', 'errorToast');
-      }
-      if (!selected || selected === 'choose') {
-        return showToast('Please select condition', 'errorToast');
-      }
-      if (!type || type === 'choose') {
-        return showToast('Please select type', 'errorToast');
-      }
-      if (!language || language === 'choose') {
-        return showToast('Please select language', 'errorToast');
-      }
-      if (!bookTitle.trim()) {
-        return showToast('Please enter book title', 'errorToast');
-      }
-      if (!description.trim()) {
-        return showToast('Please enter description', 'errorToast');
-      }
-      if (!location || location === 'choose') {
-        return showToast('Please select location', 'errorToast');
-      }
-      if (!price.trim()) {
-        return showToast('Please enter price', 'errorToast');
-      }
+      if (!validateInputs()) return;
 
       setLoading(true);
       const formData = await createFormData();
-
       const response = await apiService.createProduct(formData);
 
       if (response.error) {
         throw new Error(response.message || 'Failed to create product');
       }
 
-      // Success
       showToast('Product added successfully', 'successToast');
       navigation.goBack();
     } catch (error) {
@@ -464,7 +468,7 @@ export const AddScreen = ({ route }: any) => {
         <View style={styles.nextBtnContainer}>
           {dataType === 'edit' ? (
             <MainButton
-              onPress={()=>updateProduct(data?._id)}
+              onPress={() => updateProduct(data?._id)}
               buttonText="Update"
               isLoading={loading}
               disableBtn={loading}

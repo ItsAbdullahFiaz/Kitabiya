@@ -29,9 +29,7 @@ export const MyBooksScreen = () => {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const userId = await AsyncStorage.getItem('BACKEND_USERID');
-      console.log('USER_ID===>', userId);
-      const response = await apiService.getProductsByUser(userId);
+      const response = await apiService.getMyProducts();
       console.log(
         'PRODUCTS_BY_USERID_RESPONSE===>',
         JSON.stringify(response.data),

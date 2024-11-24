@@ -92,25 +92,14 @@ export const SignupScreen = () => {
       // Register with authentication using normalized email
       const response = await registerUser(normalizedEmail, password);
 
+      await AsyncStorage.setItem('TOKEN', response?.token || '');
+
       if (response.success) {
         // Request notification permission and save token
         const permissionGranted = await notificationService.requestUserPermission();
         if (permissionGranted) {
           await notificationService.saveFCMToken(userId);
         }
-
-        // Call API for registration
-        const registerApiResponse = await apiService.registerUser({
-          name: userName.trim(),
-          email: normalizedEmail,
-        });
-
-        if (registerApiResponse.error) {
-          throw new Error(registerApiResponse.message || 'Registration failed');
-        }
-
-        // Save API user IDs
-        await AsyncStorage.setItem('BACKEND_USERID', registerApiResponse.user.id);
 
         resetAndGo(navigation, STACK.MAIN, null);
         showToast(appLang.signupSuccess, 'successToast');

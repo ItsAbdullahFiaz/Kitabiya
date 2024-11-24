@@ -54,7 +54,7 @@ export const SearchScreen = () => {
             return { uri: images[0] };
         }
         // Return default image if no valid image URL
-        return require('../../../assets/images/books.jpg'); // Add your default image
+        return require('./../../../assets/images/books.jpg'); // Add your default image
     };
     const styles = useMemo(() => {
         return StyleSheet.create({
@@ -158,7 +158,7 @@ export const SearchScreen = () => {
 
             try {
                 setLoading(true);
-                const response = await apiService.searchProducts(searchTerm);
+                const response = await apiService.searchProducts({ query: searchTerm });
 
                 if (response.error) {
                     throw new Error(response.message || 'Failed to fetch products');
@@ -207,10 +207,7 @@ export const SearchScreen = () => {
     // Load recent searches from API
     const loadRecentSearches = async () => {
         try {
-            const userId = await AsyncStorage.getItem('BACKEND_USERID');
-            if (!userId) return;
-
-            const response = await apiService.getRecentSearches(userId);
+            const response = await apiService.getRecentSearches();
             if (!response.error && response.data) {
                 setRecentSearches(response.data);
             }
@@ -222,10 +219,7 @@ export const SearchScreen = () => {
     // Clear all recent searches
     const clearRecentSearches = async () => {
         try {
-            const userId = await AsyncStorage.getItem('BACKEND_USERID');
-            if (!userId) return;
-
-            await apiService.clearRecentSearches(userId);
+            await apiService.clearRecentSearches();
             setRecentSearches([]);
         } catch (error) {
             console.error('Error clearing recent searches:', error);
@@ -235,14 +229,7 @@ export const SearchScreen = () => {
     // Add to recent searches
     const addToRecentSearches = async (productId: string) => {
         try {
-            const userId = await AsyncStorage.getItem('BACKEND_USERID');
-            if (!userId) {
-                console.log('No user ID found');
-                return;
-            }
-
             const response = await apiService.addRecentSearch({
-                userId,
                 productId
             });
 
@@ -259,11 +246,11 @@ export const SearchScreen = () => {
     const handleProductPress = async (product: any) => {
         try {
             await addToRecentSearches(product._id);
-            navigation.navigate('ProductDetails', { product });
+            // navigation.navigate('ProductDetails', { product });
         } catch (error) {
             console.error('Error handling product press:', error);
             // Still navigate even if adding to recent fails
-            navigation.navigate('ProductDetails', { product });
+            // navigation.navigate('ProductDetails', { product });
         }
     };
 
@@ -344,7 +331,7 @@ export const SearchScreen = () => {
                                             source={getImageSource(item.product.images)}
                                             style={styles.img}
                                             resizeMode="cover"
-                                            defaultSource={require('../../../assets/images/books.jpg')}
+                                            defaultSource={require('./../../../assets/images/books.jpg')}
                                         />
                                     </View>
                                     <View>
@@ -376,7 +363,7 @@ export const SearchScreen = () => {
                                             source={getImageSource(item.images)}
                                             style={styles.img}
                                             resizeMode="cover"
-                                            defaultSource={require('../../../assets/images/books.jpg')}
+                                            defaultSource={require('./../../../assets/images/books.jpg')}
                                         />
                                     </View>
                                     <View>

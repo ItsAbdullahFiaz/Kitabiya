@@ -76,19 +76,6 @@ export const LoginScreen = () => {
       );
       console.log('User data saved to local storage');
 
-      // Call API for login
-      const registerApiResponse = await apiService.registerUser({
-        name: userData.userName.trim(),
-        email: normalizedEmail,
-      });
-
-      if (registerApiResponse.error) {
-        throw new Error(registerApiResponse.message || 'Login failed');
-      }
-
-      // Save API user ID
-      await AsyncStorage.setItem('BACKEND_USERID', registerApiResponse.user.id);
-
       // Request notification permission and save token
       try {
         const permissionGranted = await notificationService.requestUserPermission();
@@ -104,6 +91,8 @@ export const LoginScreen = () => {
       // Proceed with login using normalized email
       const response = await loginUser(normalizedEmail, password.trim());
       console.log('Login response:', response);
+
+      await AsyncStorage.setItem('TOKEN', response?.token || '');
 
       if (response.success) {
         console.log('Login successful, navigating...');

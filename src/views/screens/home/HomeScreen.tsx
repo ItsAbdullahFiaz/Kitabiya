@@ -53,7 +53,7 @@ export const HomeScreen = () => {
                 throw new Error(response.message || 'Failed to fetch products');
             }
 
-            setNewlyAddedProducts(response.data || []);
+            setNewlyAddedProducts(response.data.products || []);
         } catch (error) {
             console.error('Error fetching products:', error);
         } finally {

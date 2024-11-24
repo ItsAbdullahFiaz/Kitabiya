@@ -1,8 +1,9 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 interface ApiCallProps {
     params?: any;
     URL: string;
     verb: string;
-    token?: string | null;
     isFormData?: boolean;
     setLoading?: (loading: boolean) => void;
 }
@@ -11,13 +12,17 @@ export const ApiCall = async ({
     params,
     URL,
     verb,
-    token = null,
     isFormData = false,
     setLoading = () => { }
 }: ApiCallProps) => {
     setLoading(true);
 
     try {
+        const token = await AsyncStorage.getItem('TOKEN');
+        if (!token) {
+            throw new Error('No authentication token found');
+        }
+
         console.log('URL:', URL);
         params && console.log('Params:', params);
 
@@ -25,7 +30,7 @@ export const ApiCall = async ({
             method: verb,
             headers: {
                 'Accept': 'application/json',
-                'Authorization': token ? `Bearer ${token}` : '',
+                'Authorization': `Bearer ${token}`
             }
         };
 

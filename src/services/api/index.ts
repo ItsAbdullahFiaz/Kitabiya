@@ -77,14 +77,13 @@ export const apiService = {
 
     searchProducts: (searchParams: ProductSearchParams) =>
         ApiCall({
-            URL: API_ENDPOINTS.PRODUCTS + `/search?query=${searchParams}&page=1&limit=10`,
-            verb: 'GET',
-            params: searchParams
+            URL: `${API_ENDPOINTS.PRODUCTS}/search?query=${searchParams}`,
+            verb: 'GET'
         }),
 
-    getProductsByUser: (userId: string) =>
+    getMyProducts: () =>
         ApiCall({
-            URL: `${API_ENDPOINTS.PRODUCTS}/user/${userId}`,
+            URL: `${API_ENDPOINTS.PRODUCTS}/my-products`,
             verb: 'GET'
         }),
 
@@ -124,7 +123,7 @@ export const apiService = {
         }),
 
     // Add recent search
-    addRecentSearch: (data: { userId: string; productId: string }) =>
+    addRecentSearch: (data: { productId: string }) =>
         ApiCall({
             URL: `${API_ENDPOINTS.PRODUCTS}/recent-searches`,
             verb: 'POST',
@@ -132,16 +131,16 @@ export const apiService = {
         }),
 
     // Get recent searches
-    getRecentSearches: (userId: string) =>
+    getRecentSearches: () =>
         ApiCall({
-            URL: `${API_ENDPOINTS.PRODUCTS}/recent-searches?userId=${userId}`,
+            URL: `${API_ENDPOINTS.PRODUCTS}/recent-searches`,
             verb: 'GET'
         }),
 
     // Clear recent searches
-    clearRecentSearches: (userId: string) =>
+    clearRecentSearches: () =>
         ApiCall({
-            URL: `${API_ENDPOINTS.PRODUCTS}/recent-searches?userId=${userId}`,
+            URL: `${API_ENDPOINTS.PRODUCTS}/recent-searches`,
             verb: 'DELETE'
         }),
 
