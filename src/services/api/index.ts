@@ -122,6 +122,28 @@ export const apiService = {
             verb: 'POST',
             params: notificationData
         }),
+
+    // Add recent search
+    addRecentSearch: (data: { userId: string; productId: string }) =>
+        ApiCall({
+            URL: `${API_ENDPOINTS.PRODUCTS}/recent-searches`,
+            verb: 'POST',
+            params: data
+        }),
+
+    // Get recent searches
+    getRecentSearches: (userId: string) =>
+        ApiCall({
+            URL: `${API_ENDPOINTS.PRODUCTS}/recent-searches?userId=${userId}`,
+            verb: 'GET'
+        }),
+
+    // Clear recent searches
+    clearRecentSearches: (userId: string) =>
+        ApiCall({
+            URL: `${API_ENDPOINTS.PRODUCTS}/recent-searches?userId=${userId}`,
+            verb: 'DELETE'
+        })
 };
 
 // New response types

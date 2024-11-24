@@ -45,7 +45,7 @@ export const ApiCall = async ({
         const data = await response.json();
 
         if (response.ok) {
-            console.log('Response:', data);
+            console.log('Response:', JSON.stringify(data));
             return data;
         } else {
             console.error('Error response:', data);

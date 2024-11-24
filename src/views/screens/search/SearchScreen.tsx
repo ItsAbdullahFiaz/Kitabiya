@@ -1,5 +1,5 @@
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View, FlatList } from 'react-native'
-import React, { useContext, useMemo, useState } from 'react'
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View, FlatList, ActivityIndicator } from 'react-native'
+import React, { useContext, useMemo, useState, useCallback, useEffect, useRef } from 'react'
 import { AnyIcon, BackButton, IconType, MainContainer } from '../../../components'
 import { useResponsiveDimensions } from '../../../hooks'
 import { FONT_SIZE, TEXT_STYLE } from '../../../enums'
@@ -7,12 +7,24 @@ import { MaybeYouLike } from './components'
 import { AppDataContext } from '../../../context'
 import { apiService } from '../../../services/api'
 import { useNavigation } from '@react-navigation/native'
+import debounce from 'lodash/debounce'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+interface RecentSearch {
+    _id: string;
+    product: {
+        _id: string;
+        title: string;
+        images: string[];
+        price: number;
+    };
+    createdAt: string;
+}
 
-const data = ['history', 'science fiction', 'families', 'humor', 'thriller', 'self-help', 'personal', 'the wood', 'adventure'];
 export const SearchScreen = () => {
     const navigation = useNavigation<any>();
-    const [recent, setRecent] = useState<any>([]);
+    const inputRef = useRef<TextInput>(null);
+    const [recentSearches, setRecentSearches] = useState<RecentSearch[]>([]);
     const [searchValue, setSearchValue] = useState("");
     const [loading, setLoading] = useState(false);
     const [searchedProduct, setSearchedProduct] = useState<any>([]);
@@ -29,7 +41,6 @@ export const SearchScreen = () => {
 
             // Assuming the API returns products sorted by createdAt
             setSearchedProduct(response.data || []);
-            setRecent(prev => [...prev, search]);
         } catch (error) {
             console.error('Error fetching products:', error);
             // You might want to show an error toast here
@@ -63,6 +74,7 @@ export const SearchScreen = () => {
                 paddingLeft: hp(10)
             },
             input: {
+                flex: 1,
                 height: "100%",
                 marginTop: hp(5),
                 paddingTop: hp(5),
@@ -81,156 +93,305 @@ export const SearchScreen = () => {
                 textTransform: "capitalize",
                 marginBottom: hp(10)
             },
-            textContainer: {
-                height: hp(26),
-                borderRadius: hp(12),
-                paddingHorizontal: hp(10),
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "row",
-                backgroundColor: "rgba(90, 108, 248, 0.1)",
-                marginHorizontal: hp(6),
-                marginVertical: hp(10)
-
-            },
             btnText: {
                 ...TEXT_STYLE.medium,
                 fontSize: hp(FONT_SIZE.h5),
                 color: appTheme.tertiaryTextColor,
             },
-            searchedText: {
+            clearButton: {
+                padding: 8,
+                justifyContent: 'center',
+                alignItems: 'center',
+            },
+            card: {
+                height: hp(90),
+                width: '100%',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginTop: hp(12),
+                borderWidth: 1,
+                borderColor: appTheme.borderDefault,
+                borderRadius: hp(8),
+            },
+            leftContainer: {
+                flexDirection: 'row',
+                justifyContent: 'flex-start',
+                alignItems: 'center',
+            },
+            imgContainer: {
+                width: hp(70),
+                backgroundColor: appTheme.disabled,
+                height: '100%',
+                borderRadius: hp(8),
+                overflow: 'hidden',
+                marginRight: hp(12),
+            },
+            img: {
+                width: '100%',
+                height: '100%',
+            },
+            name: {
+                ...TEXT_STYLE.medium,
+                fontSize: hp(FONT_SIZE.h4),
+                color: appTheme.secondaryTextColor,
+                textTransform: 'capitalize',
+            },
+            author: {
                 ...TEXT_STYLE.regular,
                 fontSize: hp(FONT_SIZE.h5),
-                color: appTheme.primary,
-                marginRight: hp(8),
-                textTransform: "capitalize"
+                color: appTheme.tertiaryTextColor,
             },
-            listContainer: {
-                flexDirection: "row",
-                flexWrap: 'wrap',
-                marginTop: hp(10)
+            condition: {
+                ...TEXT_STYLE.regular,
+                fontSize: hp(FONT_SIZE.h5),
+                color: appTheme.tertiaryTextColor,
+                marginTop: hp(2),
             },
-            productCard: {
-                width: 150,
-                marginRight: 12,
-                borderRadius: 8,
-                backgroundColor: 'white',
-                elevation: 2,
-                overflow: 'hidden'
-            },
-            productImage: {
-                width: '100%',
-                height: 150,
-                backgroundColor: '#f0f0f0' // Placeholder color while loading
-            },
-            productInfo: {
-                padding: 8
-            },
-            productTitle: {
-                fontSize: 14,
-                fontWeight: '500',
-                marginBottom: 4
-            },
-            productPrice: {
-                fontSize: 12,
-                color: '#666',
-                marginBottom: 2
-            },
-            productCondition: {
-                fontSize: 12,
-                color: '#888'
-            },
-            emptyContainer: {
-                padding: 20,
-                alignItems: 'center',
-                justifyContent: 'center'
-            },
-            emptyText: {
-                fontSize: 14,
-                color: '#666'
-            }
         })
     }, [hp, wp])
+
+    // Debounced search function
+    const debouncedSearch = useCallback(
+        debounce(async (searchTerm: string) => {
+            if (!searchTerm.trim()) return;
+
+            try {
+                setLoading(true);
+                const response = await apiService.searchProducts(searchTerm);
+
+                if (response.error) {
+                    throw new Error(response.message || 'Failed to fetch products');
+                }
+
+                setSearchedProduct(response.data || []);
+            } catch (error) {
+                console.error('Error fetching products:', error);
+                // Add your error handling here (e.g., show toast)
+            } finally {
+                setLoading(false);
+            }
+        }, 500), // 500ms delay
+        []
+    );
+
+    // Handle search input change
+    const handleSearchChange = (val: string) => {
+        setSearchValue(val);
+
+        // Clear results if search field is empty
+        if (!val.trim()) {
+            setSearchedProduct([]);
+            debouncedSearch.cancel(); // Cancel any pending search
+            return;
+        }
+
+        debouncedSearch(val);
+    };
+
+    // Handle search on Enter press
+    const handleSearchSubmit = () => {
+        if (searchValue.trim()) {
+            debouncedSearch.cancel();
+            debouncedSearch(searchValue);
+        }
+    };
+
+    // Load recent searches when screen mounts
+    useEffect(() => {
+        if (!searchValue.trim()) {
+            loadRecentSearches();
+        }
+    }, [searchValue]);
+
+    // Load recent searches from API
+    const loadRecentSearches = async () => {
+        try {
+            const userId = await AsyncStorage.getItem('BACKEND_USERID');
+            if (!userId) return;
+
+            const response = await apiService.getRecentSearches(userId);
+            if (!response.error && response.data) {
+                setRecentSearches(response.data);
+            }
+        } catch (error) {
+            console.error('Error loading recent searches:', error);
+        }
+    };
+
+    // Clear all recent searches
+    const clearRecentSearches = async () => {
+        try {
+            const userId = await AsyncStorage.getItem('BACKEND_USERID');
+            if (!userId) return;
+
+            await apiService.clearRecentSearches(userId);
+            setRecentSearches([]);
+        } catch (error) {
+            console.error('Error clearing recent searches:', error);
+        }
+    };
+
+    // Add to recent searches
+    const addToRecentSearches = async (productId: string) => {
+        try {
+            const userId = await AsyncStorage.getItem('BACKEND_USERID');
+            if (!userId) {
+                console.log('No user ID found');
+                return;
+            }
+
+            const response = await apiService.addRecentSearch({
+                userId,
+                productId
+            });
+
+            if (!response.error) {
+                // Refresh recent searches list
+                loadRecentSearches();
+            }
+        } catch (error) {
+            console.error('Error adding to recent searches:', error);
+        }
+    };
+
+    // Update product press handler
+    const handleProductPress = async (product: any) => {
+        try {
+            await addToRecentSearches(product._id);
+            navigation.navigate('ProductDetails', { product });
+        } catch (error) {
+            console.error('Error handling product press:', error);
+            // Still navigate even if adding to recent fails
+            navigation.navigate('ProductDetails', { product });
+        }
+    };
+
+    // Add clear search handler
+    const handleClearSearch = () => {
+        setSearchValue('');
+        setSearchedProduct([]);
+        inputRef.current?.clear();
+    };
 
     return (
         <MainContainer>
             <View style={styles.header}>
                 <BackButton />
                 <View style={styles.searchContainer}>
-                    <TouchableOpacity onPress={() => fetchProducts(searchValue)}>
-                        <AnyIcon
-                            type={IconType.EvilIcons}
-                            name="search"
-                            color={appTheme.tertiaryTextColor}
-                            size={16}
-                        />
+                    <TouchableOpacity
+                        onPress={handleSearchSubmit}
+                        disabled={loading || !searchValue.trim()}
+                    >
+                        {loading ? (
+                            <ActivityIndicator size="small" color={appTheme.tertiaryTextColor} />
+                        ) : (
+                            <AnyIcon
+                                type={IconType.EvilIcons}
+                                name="search"
+                                color={appTheme.tertiaryTextColor}
+                                size={16}
+                            />
+                        )}
                     </TouchableOpacity>
-                    <TextInput style={styles.input} value={searchValue} placeholder={appLang.Searchhere} placeholderTextColor={appTheme.tertiaryTextColor} onChangeText={val => setSearchValue(val)} />
+                    <TextInput
+                        ref={inputRef}
+                        style={styles.input}
+                        value={searchValue}
+                        placeholder={appLang.Searchhere}
+                        placeholderTextColor={appTheme.tertiaryTextColor}
+                        onChangeText={handleSearchChange}
+                        onSubmitEditing={handleSearchSubmit}
+                        returnKeyType="search"
+                        editable={!loading}
+                        autoFocus={true}
+                    />
+                    {searchValue.length > 0 && (
+                        <TouchableOpacity
+                            onPress={handleClearSearch}
+                            style={styles.clearButton}
+                        >
+                            <AnyIcon
+                                type={IconType.EvilIcons}
+                                name="close"
+                                color={appTheme.tertiaryTextColor}
+                                size={16}
+                            />
+                        </TouchableOpacity>
+                    )}
                 </View>
             </View>
-            {recent.length > 0 && (
-                <>
+
+            {/* Show Recent Searches when search is empty */}
+            {!searchValue.trim() && recentSearches.length > 0 && (
+                <View>
                     <View style={styles.recent}>
                         <Text style={styles.text}>{appLang.recently}</Text>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={clearRecentSearches}>
                             <Text style={styles.btnText}>{appLang.Deleteall}</Text>
                         </TouchableOpacity>
                     </View>
-                    <View style={styles.listContainer}>
-                        {recent.map((item, index) => {
-                            return (
-                                <View key={index} style={styles.textContainer}>
-                                    <Text style={styles.searchedText}>{item}</Text>
-                                    <TouchableOpacity>
-                                        <AnyIcon
-                                            type={IconType.EvilIcons}
-                                            name='close'
-                                            size={16}
-                                            color={appTheme.primary}
+                    <FlatList
+                        data={recentSearches}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity
+                                style={styles.card}
+                                onPress={() => navigation.navigate('ProductDetails', { product: item.product })}
+                            >
+                                <View style={styles.leftContainer}>
+                                    <View style={styles.imgContainer}>
+                                        <Image
+                                            source={getImageSource(item.product.images)}
+                                            style={styles.img}
+                                            resizeMode="cover"
+                                            defaultSource={require('../../../assets/images/books.jpg')}
                                         />
-                                    </TouchableOpacity>
+                                    </View>
+                                    <View>
+                                        <Text style={styles.name}>{item.product.title || 'Untitled'}</Text>
+                                        <Text style={styles.author}>Rs. {item.product.price || '0'}</Text>
+                                    </View>
                                 </View>
-                            )
-                        })}
-                    </View>
-                </>
+                            </TouchableOpacity>
+                        )}
+                        keyExtractor={item => item._id}
+                    />
+                </View>
             )}
-            {/* Searched Iten */}
-            {searchedProduct.length > 0 && (
+
+            {/* Show Search Results when searching */}
+            {searchValue.trim() && searchedProduct.length > 0 && (
                 <View>
                     <Text style={styles.text}>results</Text>
                     <FlatList
                         data={searchedProduct}
-                        renderItem={({ item }) => {
-                            return (
-                                <TouchableOpacity
-                                    style={styles.productCard}
-                                    onPress={() => navigation.navigate('ProductDetails', { product: item })}
-                                >
-                                    <Image
-                                        source={getImageSource(item.images)}
-                                        style={styles.productImage}
-                                        resizeMode="cover"
-                                        defaultSource={require('../../../assets/images/books.jpg')} // Fallback while loading
-                                    />
-                                    <View style={styles.productInfo}>
-                                        <Text style={styles.productTitle} numberOfLines={1}>
-                                            {item.title || 'Untitled'}
-                                        </Text>
-                                        <Text style={styles.productPrice}>
-                                            Rs. {item.price || '0'}
-                                        </Text>
-                                        <Text style={styles.productCondition}>
-                                            {item.condition || 'N/A'}
-                                        </Text>
+                        renderItem={({ item }) => (
+                            <TouchableOpacity
+                                style={styles.card}
+                                onPress={() => handleProductPress(item)}
+                            >
+                                <View style={styles.leftContainer}>
+                                    <View style={styles.imgContainer}>
+                                        <Image
+                                            source={getImageSource(item.images)}
+                                            style={styles.img}
+                                            resizeMode="cover"
+                                            defaultSource={require('../../../assets/images/books.jpg')}
+                                        />
                                     </View>
-                                </TouchableOpacity>
-                            )
-                        }}
+                                    <View>
+                                        <Text style={styles.name}>{item.title || 'Untitled'}</Text>
+                                        <Text style={styles.author}>Rs. {item.price || '0'}</Text>
+                                        <Text style={styles.condition}>{item.condition || 'N/A'}</Text>
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+                        )}
+                        keyExtractor={item => item._id}
                     />
                 </View>
             )}
-            <MaybeYouLike />
+            {/* <MaybeYouLike /> */}
         </MainContainer>
     )
 }
