@@ -50,7 +50,8 @@ export const MyBooksScreen = () => {
   };
   useEffect(() => {
     fetchProducts();
-  }, [isModalVisible]);
+  }, [isModalVisible,myAdsList]);
+
   const handleOpenModal = (id: any) => {
     setIndex(id);
     setIsModalVisible(true);

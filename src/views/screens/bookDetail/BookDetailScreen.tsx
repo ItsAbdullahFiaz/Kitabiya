@@ -1,22 +1,23 @@
 import { Image, StyleSheet, Text, View } from 'react-native';
 import React, { useContext, useMemo, useState } from 'react';
-import { AnyIcon, Header, IconType, MainButton, MainContainer } from '../../../components';
-import { FONT, FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../enums';
+import { Header, MainButton, MainContainer } from '../../../components';
+import { FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE } from '../../../enums';
 import { useResponsiveDimensions } from '../../../hooks';
 import { AppDataContext } from '../../../context';
+import { useNavigation } from '@react-navigation/native';
 
 export const BookDetailScreen = ({ route }: any) => {
+  const navigation=useNavigation<any>();
   const { appTheme, appLang } = useContext(AppDataContext);
   const [isExpanded, setIsExpanded] = useState(false);
-
   const toggleText = () => setIsExpanded(!isExpanded);
-
   const { hp, wp } = useResponsiveDimensions();
-  const data = route?.params?.book;
+  const data = route?.params?.product;
+  console.log("PARAM_DATA_BOOK===>",data);
   const shouldShowReadMore = data.description.length > 100;
-  const fullStars = Math.floor(data.rating);
-  const halfStars = data.rating - fullStars >= 0.5 ? 1 : 0;
-  const emptyStars = 5 - fullStars - halfStars;
+  // const fullStars = Math.floor(data.rating);
+  // const halfStars = data.rating - fullStars >= 0.5 ? 1 : 0;
+  // const emptyStars = 5 - fullStars - halfStars;
 
   // Truncate the text if needed and add the "Read more" link inline
   const displayText =
@@ -127,12 +128,12 @@ export const BookDetailScreen = ({ route }: any) => {
       <Header title={appLang.bookdetail} />
       <View style={styles.introContainer}>
         <View style={styles.imgContainer}>
-          <Image source={data.image} />
+          <Image style={{width:"100%",height:"100%"}} source={{uri:data.images[0]}} />
         </View>
         <View style={styles.nameContainer}>
-          <Text style={styles.name}>{data.name}</Text>
-          <Text style={styles.author}>{data.author}</Text>
-          <View style={styles.starsContainer}>
+          <Text style={styles.name}>{data.title}</Text>
+          {/* <Text style={styles.author}>{data.author}</Text> */}
+          {/* <View style={styles.starsContainer}>
             {[...Array(fullStars)].map((_, index) => (
               <AnyIcon
                 type={IconType.FontAwesome}
@@ -158,13 +159,13 @@ export const BookDetailScreen = ({ route }: any) => {
                 color={OTHER_COLORS.yellow}
               />
             ))}
-          </View>
+          </View> */}
           {data.price > 0 ? (
             <Text style={styles.price}>{`$${data.price}`}</Text>
           ) : (
             <Text style={styles.free}>{appLang.free}</Text>
           )}
-          <View
+          {/* <View
             style={{
               flexDirection: 'row',
               justifyContent: 'flex-start',
@@ -177,14 +178,14 @@ export const BookDetailScreen = ({ route }: any) => {
                 </View>
               );
             })}
-          </View>
+          </View> */}
         </View>
       </View>
       <View style={styles.detailsContainer}>
         <Text style={styles.detailHeading}>{appLang.details}</Text>
         <View style={styles.textContainer}>
           <Text style={styles.text}>
-            {displayText}
+            {data.description}
             {!isExpanded && shouldShowReadMore && (
               <Text onPress={toggleText} style={styles.readMore}>
                 {appLang.Readmore}
@@ -200,7 +201,7 @@ export const BookDetailScreen = ({ route }: any) => {
       </View>
       <View style={styles.chatBtnContainer}>
         <MainButton
-          onPress={() => { }}
+          onPress={() => navigation.navigate(SCREENS.CHAT as never)}
           buttonText={appLang.chatnow}
         />
       </View>
