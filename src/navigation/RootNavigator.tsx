@@ -4,7 +4,7 @@ import { NavigationHandler } from './NavigationHandler';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SCREENS, STACK } from '../enums';
 import { AuthStack, MainStack, OnboardingStack } from '.';
-import { MyBooksScreen, Notification, SplashScreen } from '../views/screens';
+import { MyBooksScreen, Notification, Popular, SplashScreen } from '../views/screens';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +19,7 @@ export const RootNavigator = () => {
                 <Stack.Screen name={STACK.MAIN} component={MainStack} />
                 <Stack.Screen name={SCREENS.NOTIFICATION} component={Notification} />
                 <Stack.Screen name={SCREENS.MY_BOOK} component={MyBooksScreen} />
+                <Stack.Screen name={SCREENS.POPULAR} component={Popular} />
             </Stack.Navigator>
         </NavigationContainer>
     )
