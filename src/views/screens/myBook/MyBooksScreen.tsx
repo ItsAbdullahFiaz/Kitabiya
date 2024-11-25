@@ -12,10 +12,11 @@ import { AnyIcon, IconType, MainContainer } from '../../../components';
 import { FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE } from '../../../enums';
 import { useResponsiveDimensions } from '../../../hooks';
 import { AppDataContext } from '../../../context';
+import { apiService } from '../../../services/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { convertDate } from '../../../utils';
 import { RemoveAd } from './components';
 import { useNavigation } from '@react-navigation/native';
-import { useApiService } from '../../../hooks/useApiService';
 
 export const MyBooksScreen = () => {
   const navigation = useNavigation<any>();
@@ -25,12 +26,10 @@ export const MyBooksScreen = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { hp, wp } = useResponsiveDimensions();
   const { appTheme, appLang } = useContext(AppDataContext);
-  const { getMyProducts } = useApiService();
-
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const response = await getMyProducts();
+      const response = await apiService.getMyProducts();
       console.log(
         'PRODUCTS_BY_USERID_RESPONSE===>',
         JSON.stringify(response.data),

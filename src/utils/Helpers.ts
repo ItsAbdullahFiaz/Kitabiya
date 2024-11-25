@@ -29,15 +29,18 @@ const storeStringValue = async (key: string, value: any) => {
     }
 }
 
-const getStoredStringValue = async (key: string) => {
+const getStoredStringValue = async (key: string, setStoredValue: any, defaultValue: any) => {
     try {
         const value = await AsyncStorage.getItem(key);
-        return value ?? null;
+        if (value !== null) {
+            setStoredValue(value)
+        } else {
+            setStoredValue(defaultValue)
+        }
     } catch (error) {
-        console.log(error);
-        return null;
+        console.log(error)
     }
-};
+}
 
 const validateName = (name: string) => {
     return name.length >= 3;

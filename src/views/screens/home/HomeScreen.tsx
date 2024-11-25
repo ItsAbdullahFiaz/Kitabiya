@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import { HeaderButtons, NewlyPublished, TopTrending } from './components';
 import { notificationService } from '../../../services/NotificationService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useApiService } from '../../../hooks/useApiService';
+import { apiService } from '../../../services/api';
 
 export const HomeScreen = () => {
     const navigation = useNavigation();
@@ -17,7 +17,6 @@ export const HomeScreen = () => {
     const [newlyAddedProducts, setNewlyAddedProducts] = useState([]);
     const [popularProducts, setPopularProducts] = useState([]);
     const [loading, setLoading] = useState(false);
-    const { getProducts, getPopularProducts } = useApiService();
 
     useEffect(() => {
         const setupNotifications = async () => {
@@ -48,7 +47,7 @@ export const HomeScreen = () => {
     const fetchProducts = async () => {
         try {
             setLoading(true);
-            const response = await getProducts();
+            const response = await apiService.getProducts();
 
             if (response.error) {
                 throw new Error(response.message || 'Failed to fetch products');
@@ -64,7 +63,7 @@ export const HomeScreen = () => {
 
     const fetchPopularProducts = async () => {
         try {
-            const response = await getPopularProducts();
+            const response = await apiService.getPopularProducts();
 
             if (response.error) {
                 throw new Error(response.message || 'Failed to fetch popular products');

@@ -5,7 +5,7 @@ import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { AppDataContext } from '../../../../context';
 import { useResponsiveDimensions } from '../../../../hooks';
 import { FONT_SIZE, TEXT_STYLE } from '../../../../enums';
-import { useApiService } from '../../../../hooks/useApiService';
+import { apiService } from '../../../../services/api';
 
 export const RemoveAd = ({ handleRemoveModal, index }: any) => {
   //   console.log('REMOVE_AD_ID===>', index);
@@ -14,12 +14,11 @@ export const RemoveAd = ({ handleRemoveModal, index }: any) => {
   const { hp, wp } = useResponsiveDimensions();
   const handleSheetChanges = useCallback((index: number) => { }, []);
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const { deleteProductApi } = useApiService();
 
   const deleteProduct = async (index: any) => {
     try {
       setLoading(true);
-      const response = await deleteProductApi(index);
+      const response = await apiService.deleteProduct(index);
       console.log(
         'PRODUCTS_BY_USERID_RESPONSE===>',
         JSON.stringify(response.data),

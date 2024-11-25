@@ -5,9 +5,10 @@ import { useResponsiveDimensions } from '../../../hooks'
 import { FONT_SIZE, TEXT_STYLE } from '../../../enums'
 import { MaybeYouLike } from './components'
 import { AppDataContext } from '../../../context'
+import { apiService } from '../../../services/api'
 import { useNavigation } from '@react-navigation/native'
 import debounce from 'lodash/debounce'
-import { useApiService } from '../../../hooks/useApiService'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface RecentSearch {
     _id: string;
@@ -29,12 +30,10 @@ export const SearchScreen = () => {
     const [searchedProduct, setSearchedProduct] = useState<any>([]);
     const { appTheme, appLang } = useContext(AppDataContext);
     const { hp, wp } = useResponsiveDimensions();
-    const { searchProducts, getRecentSearches, clearRecentSearchesApi, addRecentSearch } = useApiService();
-
     const fetchProducts = async (search: any) => {
         try {
             setLoading(true);
-            const response = await searchProducts(search);
+            const response = await apiService.searchProducts(search);
             console.log("SEARCH_RESPONSE===>", JSON.stringify(response.data));
             if (response.error) {
                 throw new Error(response.message || 'Failed to fetch products');
@@ -159,7 +158,7 @@ export const SearchScreen = () => {
 
             try {
                 setLoading(true);
-                const response = await searchProducts({ query: searchTerm });
+                const response = await apiService.searchProducts({ query: searchTerm });
 
                 if (response.error) {
                     throw new Error(response.message || 'Failed to fetch products');
@@ -208,7 +207,7 @@ export const SearchScreen = () => {
     // Load recent searches from API
     const loadRecentSearches = async () => {
         try {
-            const response = await getRecentSearches();
+            const response = await apiService.getRecentSearches();
             if (!response.error && response.data) {
                 setRecentSearches(response.data);
             }
@@ -220,7 +219,7 @@ export const SearchScreen = () => {
     // Clear all recent searches
     const clearRecentSearches = async () => {
         try {
-            await clearRecentSearchesApi();
+            await apiService.clearRecentSearches();
             setRecentSearches([]);
         } catch (error) {
             console.error('Error clearing recent searches:', error);
@@ -230,7 +229,7 @@ export const SearchScreen = () => {
     // Add to recent searches
     const addToRecentSearches = async (productId: string) => {
         try {
-            const response = await addRecentSearch({
+            const response = await apiService.addRecentSearch({
                 productId
             });
 

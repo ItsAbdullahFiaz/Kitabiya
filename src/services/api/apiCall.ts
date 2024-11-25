@@ -1,13 +1,11 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 interface ApiCallProps {
     params?: any;
     URL: string;
     verb: string;
     isFormData?: boolean;
     setLoading?: (loading: boolean) => void;
-    authToken: string | null;
-    isTokenExpired: () => boolean;
-    refreshToken: () => Promise<string | null>;
-    setAuthToken: any;
 }
 
 export const ApiCall = async ({
@@ -15,28 +13,25 @@ export const ApiCall = async ({
     URL,
     verb,
     isFormData = false,
-    setLoading = () => { },
-    authToken,
-    isTokenExpired,
-    refreshToken,
-    setAuthToken,
+    setLoading = () => { }
 }: ApiCallProps) => {
     setLoading(true);
 
     try {
-        if (!authToken || isTokenExpired()) {
-            const newToken = await refreshToken();
-            if (!newToken) {
-                throw new Error('No valid authentication token found');
-            }
+        const token = await AsyncStorage.getItem('TOKEN');
+        if (!token) {
+            throw new Error('No authentication token found');
         }
+
+        console.log('URL:', URL);
+        params && console.log('Params:', params);
 
         let options: RequestInit = {
             method: verb,
             headers: {
                 'Accept': 'application/json',
-                'Authorization': `Bearer ${authToken}`,
-            },
+                'Authorization': `Bearer ${token}`
+            }
         };
 
         if (verb !== 'GET') {
@@ -45,38 +40,24 @@ export const ApiCall = async ({
             } else {
                 options.headers = {
                     ...options.headers,
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 };
                 options.body = JSON.stringify(params);
             }
         }
 
-        let response = await fetch(URL, options);
-
-        if (response.status === 401) {
-            const newToken = await refreshToken();
-            if (newToken) {
-                options.headers = {
-                    ...options.headers,
-                    'Authorization': `Bearer ${newToken}`,
-                };
-                response = await fetch(URL, options);
-            } else {
-                throw new Error('Session expired. Please login again.');
-            }
-        }
-
+        const response = await fetch(URL, options);
         const data = await response.json();
 
         if (response.ok) {
+            console.log('Response:', JSON.stringify(data));
             return data;
         } else {
+            console.error('Error response:', data);
             return { error: response.status, message: data };
         }
     } catch (error: any) {
-        if (error.message === 'Session expired. Please login again.') {
-            setAuthToken(null);
-        }
+        console.error('API call error:', error);
         return { error: error.message };
     } finally {
         setLoading(false);

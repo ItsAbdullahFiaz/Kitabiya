@@ -6,14 +6,13 @@ import firestore from '@react-native-firebase/firestore';
 import { useResponsiveDimensions } from '../../../hooks';
 import { FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../enums';
 import { AppDataContext } from '../../../context';
-import { useApiService } from '../../../hooks/useApiService';
+import { apiService } from '../../../services/api';
 
 export const Chat = ({ route }: any) => {
   const { appTheme } = useContext(AppDataContext);
   const { hp, wp } = useResponsiveDimensions();
   const [messages, setMessages] = useState<any>([]);
   const [receiverToken, setReceiverToken] = useState<string>('');
-  const { sendNotificationApi } = useApiService();
 
   // Fetch receiver's FCM token
   useEffect(() => {
@@ -74,7 +73,7 @@ export const Chat = ({ route }: any) => {
         }
       };
 
-      const response = await sendNotificationApi(notificationData);
+      const response = await apiService.sendNotification(notificationData);
 
       if (response.error) {
         if (response.code === 'messaging/registration-token-not-registered') {
