@@ -17,7 +17,7 @@ export const BASE_URL = CONFIG[ENV].API_URL;
 export const API_ENDPOINTS = {
     // Auth
     REGISTER: `${BASE_URL}/users/register`,
-    LOGIN: `${BASE_URL}/users/login`,
+    LOGIN: `${BASE_URL}/auth/login`,
 
     // Products
     PRODUCTS: `${BASE_URL}/products`,

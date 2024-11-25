@@ -60,6 +60,12 @@ export const apiService = {
             params: userData
         }),
 
+    loginUser: () =>
+        ApiCall({
+            URL: API_ENDPOINTS.LOGIN,
+            verb: 'POST',
+        }),
+
     // Product APIs
     createProduct: (productData: FormData) =>
         ApiCall({
