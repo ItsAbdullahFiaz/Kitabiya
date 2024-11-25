@@ -32,9 +32,8 @@ import {
 } from '../../../components';
 import { Instructions } from '../../../components/unused';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
-import { apiService } from '../../../services/api';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import { useApiService } from '../../../hooks/useApiService';
 
 export const AddScreen = ({ route }: any) => {
   const { dataType } = route.params || 'add';
@@ -57,6 +56,7 @@ export const AddScreen = ({ route }: any) => {
   const [loading, setLoading] = useState(false);
   const showToast = useToast();
   const navigation = useNavigation<any>();
+  const { updateProductApi, createProduct } = useApiService();
 
   const updateProduct = async (productId: string) => {
     try {
@@ -64,7 +64,7 @@ export const AddScreen = ({ route }: any) => {
 
       setLoading(true);
       const formData = await createFormData();
-      const response = await apiService.updateProduct(productId, formData);
+      const response = await updateProductApi(productId, formData);
 
       if (response.error) {
         throw new Error(response.message || 'Failed to update product');
@@ -238,7 +238,7 @@ export const AddScreen = ({ route }: any) => {
 
       setLoading(true);
       const formData = await createFormData();
-      const response = await apiService.createProduct(formData);
+      const response = await createProduct(formData);
 
       if (response.error) {
         throw new Error(response.message || 'Failed to create product');

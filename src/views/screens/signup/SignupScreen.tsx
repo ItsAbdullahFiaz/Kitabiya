@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { CustomInput, Header, MainButton, MainContainer, SocialLogins } from '../../../components';
 import { useResponsiveDimensions, useToast } from '../../../hooks';
-import { resetAndGo, setEmailError, setNameError, setPasswordError, validateEmail, validatePassword, validateName } from '../../../utils';
+import { resetAndGo, setEmailError, setNameError, setPasswordError, validateEmail, validatePassword, validateName, storeStringValue } from '../../../utils';
 import { AppDataContext } from '../../../context';
 import { registerUser } from '../../../services';
 import { useNavigation } from '@react-navigation/native';
@@ -11,12 +11,11 @@ import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import uuid from 'react-native-uuid';
 import { notificationService } from '../../../services/NotificationService';
-import { apiService } from '../../../services/api';
 
 export const SignupScreen = () => {
   const navigation = useNavigation();
   const { hp, wp } = useResponsiveDimensions();
-  const { appTheme, appLang } = useContext(AppDataContext);
+  const { appTheme, appLang, setAuthToken } = useContext(AppDataContext);
   const showToast = useToast();
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
@@ -92,17 +91,18 @@ export const SignupScreen = () => {
       // Register with authentication using normalized email
       const response = await registerUser(normalizedEmail, password);
 
-      await AsyncStorage.setItem('TOKEN', response?.token || '');
+      // await AsyncStorage.setItem('TOKEN', response?.token || '');
 
-      if (response.success) {
+      if (response.success && response.token) {
+        const { token, expirationTime } = response.token;
+        setAuthToken(token, expirationTime);
+        resetAndGo(navigation, STACK.MAIN, null);
+        showToast(appLang.signupSuccess, 'successToast');
         // Request notification permission and save token
         const permissionGranted = await notificationService.requestUserPermission();
         if (permissionGranted) {
           await notificationService.saveFCMToken(userId);
         }
-
-        resetAndGo(navigation, STACK.MAIN, null);
-        showToast(appLang.signupSuccess, 'successToast');
       } else {
         // If auth fails, delete the Firestore document
         await firestore().collection('users').doc(userId).delete();

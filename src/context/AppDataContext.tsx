@@ -3,6 +3,7 @@ import { Appearance } from 'react-native';
 import { theme } from '../enums';
 import { langTranslations } from '../assets/lang';
 import { getStoredStringValue, storeStringValue } from '../utils';
+import { getAuthToken } from '../services/auth';
 
 const DEFAULT_LANG = langTranslations[4].value;
 const AUTO_THEME_MODE = '0'
@@ -17,6 +18,11 @@ interface AppDataContextType {
   activeLang: string;
   setActiveLang: React.Dispatch<React.SetStateAction<string>>;
   langTranslations: typeof langTranslations;
+  authToken: string | null;
+  tokenExpiration: string | null;
+  setAuthToken: (token: string | null, expiration: string | null) => void;
+  refreshToken: () => Promise<string | null>;
+  isTokenExpired: () => boolean;
 }
 
 // Provide a default value for appTheme
@@ -28,6 +34,11 @@ const defaultAppDataContext: AppDataContextType = {
   activeLang: '',
   setActiveLang: () => { },
   langTranslations: langTranslations,
+  authToken: null,
+  tokenExpiration: null,
+  setAuthToken: () => { },
+  refreshToken: async () => null,
+  isTokenExpired: () => true,
 };
 
 const AppDataContext = createContext<AppDataContextType>(defaultAppDataContext);
@@ -37,9 +48,15 @@ const AppDataProvider = ({ children }: { children: React.ReactNode }) => {
 
   const [activeLang, setActiveLang] = useState(DEFAULT_LANG);
   const [appLang, setAppLang] = useState({});
+  const [authToken, setAuthTokenState] = useState<string | null>(null);
+  const [tokenExpiration, setTokenExpiration] = useState<string | null>(null);
 
   useEffect(() => {
-    getStoredStringValue('@ThemeState', setActiveThemeMode, AUTO_THEME_MODE)
+    const fetchTheme = async () => {
+      const theme = await getStoredStringValue('@ThemeState')
+      setActiveThemeMode(theme ?? AUTO_THEME_MODE)
+    }
+    fetchTheme()
   }, [])
 
   useEffect(() => {
@@ -66,7 +83,11 @@ const AppDataProvider = ({ children }: { children: React.ReactNode }) => {
   }, [activeThemeMode]);
 
   useEffect(() => {
-    getStoredStringValue('@LangState', setActiveLang, DEFAULT_LANG)
+    const fetchLang = async () => {
+      const lang = await getStoredStringValue('@LangState');
+      setActiveLang(lang ?? DEFAULT_LANG);
+    };
+    fetchLang();
   }, [])
 
   useEffect(() => {
@@ -74,6 +95,44 @@ const AppDataProvider = ({ children }: { children: React.ReactNode }) => {
     setAppLang(mLangData?.data);
     storeStringValue('@LangState', activeLang)
   }, [activeLang]);
+
+  const setAuthToken = (token: string | null, expiration: string | null) => {
+    setAuthTokenState(token);
+    setTokenExpiration(expiration);
+  };
+
+  // Check token expiration
+  const isTokenExpired = () => {
+    if (!tokenExpiration) return true;
+    return new Date(tokenExpiration) <= new Date();
+  };
+
+  // Token refresh function
+  const refreshToken = async () => {
+    try {
+      const tokenResult = await getAuthToken(true);
+      if (tokenResult) {
+        storeStringValue('TOKEN', tokenResult.token);
+        storeStringValue('TOKEN_EXPIRATION', tokenResult.expirationTime);
+        setAuthToken(tokenResult.token, tokenResult.expirationTime);
+        return tokenResult.token;
+      }
+      return null;
+    } catch (error) {
+      console.error('Token refresh failed:', error);
+      return null;
+    }
+  };
+
+  // Load token on mount
+  useEffect(() => {
+    const loadToken = async () => {
+      const token = await getStoredStringValue('TOKEN');
+      const expiration = await getStoredStringValue('TOKEN_EXPIRATION');
+      setAuthToken(token, expiration);
+    };
+    loadToken();
+  }, []);
 
   const contextValue = useMemo(
     () => ({
@@ -84,6 +143,11 @@ const AppDataProvider = ({ children }: { children: React.ReactNode }) => {
       activeLang,
       setActiveLang,
       langTranslations,
+      authToken,
+      tokenExpiration,
+      setAuthToken,
+      refreshToken,
+      isTokenExpired,
     }),
     [
       appTheme,
@@ -93,6 +157,8 @@ const AppDataProvider = ({ children }: { children: React.ReactNode }) => {
       activeLang,
       setActiveLang,
       langTranslations,
+      authToken,
+      tokenExpiration,
     ],
   );
 

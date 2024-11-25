@@ -3,19 +3,18 @@ import React, { useContext, useMemo, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { CustomInput, Header, MainButton, MainContainer, SocialLogins } from '../../../components';
 import { useResponsiveDimensions, useToast } from '../../../hooks';
-import { resetAndGo, setEmailError, setPasswordError, validateEmail } from '../../../utils';
+import { resetAndGo, setEmailError, setPasswordError, storeStringValue, validateEmail } from '../../../utils';
 import { FONT_SIZE, SCREENS, STACK, TEXT_STYLE } from '../../../enums';
 import { AppDataContext } from '../../../context';
 import { loginUser } from '../../../services';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { notificationService } from '../../../services/NotificationService';
-import { apiService } from '../../../services/api';
 
 export const LoginScreen = () => {
   const navigation = useNavigation();
   const { hp, wp } = useResponsiveDimensions();
-  const { appTheme, appLang } = useContext(AppDataContext);
+  const { appTheme, appLang, setAuthToken } = useContext(AppDataContext);
   const showToast = useToast();
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -92,9 +91,10 @@ export const LoginScreen = () => {
       const response = await loginUser(normalizedEmail, password.trim());
       console.log('Login response:', response);
 
-      await AsyncStorage.setItem('TOKEN', response?.token || '');
+      if (response.success && response.token) {
+        const { token, expirationTime } = response.token;
+        setAuthToken(token, expirationTime);
 
-      if (response.success) {
         console.log('Login successful, navigating...');
         resetAndGo(navigation, STACK.MAIN, null);
         showToast(appLang.loginSuccess, 'successToast');
