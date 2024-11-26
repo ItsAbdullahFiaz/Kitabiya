@@ -1,20 +1,37 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
-import React, { useContext, useMemo, useState } from 'react';
-import { Header, MainButton, MainContainer } from '../../../components';
-import { FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE } from '../../../enums';
-import { useResponsiveDimensions } from '../../../hooks';
-import { AppDataContext } from '../../../context';
-import { useNavigation } from '@react-navigation/native';
+import {Image, StyleSheet, Text, View} from 'react-native';
+import React, {useContext, useEffect, useMemo, useState} from 'react';
+import {Header, MainButton, MainContainer} from '../../../components';
+import {FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE} from '../../../enums';
+import {useResponsiveDimensions} from '../../../hooks';
+import {AppDataContext} from '../../../context';
+import {useNavigation} from '@react-navigation/native';
+import auth from '@react-native-firebase/auth';
 
-export const BookDetailScreen = ({ route }: any) => {
-  const navigation=useNavigation<any>();
-  const { appTheme, appLang } = useContext(AppDataContext);
+export const BookDetailScreen = ({route}: any) => {
+  const navigation = useNavigation<any>();
+  const {appTheme, appLang} = useContext(AppDataContext);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [item, setItem] = useState({});
+  const [emailId, setEmailId] = useState('');
   const toggleText = () => setIsExpanded(!isExpanded);
-  const { hp, wp } = useResponsiveDimensions();
+  const {hp, wp} = useResponsiveDimensions();
   const data = route?.params?.product;
-  console.log("PARAM_DATA_BOOK===>",data);
+  console.log('PARAM_DATA_BOOK===>', data);
   const shouldShowReadMore = data.description.length > 100;
+
+  const chatCredentials = async () => {
+    try {
+      const res = await auth().currentUser;
+      setEmailId(res?.email);
+      setItem({email: data?.user.email, userName: data.user.name});
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    chatCredentials();
+  }, []);
   // const fullStars = Math.floor(data.rating);
   // const halfStars = data.rating - fullStars >= 0.5 ? 1 : 0;
   // const emptyStars = 5 - fullStars - halfStars;
@@ -115,11 +132,11 @@ export const BookDetailScreen = ({ route }: any) => {
         fontSize: hp(FONT_SIZE.h4),
       },
       chatBtnContainer: {
-        position: "absolute",
+        position: 'absolute',
         bottom: hp(20),
-        width: "100%",
-        alignSelf: "center"
-      }
+        width: '100%',
+        alignSelf: 'center',
+      },
     });
   }, [hp, wp]);
 
@@ -128,7 +145,10 @@ export const BookDetailScreen = ({ route }: any) => {
       <Header title={appLang.bookdetail} />
       <View style={styles.introContainer}>
         <View style={styles.imgContainer}>
-          <Image style={{width:"100%",height:"100%"}} source={{uri:data.images[0]}} />
+          <Image
+            style={{width: '100%', height: '100%'}}
+            source={{uri: data.images[0]}}
+          />
         </View>
         <View style={styles.nameContainer}>
           <Text style={styles.name}>{data.title}</Text>
@@ -201,7 +221,9 @@ export const BookDetailScreen = ({ route }: any) => {
       </View>
       <View style={styles.chatBtnContainer}>
         <MainButton
-          onPress={() => navigation.navigate(SCREENS.CHAT as never)}
+          onPress={() =>
+            navigation.navigate(SCREENS.CHAT as never, {data: item, emailId})
+          }
           buttonText={appLang.chatnow}
         />
       </View>

@@ -8,9 +8,15 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useContext, useMemo, useState } from 'react';
-import { FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE } from '../../../enums';
-import { useResponsiveDimensions, useToast } from '../../../hooks';
+import React, {useContext, useMemo, useState} from 'react';
+import {
+  FONT_SIZE,
+  OTHER_COLORS,
+  SCREENS,
+  STACK,
+  TEXT_STYLE,
+} from '../../../enums';
+import {useResponsiveDimensions, useToast} from '../../../hooks';
 import {
   AdTitle,
   BottomSheetComponent,
@@ -22,7 +28,7 @@ import {
   RemoveSheet,
   Type,
 } from './components';
-import { AppDataContext } from '../../../context';
+import {AppDataContext} from '../../../context';
 import {
   AnyIcon,
   Header,
@@ -30,30 +36,44 @@ import {
   MainButton,
   MainContainer,
 } from '../../../components';
-import { Instructions } from '../../../components/unused';
-import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
-import { apiService } from '../../../services/api';
+import {Instructions} from '../../../components/unused';
+import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
+import {apiService} from '../../../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
-export const AddScreen = ({ route }: any) => {
-  const { dataType } = route.params || 'add';
-  const { data } = route.params || [];
-  console.log("TYPE===>", dataType);
-  console.log("TYPE_DATA===>", data);
-  const [imagesList, setImagesList] = useState<any>(dataType === 'edit' ? data?.images : []);
-  const { appTheme } = useContext(AppDataContext);
-  const { hp, wp } = useResponsiveDimensions();
+export const AddScreen = ({route}: any) => {
+  const {dataType} = route.params || 'add';
+  const {data} = route.params || [];
+  console.log('TYPE===>', dataType);
+  console.log('TYPE_DATA===>', data);
+  const [imagesList, setImagesList] = useState<any>(
+    dataType === 'edit' ? data?.images : [],
+  );
+  const {appTheme} = useContext(AppDataContext);
+  const {hp, wp} = useResponsiveDimensions();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
-  const [myIndex, setMyIndex] = useState<any>("");
-  const [selected, setSelected] = useState(dataType === 'edit' ? data?.condition : null);
-  const [type, setType] = useState(dataType === 'edit' ? data?.type : "choose");
-  const [language, setLanguage] = useState(dataType === 'edit' ? data?.language : "choose");
-  const [location, setLocation] = useState(dataType === 'edit' ? data?.locationAddress : "choose");
-  const [bookTitle, setBookTitle] = useState(dataType === 'edit' ? data?.title : "");
-  const [description, setDescription] = useState(dataType === 'edit' ? data?.description : "");
-  const [price, setPrice] = useState(dataType === 'edit' ? data?.price?.toString() : "");
+  const [myIndex, setMyIndex] = useState<any>('');
+  const [selected, setSelected] = useState(
+    dataType === 'edit' ? data?.condition : null,
+  );
+  const [type, setType] = useState(dataType === 'edit' ? data?.type : 'choose');
+  const [language, setLanguage] = useState(
+    dataType === 'edit' ? data?.language : 'choose',
+  );
+  const [location, setLocation] = useState(
+    dataType === 'edit' ? data?.locationAddress : 'choose',
+  );
+  const [bookTitle, setBookTitle] = useState(
+    dataType === 'edit' ? data?.title : '',
+  );
+  const [description, setDescription] = useState(
+    dataType === 'edit' ? data?.description : '',
+  );
+  const [price, setPrice] = useState(
+    dataType === 'edit' ? data?.price?.toString() : '',
+  );
   const [loading, setLoading] = useState(false);
   const showToast = useToast();
   const navigation = useNavigation<any>();
@@ -76,7 +96,7 @@ export const AddScreen = ({ route }: any) => {
       console.error('Error updating product:', error);
       showToast(
         error instanceof Error ? error.message : 'Failed to update product',
-        'errorToast'
+        'errorToast',
       );
     } finally {
       setLoading(false);
@@ -123,29 +143,29 @@ export const AddScreen = ({ route }: any) => {
     setSelected(type);
   };
   const handleSelectType = (type: any) => {
-    console.log("TYPE===>", type);
+    console.log('TYPE===>', type);
     setType(type);
   };
   const handleSelectLanguage = (type: any) => {
-    console.log("Language===>", type);
+    console.log('Language===>', type);
     setLanguage(type);
   };
   const handleSelectLocation = (type: any) => {
-    console.log("Location===>", type);
+    console.log('Location===>', type);
     setLocation(type);
   };
   const handleSelectTitle = (val: any) => {
-    console.log("Book_TITLe===>", val);
+    console.log('Book_TITLe===>', val);
     setBookTitle(val);
-  }
+  };
   const handleDescription = (val: any) => {
-    console.log("Book_Description===>", val);
+    console.log('Book_Description===>', val);
     setDescription(val);
-  }
+  };
   const handlePrice = (val: any) => {
-    console.log("Book_Price===>", val);
+    console.log('Book_Price===>', val);
     setPrice(val);
-  }
+  };
 
   const handleModal = (val: any) => {
     setIsModalOpen(val);
@@ -153,7 +173,7 @@ export const AddScreen = ({ route }: any) => {
 
   const handleRemoveModal = (val: any) => {
     setIsRemoveModalOpen(val);
-  }
+  };
 
   const openImagePicker = () => {
     const options = {
@@ -170,7 +190,7 @@ export const AddScreen = ({ route }: any) => {
         console.log('Image picker error: ', response.error);
       } else {
         let imageUri = response.uri || response.assets?.[0]?.uri;
-        setImagesList((prev) => [...prev, imageUri]);
+        setImagesList(prev => [...prev, imageUri]);
         setIsModalOpen(false);
       }
     });
@@ -191,7 +211,7 @@ export const AddScreen = ({ route }: any) => {
         console.log('Camera Error: ', response.error);
       } else {
         let imageUri = response.uri || response.assets?.[0]?.uri;
-        setImagesList((prev) => [...prev, imageUri]);
+        setImagesList(prev => [...prev, imageUri]);
         setIsModalOpen(false);
       }
     });
@@ -200,12 +220,14 @@ export const AddScreen = ({ route }: any) => {
   const handleOpenAndDelete = (index: number) => {
     setIsRemoveModalOpen(true);
     setMyIndex(index);
-  }
+  };
   const removeImage = (id: any) => {
-    const remaining = imagesList.filter((item: any, index: any) => index !== id);
+    const remaining = imagesList.filter(
+      (item: any, index: any) => index !== id,
+    );
     setImagesList(remaining);
     setIsRemoveModalOpen(false);
-  }
+  };
 
   const createFormData = async () => {
     const formData = new FormData();
@@ -215,7 +237,7 @@ export const AddScreen = ({ route }: any) => {
       formData.append('images', {
         uri,
         type: 'image/jpeg',
-        name: `image${index}.jpg`
+        name: `image${index}.jpg`,
       });
     });
 
@@ -245,12 +267,13 @@ export const AddScreen = ({ route }: any) => {
       }
 
       showToast('Product added successfully', 'successToast');
-      navigation.goBack();
+      // navigation.goBack();
+      navigation.navigate(SCREENS.MY_BOOK as never);
     } catch (error) {
       console.error('Error creating product:', error);
       showToast(
         error instanceof Error ? error.message : 'Failed to create product',
-        'errorToast'
+        'errorToast',
       );
     } finally {
       setLoading(false);
@@ -319,7 +342,7 @@ export const AddScreen = ({ route }: any) => {
         borderWidth: 0.5,
         borderColor: appTheme.borderDefault,
         borderRadius: hp(8),
-        justifyContent: "space-between"
+        justifyContent: 'space-between',
       },
       dummyImg: {
         width: hp(150),
@@ -355,19 +378,19 @@ export const AddScreen = ({ route }: any) => {
         borderWidth: 0.5,
         borderColor: appTheme.tertiaryTextColor,
         borderRadius: hp(8),
-        justifyContent: "center",
-        alignItems: "center",
-        marginRight: hp(5)
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: hp(5),
       },
       listImg: {
         height: hp(70),
         width: hp(70),
         borderRadius: hp(8),
-        overflow: "hidden",
-        marginRight: hp(5)
+        overflow: 'hidden',
+        marginRight: hp(5),
       },
       listContainer: {
-        width: "100%"
+        width: '100%',
       },
       loadingContainer: {
         position: 'absolute',
@@ -384,8 +407,10 @@ export const AddScreen = ({ route }: any) => {
 
   return (
     <MainContainer>
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <Header title={dataType === 'edit' ? 'edit ad details' : 'ad Details'} />
+      <ScrollView contentContainerStyle={{flexGrow: 1}}>
+        <Header
+          title={dataType === 'edit' ? 'edit ad details' : 'ad Details'}
+        />
         {/* <Header title="ad details"/> */}
         <View style={styles.categoryContainer}>
           <View style={styles.titleContainer}>
@@ -411,31 +436,41 @@ export const AddScreen = ({ route }: any) => {
           </View>
           {imagesList.length > 0 ? (
             <View style={styles.imagesContainer}>
-              <View style={{ flexDirection: "row" }}>
-                <TouchableOpacity style={styles.addImage} onPress={() => setIsModalOpen(true)}>
+              <View style={{flexDirection: 'row'}}>
+                <TouchableOpacity
+                  style={styles.addImage}
+                  onPress={() => setIsModalOpen(true)}>
                   <AnyIcon
                     type={IconType.Ionicons}
-                    name='add'
+                    name="add"
                     size={hp(20)}
-                    color='blue'
+                    color="blue"
                   />
                 </TouchableOpacity>
                 <View style={styles.listContainer}>
                   <FlatList
                     horizontal
                     data={imagesList}
-                    renderItem={({ item, index }) => {
+                    renderItem={({item, index}) => {
                       return (
-                        <TouchableOpacity style={styles.listImg} onPress={() => handleOpenAndDelete(index)}>
-                          <Image style={{ width: "100%", height: "100%" }} source={{ uri: item }} />
+                        <TouchableOpacity
+                          style={styles.listImg}
+                          onPress={() => handleOpenAndDelete(index)}>
+                          <Image
+                            style={{width: '100%', height: '100%'}}
+                            source={{uri: item}}
+                          />
                         </TouchableOpacity>
-                      )
+                      );
                     }}
                   />
                 </View>
               </View>
               <View>
-                <Text>Top on images to edit them, or press, hold and move for reordering.</Text>
+                <Text>
+                  Top on images to edit them, or press, hold and move for
+                  reordering.
+                </Text>
               </View>
             </View>
           ) : (
@@ -458,11 +493,20 @@ export const AddScreen = ({ route }: any) => {
         </View>
         <Condition handleSelect={handleSelect} selected={selected} />
         <Type handleSelectType={handleSelectType} type={type} />
-        <Language handleSelectLanguage={handleSelectLanguage} language={language} />
+        <Language
+          handleSelectLanguage={handleSelectLanguage}
+          language={language}
+        />
         <View style={styles.border} />
         <AdTitle bookTitle={bookTitle} handleSelectTitle={handleSelectTitle} />
-        <Description handleDescription={handleDescription} description={description} />
-        <Location handleSelectLocation={handleSelectLocation} location={location} />
+        <Description
+          handleDescription={handleDescription}
+          description={description}
+        />
+        <Location
+          handleSelectLocation={handleSelectLocation}
+          location={location}
+        />
         <View style={styles.border} />
         <Price handlePrice={handlePrice} price={price} />
         <View style={styles.nextBtnContainer}>

@@ -1,24 +1,45 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { Header, MainContainer } from '../../../components';
-import { GiftedChat, IMessage } from 'react-native-gifted-chat';
+import {Image, StyleSheet, Text, View} from 'react-native';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import {MainContainer} from '../../../components';
+import {GiftedChat, IMessage} from 'react-native-gifted-chat';
 import firestore from '@react-native-firebase/firestore';
-import { useResponsiveDimensions } from '../../../hooks';
-import { FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../enums';
-import { AppDataContext } from '../../../context';
-import { apiService } from '../../../services/api';
+import {useResponsiveDimensions} from '../../../hooks';
+import {FONT_SIZE, OTHER_COLORS, TEXT_STYLE} from '../../../enums';
+import {AppDataContext} from '../../../context';
+import {apiService} from '../../../services/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const Chat = ({ route }: any) => {
-  const { appTheme } = useContext(AppDataContext);
-  const { hp, wp } = useResponsiveDimensions();
+export const Chat = ({route}: any) => {
+  console.log('CHAT_ROUTE_DATA===>', route?.params);
+  const {appTheme} = useContext(AppDataContext);
+  const {hp, wp} = useResponsiveDimensions();
   const [messages, setMessages] = useState<any>([]);
   const [receiverToken, setReceiverToken] = useState<string>('');
 
-  // Fetch receiver's FCM token
+  const saveUserData = async () => {
+    try {
+      const existingData = await AsyncStorage.getItem('MESSAGE_LIST');
+      const parsedData = existingData ? JSON.parse(existingData) : [];
+      const newData = [...parsedData, route?.params?.data];
+      await AsyncStorage.setItem('MESSAGE_LIST', JSON.stringify(newData));
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    saveUserData();
+  }, []);
+
   useEffect(() => {
     const getReceiverToken = async () => {
       try {
-        // Get receiver's token from Firestore
         const userDoc = await firestore()
           .collection('users')
           .doc(route.params.data.email)
@@ -69,15 +90,14 @@ export const Chat = ({ route }: any) => {
           type: 'chat',
           senderId: route.params.emailId,
           receiverId: route.params.data.email,
-          screen: 'CHAT'
-        }
+          screen: 'CHAT',
+        },
       };
 
       const response = await apiService.sendNotification(notificationData);
 
       if (response.error) {
         if (response.code === 'messaging/registration-token-not-registered') {
-          // Remove invalid token from database
           await firestore()
             .collection('users')
             .doc(route.params.data.email)
@@ -94,106 +114,108 @@ export const Chat = ({ route }: any) => {
       if (error instanceof Error) {
         console.error('Error details:', {
           message: error.message,
-          stack: error.stack
+          stack: error.stack,
         });
       }
     }
   };
 
-  const onSend = useCallback(async (messages: IMessage[] = []) => {
-    const msg = messages[0];
-    const myMsg = {
-      ...msg,
-      sendBy: route.params.emailId,
-      sendTo: route.params.data.email,
-      createdAt: new Date(),
-    };
+  const onSend = useCallback(
+    async (messages: IMessage[] = []) => {
+      const msg = messages[0];
+      const myMsg = {
+        ...msg,
+        sendBy: route.params.emailId,
+        sendTo: route.params.data.email,
+        createdAt: new Date(),
+      };
 
-    setMessages((previousMessages: IMessage[]) =>
-      GiftedChat.append(previousMessages, [myMsg])
-    );
+      setMessages((previousMessages: IMessage[]) =>
+        GiftedChat.append(previousMessages, [myMsg]),
+      );
 
-    try {
-      // Save message to both users' chat collections
-      await Promise.all([
-        firestore()
-          .collection('chats')
-          .doc(`${route.params.emailId}-${route.params.data.email}`)
-          .collection('messages')
-          .add(myMsg),
+      try {
+        await Promise.all([
+          firestore()
+            .collection('chats')
+            .doc(`${route.params.emailId}-${route.params.data.email}`)
+            .collection('messages')
+            .add(myMsg),
 
-        firestore()
-          .collection('chats')
-          .doc(`${route.params.data.email}-${route.params.emailId}`)
-          .collection('messages')
-          .add(myMsg)
-      ]);
-
-      // Send notification to receiver
-      if (receiverToken) {
-        await sendNotification(msg.text);
+          firestore()
+            .collection('chats')
+            .doc(`${route.params.data.email}-${route.params.emailId}`)
+            .collection('messages')
+            .add(myMsg),
+        ]);
+        if (receiverToken) {
+          await sendNotification(msg.text);
+        }
+      } catch (error) {
+        console.error('Error in onSend:', error);
       }
-    } catch (error) {
-      console.error('Error in onSend:', error);
-      // You might want to show an error toast here
-    }
-  }, [route.params.emailId, route.params.data.email, receiverToken]);
+    },
+    [route.params.emailId, route.params.data.email, receiverToken],
+  );
 
   const styles = useMemo(() => {
     return StyleSheet.create({
       headerContainer: {
-        flexDirection: "row",
-        justifyContent: "flex-start",
-        alignItems: "center",
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
         borderBottomWidth: 0.5,
         borderBottomColor: appTheme.borderDefault,
-        paddingBottom: hp(20)
+        paddingBottom: hp(20),
       },
       imgContainer: {
         height: hp(50),
         width: hp(50),
         borderRadius: hp(25),
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: OTHER_COLORS.green
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: OTHER_COLORS.green,
       },
       img: {
         height: hp(48),
         width: hp(48),
-        borderRadius: hp(24)
+        borderRadius: hp(24),
       },
       userName: {
         ...TEXT_STYLE.medium,
         fontSize: hp(FONT_SIZE.h3),
-        color: appTheme.secondaryTextColor
+        color: appTheme.secondaryTextColor,
       },
       status: {
         ...TEXT_STYLE.regular,
         fontSize: hp(FONT_SIZE.h4),
-        color: OTHER_COLORS.green
+        color: OTHER_COLORS.green,
       },
       greenDot: {
         height: hp(10),
         width: hp(10),
         borderRadius: hp(5),
         backgroundColor: OTHER_COLORS.green,
-        position: "absolute",
+        position: 'absolute',
         top: hp(5),
         right: hp(0),
-        zIndex: 1
+        zIndex: 1,
       },
       textContainer: {
-        marginLeft: hp(15)
-      }
+        marginLeft: hp(15),
+      },
     });
-  }, [])
+  }, []);
   return (
     <MainContainer>
-      {/* <Header title="chat" /> */}
       <View style={styles.headerContainer}>
         <View style={styles.imgContainer}>
           <View style={styles.greenDot}></View>
-          <Image style={styles.img} resizeMode={"cover"} source={require("../../../assets/images/user.png")} />
+          <Image
+            style={styles.img}
+            resizeMode={'cover'}
+            source={require('../../../assets/images/user.png')}
+          />
         </View>
         <View style={styles.textContainer}>
           <Text style={styles.userName}>{route?.params?.data.userName}</Text>
