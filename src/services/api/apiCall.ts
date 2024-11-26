@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getAuthToken } from "../auth";
+import { storeStringValue } from "../../utils";
 
 interface ApiCallProps {
     params?: any;
@@ -48,21 +49,7 @@ export const ApiCall = async ({
         }
 
         const response = await fetch(URL, options);
-        let data;
-        const clonedResponse = response.clone();
-
-        try {
-            data = await response.json();
-        } catch (parseError) {
-            // Handle non-JSON responses using the cloned response
-            const textResponse = await clonedResponse.text();
-            console.error('Failed to parse JSON response:', textResponse);
-            return {
-                error: 'PARSE_ERROR',
-                message: 'Invalid JSON response from server',
-                rawResponse: textResponse
-            };
-        }
+        const data = await response.json();
 
         if (response.ok) {
             console.log('Response:', JSON.stringify(data));
@@ -70,6 +57,7 @@ export const ApiCall = async ({
         } else {
             if (response.status === 401) {
                 const newToken = await getAuthToken(true);
+                storeStringValue('TOKEN', newToken)
                 if (newToken) {
                     options.headers = {
                         ...options.headers,
@@ -79,6 +67,7 @@ export const ApiCall = async ({
                     const retryData = await retryResponse.json();
 
                     if (retryResponse.ok) {
+                        console.log('Retry Response:', JSON.stringify(retryData));
                         return retryData;
                     }
                 }
