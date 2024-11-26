@@ -8,66 +8,17 @@ import firestore from '@react-native-firebase/firestore'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useNavigation } from '@react-navigation/native'
 
-const data = [
-  {
-    image: require("../../../assets/images/person.jpg"),
-    name: "Anika",
-    text: "Oh i don't like fist",
-    numberOfMessages: 2
-  },
-  {
-    image: require("../../../assets/images/person.jpg"),
-    name: "Shreya",
-    text: "Oh i don't like fist",
-    numberOfMessages: 3
-  },
-  {
-    image: require("../../../assets/images/person.jpg"),
-    name: "Lilly",
-    text: "Oh i don't like fist",
-    numberOfMessages: 0
-  },
-  {
-    image: require("../../../assets/images/person.jpg"),
-    name: "Mona",
-    text: "Oh i don't like fist",
-    numberOfMessages: 0
-  },
-  {
-    image: require("../../../assets/images/person.jpg"),
-    name: "Sonia",
-    text: "Oh i don't like fist",
-    numberOfMessages: 1
-  },
-  {
-    image: require("../../../assets/images/person.jpg"),
-    name: "Monika",
-    text: "Oh i don't like fist",
-    numberOfMessages: 0
-  },
-  {
-    image: require("../../../assets/images/person.jpg"),
-    name: "Kiran",
-    text: "Oh i don't like fist",
-    numberOfMessages: 5
-  },
-  {
-    image: require("../../../assets/images/person.jpg"),
-    name: "Roshni",
-    text: "Oh i don't like fist",
-    numberOfMessages: 0
-  },
-]
-let id = '';
 export const MessagesScreen = () => {
   const navigation = useNavigation<any>();
   const [users, setUsers] = useState([]);
+  const [emailId, setEmailId] = useState('')
   const { appTheme, appLang } = useContext(AppDataContext)
   const { hp, wp } = useResponsiveDimensions();
+  
   const getUsers = async () => {
-    id = await AsyncStorage.getItem("USERID") || '';
     let tempArr: any[] = [];
     const email = await AsyncStorage.getItem("EMAIL");
+    setEmailId(email as any)
     const res = await firestore().collection("users").where('email', '!=', email).get();
     if (res.docs.length > 0) {
       res.docs.map((item) => {
@@ -200,7 +151,7 @@ export const MessagesScreen = () => {
           data={users}
           renderItem={({ item, index }: any) => {
             return (
-              <TouchableOpacity style={styles.card} onPress={() => navigation.navigate(SCREENS.CHAT as never, { data: item, id: id })}>
+              <TouchableOpacity style={styles.card} onPress={() => navigation.navigate(SCREENS.CHAT as never, { data: item, emailId : emailId })}>
                 <View style={styles.firstContainer}>
                   <View style={styles.imgContainer}>
                     <Image style={styles.img} source={require("../../../assets/images/user.png")} />

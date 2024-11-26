@@ -21,7 +21,7 @@ export const Chat = ({ route }: any) => {
         // Get receiver's token from Firestore
         const userDoc = await firestore()
           .collection('users')
-          .doc(route.params.data.userId)
+          .doc(route.params.data.email)
           .get();
 
         if (userDoc.exists) {
@@ -35,12 +35,12 @@ export const Chat = ({ route }: any) => {
     };
 
     getReceiverToken();
-  }, [route.params.data.userId]);
+  }, [route.params.data.email]);
 
   useEffect(() => {
     const subscriber = firestore()
       .collection('chats')
-      .doc(route.params.id + '-' + route.params.data.userId)
+      .doc(route.params.emailId + '-' + route.params.data.email)
       .collection('messages')
       .orderBy('createdAt', 'desc')
       .onSnapshot(querySnapshot => {
@@ -57,7 +57,7 @@ export const Chat = ({ route }: any) => {
         setMessages(allMessages);
       });
     return () => subscriber();
-  }, [route.params.id, route.params.data.userId]);
+  }, [route.params.emailId, route.params.data.email]);
 
   const sendNotification = async (messageText: string) => {
     try {
@@ -67,8 +67,8 @@ export const Chat = ({ route }: any) => {
         body: messageText,
         data: {
           type: 'chat',
-          senderId: route.params.id,
-          receiverId: route.params.data.userId,
+          senderId: route.params.emailId,
+          receiverId: route.params.data.email,
           screen: 'CHAT'
         }
       };
@@ -80,7 +80,7 @@ export const Chat = ({ route }: any) => {
           // Remove invalid token from database
           await firestore()
             .collection('users')
-            .doc(route.params.data.userId)
+            .doc(route.params.data.email)
             .update({
               fcmToken: firestore.FieldValue.delete(),
             });
@@ -104,8 +104,8 @@ export const Chat = ({ route }: any) => {
     const msg = messages[0];
     const myMsg = {
       ...msg,
-      sendBy: route.params.id,
-      sendTo: route.params.data.userId,
+      sendBy: route.params.emailId,
+      sendTo: route.params.data.email,
       createdAt: new Date(),
     };
 
@@ -118,13 +118,13 @@ export const Chat = ({ route }: any) => {
       await Promise.all([
         firestore()
           .collection('chats')
-          .doc(`${route.params.id}-${route.params.data.userId}`)
+          .doc(`${route.params.emailId}-${route.params.data.email}`)
           .collection('messages')
           .add(myMsg),
 
         firestore()
           .collection('chats')
-          .doc(`${route.params.data.userId}-${route.params.id}`)
+          .doc(`${route.params.data.email}-${route.params.emailId}`)
           .collection('messages')
           .add(myMsg)
       ]);
@@ -137,7 +137,7 @@ export const Chat = ({ route }: any) => {
       console.error('Error in onSend:', error);
       // You might want to show an error toast here
     }
-  }, [route.params.id, route.params.data.userId, receiverToken]);
+  }, [route.params.emailId, route.params.data.email, receiverToken]);
 
   const styles = useMemo(() => {
     return StyleSheet.create({
@@ -204,7 +204,7 @@ export const Chat = ({ route }: any) => {
         messages={messages}
         onSend={messages => onSend(messages as any)}
         user={{
-          _id: route.params.id,
+          _id: route.params.emailId,
         }}
         textInputStyle={{
           color: appTheme.secondaryTextColor,

@@ -51,7 +51,11 @@ export const MainButton = (props: MainButtonProps) => {
                 <Text style={styles.buttonText}>{buttonText}</Text>
             ) : (
                 <View>
-                    <DotIndicator color={appTheme.primary} size={hp(10)} />
+                    <DotIndicator 
+                        color={appTheme.primary} 
+                        size={hp(10)}
+                        key="loading-indicator"
+                    />
                 </View>
             )}
         </TouchableOpacity>

@@ -12,11 +12,11 @@ interface Product {
   condition: string;
 }
 
-interface NewlyPublishedProps {
+interface PopularProductsProps {
   products: Product[];
 }
 
-export const NewlyPublished = ({ products }: NewlyPublishedProps) => {
+export const PopularProducts = ({ products }: PopularProductsProps) => {
   const navigation = useNavigation<any>();
   const { appTheme } = useContext(AppDataContext);
 

@@ -1,8 +1,6 @@
 import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import React, { useContext, useMemo } from 'react';
 import { useResponsiveDimensions } from '../../../../hooks';
-import { topTrending } from '../../../../utils';
-import { AnyIcon, IconType } from '../../../../components/AnyIcon';
 import { FONT, FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../../enums';
 import { AppDataContext } from '../../../../context';
 
@@ -25,12 +23,12 @@ interface Product {
   createdAt: string;
 }
 
-interface TopTrendingProps {
+interface NewlyAddedProps {
   products: Product[];
   loading: boolean;
 }
 
-export const TopTrending = ({ products, loading }: TopTrendingProps) => {
+export const NewlyAdded = ({ products, loading }: NewlyAddedProps) => {
   const { appTheme } = useContext(AppDataContext);
   const { hp, wp } = useResponsiveDimensions();
   const styles = useMemo(() => {

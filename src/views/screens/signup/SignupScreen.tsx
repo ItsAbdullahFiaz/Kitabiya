@@ -1,17 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { CustomInput, Header, MainButton, MainContainer, SocialLogins } from '../../../components';
 import { useResponsiveDimensions, useToast } from '../../../hooks';
-import { resetAndGo, setEmailError, setNameError, setPasswordError, validateEmail, validatePassword, validateName } from '../../../utils';
+import { resetAndGo, setEmailError, setNameError, setPasswordError, validateEmail, validatePassword, validateName, saveToLocal } from '../../../utils';
 import { AppDataContext } from '../../../context';
 import { registerUser } from '../../../services';
 import { useNavigation } from '@react-navigation/native';
 import { FONT_SIZE, STACK, TEXT_STYLE } from '../../../enums';
 import firestore from '@react-native-firebase/firestore';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import uuid from 'react-native-uuid';
 import { notificationService } from '../../../services/NotificationService';
-import { apiService } from '../../../services/api';
 
 export const SignupScreen = () => {
   const navigation = useNavigation();
@@ -25,19 +22,6 @@ export const SignupScreen = () => {
   const [wrongNameError, setWrongNameError] = useState('');
   const [wrongEmailError, setWrongEmailError] = useState('');
   const [wrongPasswordError, setWrongPasswordError] = useState('');
-
-  const saveToLocal = async (name: string, email: string, userId: string) => {
-    try {
-      await AsyncStorage.multiSet([
-        ['NAME', name],
-        ['EMAIL', email],
-        ['USERID', userId],
-      ]);
-    } catch (error) {
-      console.error('Error saving to AsyncStorage:', error);
-      throw error;
-    }
-  };
 
   const handleSignup = async () => {
     try {
@@ -54,58 +38,27 @@ export const SignupScreen = () => {
       }
 
       setLoading(true);
-
-      // Normalize email to lowercase
       const normalizedEmail = email.toLowerCase().trim();
 
-      // Check if email already exists
-      const existingUser = await firestore()
-        .collection('users')
-        .where('email', '==', normalizedEmail)
-        .get();
-
-      if (!existingUser.empty) {
-        showToast('Email already exists', 'errorToast');
-        setLoading(false);
-        return;
-      }
-
-      // Generate userId
-      const userId = uuid.v4().toString();
-
-      // Get FCM token
-      const fcmToken = await notificationService.getFCMToken();
-
-      // Create user document with normalized email
-      await firestore().collection('users').doc(userId).set({
-        userName: userName.trim(),
-        email: normalizedEmail, // Store normalized email
-        password,
-        userId,
-        fcmToken,
-        createdAt: firestore.FieldValue.serverTimestamp()
-      });
-
-      // Save to local storage with normalized email
-      await saveToLocal(userName.trim(), normalizedEmail, userId);
-
-      // Register with authentication using normalized email
       const response = await registerUser(normalizedEmail, password);
-
-      await AsyncStorage.setItem('TOKEN', response?.token || '');
-
       if (response.success) {
-        // Request notification permission and save token
+        await firestore().collection('users').doc(normalizedEmail).set({
+          userName: userName.trim(),
+          email: normalizedEmail,
+          password,
+          fcmToken: '',
+          createdAt: firestore.FieldValue.serverTimestamp()
+        });
+        
         const permissionGranted = await notificationService.requestUserPermission();
         if (permissionGranted) {
-          await notificationService.saveFCMToken(userId);
+          await notificationService.saveFCMToken(normalizedEmail);
         }
 
+        await saveToLocal(userName.trim(), normalizedEmail, response?.token || '');
         resetAndGo(navigation, STACK.MAIN, null);
         showToast(appLang.signupSuccess, 'successToast');
       } else {
-        // If auth fails, delete the Firestore document
-        await firestore().collection('users').doc(userId).delete();
         showToast(response.errorMessage, 'errorToast');
       }
     } catch (error) {
@@ -132,7 +85,7 @@ export const SignupScreen = () => {
         marginTop: hp(40)
       }
     });
-  }, [hp]);
+  }, [hp, wp]);
 
   return (
     <MainContainer>

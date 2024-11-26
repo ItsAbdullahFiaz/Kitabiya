@@ -90,14 +90,14 @@ class NotificationService {
         });
     }
 
-    async saveFCMToken(userId: string) {
+    async saveFCMToken(email: string) {
         try {
             const token = await messaging().getToken();
-            console.log('Saving FCM token:', token, 'for user:', userId);
+            console.log('Saving FCM token:', token, 'for user:', email);
 
             await firestore()
                 .collection('users')
-                .doc(userId)
+                .doc(email)
                 .update({
                     fcmToken: token,
                 });
@@ -106,7 +106,7 @@ class NotificationService {
             messaging().onTokenRefresh(async (newToken) => {
                 await firestore()
                     .collection('users')
-                    .doc(userId)
+                    .doc(email)
                     .update({
                         fcmToken: newToken,
                     });

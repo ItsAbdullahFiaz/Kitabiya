@@ -1,29 +1,14 @@
 import auth from '@react-native-firebase/auth';
 import { STACK } from '../enums';
 import { resetAndGo } from '../utils';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { API_ENDPOINTS } from '../config';
 
 const registerUser = async (email: string, password: string) => {
     try {
-        await auth().createUserWithEmailAndPassword(email, password);
-        const token = await getAuthToken(true);
-        
-        const response = await fetch(API_ENDPOINTS.LOGIN, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        
-        const data = await response.json();
-        
-        if (!response.ok) {
-            throw new Error(data.message || 'Authentication failed');
-        }
-        
-        return { success: true, token: data.token };
+        const userCredential = await auth().createUserWithEmailAndPassword(email, password);
+        const token = await userCredential.user.getIdToken();
+
+        return { success: true, token: token };
     } catch (error: any) {
         console.log(error)
         let errorMessage = 'An error occurred. Please try again.';
@@ -40,9 +25,9 @@ const registerUser = async (email: string, password: string) => {
 
 const loginUser = async (email: string, password: string) => {
     try {
-        await auth().signInWithEmailAndPassword(email, password);
-        const token = await getAuthToken(true);
-        
+        const userCredential = await auth().signInWithEmailAndPassword(email, password);
+        const token = await userCredential.user.getIdToken();
+
         const response = await fetch(API_ENDPOINTS.LOGIN, {
             method: 'POST',
             headers: {
@@ -50,14 +35,14 @@ const loginUser = async (email: string, password: string) => {
                 'Authorization': `Bearer ${token}`
             }
         });
-        
+
         const data = await response.json();
-        
+
         if (!response.ok) {
             throw new Error(data.message || 'Authentication failed');
         }
-        
-        return { success: true, token: data.token };
+
+        return { success: true, token: token };
     } catch (error: any) {
         console.log(error.code)
         let errorMessage = 'An error occurred. Please try again.';

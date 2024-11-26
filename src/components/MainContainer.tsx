@@ -6,12 +6,13 @@ import { AppDataContext } from '../context';
 
 interface MainContainerProps {
     children: React.ReactNode,
-    disableJustifyContent?: boolean
+    disableJustifyContent?: boolean,
+    fullWidth?: boolean
 }
 
-export const MainContainer = (props: MainContainerProps) => {
+export const MainContainer = React.memo((props: MainContainerProps) => {
     const { appTheme } = useContext(AppDataContext);
-    const { children, disableJustifyContent } = props
+    const { children, disableJustifyContent, fullWidth } = props
     const { wp, hp } = useResponsiveDimensions();
 
     const styles = useMemo(() => {
@@ -19,7 +20,7 @@ export const MainContainer = (props: MainContainerProps) => {
             container: {
                 flex: 1,
                 backgroundColor: appTheme.primaryBackground,
-                padding: hp(16),
+                padding: fullWidth ? 0 : hp(16),
             },
         });
     }, [hp, wp, appTheme]);
@@ -30,4 +31,4 @@ export const MainContainer = (props: MainContainerProps) => {
             {children}
         </View>
     )
-}
+})

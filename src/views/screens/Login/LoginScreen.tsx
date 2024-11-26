@@ -3,14 +3,12 @@ import React, { useContext, useMemo, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { CustomInput, Header, MainButton, MainContainer, SocialLogins } from '../../../components';
 import { useResponsiveDimensions, useToast } from '../../../hooks';
-import { resetAndGo, setEmailError, setPasswordError, validateEmail } from '../../../utils';
+import { resetAndGo, saveToLocal, setEmailError, setPasswordError, validateEmail } from '../../../utils';
 import { FONT_SIZE, SCREENS, STACK, TEXT_STYLE } from '../../../enums';
 import { AppDataContext } from '../../../context';
 import { loginUser } from '../../../services';
 import firestore from '@react-native-firebase/firestore';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { notificationService } from '../../../services/NotificationService';
-import { apiService } from '../../../services/api';
 
 export const LoginScreen = () => {
   const navigation = useNavigation();
@@ -25,81 +23,40 @@ export const LoginScreen = () => {
 
   const handleLogin = async () => {
     try {
-      console.log('Login attempt started');
-
       const isEmailValid = validateEmail(email);
       setEmailError(email, isEmailValid, appLang, setWrongEmailError);
       setPasswordError(password, true, appLang, setWrongPasswordError);
 
       if (!isEmailValid || password.trim().length === 0) {
-        console.log('Validation failed:', { isEmailValid, passwordLength: password.trim().length });
         return;
       }
 
       setLoading(true);
-
-      // Normalize email
       const normalizedEmail = email.toLowerCase().trim();
-      console.log('Normalized email:', normalizedEmail);
-      // First check if user exists
-      const userQuery = await firestore()
-        .collection('users')
-        .where('email', '==', normalizedEmail)
-        .get();
-
-      console.log('User query result:', { exists: !userQuery.empty });
-
-      if (userQuery.empty) {
-        console.log('No user found with this email');
-        showToast('User not found', 'errorToast');
-        setLoading(false);
-        return;
-      }
-
-      // Get user data
-      const userData = userQuery.docs[0].data();
-      console.log('User data retrieved:', { userId: userData.userId });
-
-      // Verify password
-      if (userData.password !== password.trim()) {
-        console.log('Password mismatch');
-        showToast('Invalid password', 'errorToast');
-        setLoading(false);
-        return;
-      }
-
-      // Save user data to local storage with normalized email
-      await saveToLocal(
-        userData.userName.trim(),
-        normalizedEmail,
-        userData.userId
-      );
-      console.log('User data saved to local storage');
-
-      // Request notification permission and save token
-      try {
-        const permissionGranted = await notificationService.requestUserPermission();
-        if (permissionGranted) {
-          await notificationService.saveFCMToken(userData.userId);
-          console.log('FCM token saved');
-        }
-      } catch (error) {
-        console.error('Notification setup error:', error);
-        // Continue with login even if notification setup fails
-      }
-
-      // Proceed with login using normalized email
+      
+      // Directly use Firebase Authentication
       const response = await loginUser(normalizedEmail, password.trim());
-      console.log('Login response:', response);
-
-      await AsyncStorage.setItem('TOKEN', response?.token || '');
-
+      
       if (response.success) {
-        console.log('Login successful, navigating...');
+        // Get user data after successful authentication
+        const userQuery = await firestore()
+          .collection('users')
+          .where('email', '==', normalizedEmail)
+          .get();
+        
+        const userData = userQuery.docs[0].data();
+        
+        // Save user data and token
+        await Promise.all([
+          saveToLocal(userData.userName.trim(), normalizedEmail, response.token || ''),
+          notificationService.requestUserPermission()
+            .then(granted => granted ? notificationService.saveFCMToken(normalizedEmail) : Promise.resolve(''))
+            .catch(console.error)
+        ]);
+
         resetAndGo(navigation, STACK.MAIN, null);
         showToast(appLang.loginSuccess, 'successToast');
       } else {
-        console.log('Login failed:', response.errorMessage);
         showToast(response.errorMessage, 'errorToast');
       }
     } catch (error) {
@@ -107,21 +64,6 @@ export const LoginScreen = () => {
       showToast('An error occurred during login', 'errorToast');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const saveToLocal = async (name: string, email: string, userId: string) => {
-    try {
-      console.log('Saving to AsyncStorage:', { name, email, userId });
-      await AsyncStorage.multiSet([
-        ['NAME', name.trim()],
-        ['EMAIL', email],
-        ['USERID', userId],
-      ]);
-      console.log('Successfully saved to AsyncStorage');
-    } catch (error) {
-      console.error('Error saving to AsyncStorage:', error);
-      throw error;
     }
   };
 

@@ -700,5 +700,18 @@ const convertDate = (isoString: any) => {
     return new Intl.DateTimeFormat('en-US', options).format(date);
 };
 
+const saveToLocal = async (name: string, email: string, token: string) => {
+    try {
+        await AsyncStorage.multiSet([
+            ['NAME', name],
+            ['EMAIL', email],
+            ['TOKEN', token],
+        ]);
+    } catch (error) {
+        console.error('Error saving to AsyncStorage:', error);
+        throw error;
+    }
+};
+
 const dropdownItems = ['acer', 'alcatel', 'apple iphone', 'asus', 'black berry', 'calme', 'club', "g'give", 'google', 'gright', 'haier', 'oppo', 'redmi', 'realme', 'infinix'];
-export { resetAndGo, isEmptyString, storeStringValue, getStoredStringValue, topTrending, validateEmail, validatePassword, validateName, setEmailError, setPasswordError, setNameError, dropdownItems, notificationData, convertDate }
+export { resetAndGo, isEmptyString, storeStringValue, getStoredStringValue, topTrending, validateEmail, validatePassword, validateName, setEmailError, setPasswordError, setNameError, dropdownItems, notificationData, convertDate, saveToLocal }

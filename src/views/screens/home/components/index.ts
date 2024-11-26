@@ -1,3 +1,3 @@
 export * from './HeaderButtons'
-export * from './NewlyPublished'
-export * from './TopTrending'
+export * from './PopularProducts'
+export * from './NewlyAdded'

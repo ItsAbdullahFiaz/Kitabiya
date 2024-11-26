@@ -13,7 +13,6 @@ import { FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE } from '../../../enums';
 import { useResponsiveDimensions } from '../../../hooks';
 import { AppDataContext } from '../../../context';
 import { apiService } from '../../../services/api';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { convertDate } from '../../../utils';
 import { RemoveAd } from './components';
 import { useNavigation } from '@react-navigation/native';
@@ -49,7 +48,7 @@ export const MyBooksScreen = () => {
   };
   useEffect(() => {
     fetchProducts();
-  }, [isModalVisible,myAdsList]);
+  }, [isModalVisible, myAdsList]);
 
   const handleOpenModal = (id: any) => {
     setIndex(id);
