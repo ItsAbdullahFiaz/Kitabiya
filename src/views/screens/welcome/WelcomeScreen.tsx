@@ -30,13 +30,13 @@ export const WelcomeScreen = () => {
         alignSelf: 'center',
       },
       contentContainer: {
-        marginTop: hp(40),
+        marginTop: hp(90),
       },
       btnContainer: {
         height: hp(48),
         width: '100%',
         backgroundColor: 'transparent',
-        borderRadius: 8,
+        borderRadius: hp(8),
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: hp(30),
@@ -44,9 +44,8 @@ export const WelcomeScreen = () => {
         borderColor: appTheme.primary,
       },
       btnText: {
-        ...TEXT_STYLE.regular,
+        ...TEXT_STYLE.medium,
         fontSize: hp(FONT_SIZE.h3),
-        fontWeight: 'medium',
         color: appTheme.primary,
         textTransform: 'capitalize',
       },
