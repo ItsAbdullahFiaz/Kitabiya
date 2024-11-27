@@ -349,7 +349,7 @@ export const SearchScreen = () => {
             {/* Show Search Results when searching */}
             {searchValue.trim() && searchedProduct.length > 0 && (
                 <View>
-                    <Text style={styles.text}>results</Text>
+                    <Text style={styles.text}>{appLang.results}</Text>
                     <FlatList
                         data={searchedProduct}
                         renderItem={({ item }) => (

@@ -51,7 +51,7 @@ export const AccountScreen = () => {
         color: appTheme.secondaryTextColor,
       },
       border: {
-        borderWidth: 0.2,
+        borderWidth: 0.3,
         borderColor: appTheme.tertiaryTextColor,
         marginVertical: hp(20),
       },
