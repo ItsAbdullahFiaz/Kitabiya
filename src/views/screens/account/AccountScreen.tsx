@@ -1,19 +1,26 @@
-import { StyleSheet, Text, TouchableOpacity, View, NativeModules, Platform } from 'react-native';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { AnyIcon, IconType, MainContainer } from '../../../components';
-import { useResponsiveDimensions } from '../../../hooks';
-import { FONT_SIZE, TEXT_STYLE } from '../../../enums';
-import { signOutUser } from '../../../services';
-import { useNavigation } from '@react-navigation/native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  NativeModules,
+  Platform,
+} from 'react-native';
+import React, {useContext, useEffect, useMemo, useState} from 'react';
+import {AnyIcon, IconType, MainContainer} from '../../../components';
+import {useResponsiveDimensions} from '../../../hooks';
+import {FONT_SIZE, TEXT_STYLE} from '../../../enums';
+import {signOutUser} from '../../../services';
+import {useNavigation} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
-import { ProfileHeader } from './components';
-import { AppDataContext } from '../../../context';
+import {ProfileHeader} from './components';
+import {AppDataContext} from '../../../context';
 
 export const AccountScreen = () => {
   const [userInfo, setUserInfo] = useState<any>('');
   const [appVersion, setAppVersion] = useState('1.0.1');
-  const { appTheme, appLang } = useContext(AppDataContext);
-  const { hp, wp } = useResponsiveDimensions();
+  const {appTheme, appLang} = useContext(AppDataContext);
+  const {hp, wp} = useResponsiveDimensions();
   const navigation = useNavigation();
   const userDetails = async () => {
     try {
@@ -140,7 +147,9 @@ export const AccountScreen = () => {
         style={styles.logoutContainer}>
         <Text style={styles.logoutText}>{appLang.logout}</Text>
       </TouchableOpacity>
-      <Text style={styles.versionText}>{appLang.version} {appVersion}</Text>
+      <Text style={styles.versionText}>
+        {appLang.version} {appVersion}
+      </Text>
     </MainContainer>
   );
 };
