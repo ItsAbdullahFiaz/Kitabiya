@@ -1,5 +1,10 @@
 import React, {useContext, useEffect, useMemo, useState} from 'react';
-import {AnyIcon, IconType, MainContainer} from '../../../components';
+import {
+  AnyIcon,
+  IconType,
+  MainContainer,
+  SkeletonLoader,
+} from '../../../components';
 import {AppDataContext} from '../../../context';
 import {
   Text,
@@ -7,7 +12,6 @@ import {
   StyleSheet,
   StatusBar,
   TouchableOpacity,
-  ActivityIndicator,
   SectionList,
 } from 'react-native';
 import {FONT, FONT_SIZE, SCREENS} from '../../../enums';
@@ -17,8 +21,6 @@ import {HeaderButtons, PopularProducts, NewlyAdded} from './components';
 import {notificationService} from '../../../services/NotificationService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {apiService} from '../../../services/api';
-import firestore from '@react-native-firebase/firestore';
-import auth from '@react-native-firebase/auth';
 
 export const HomeScreen = () => {
   const navigation = useNavigation();
@@ -27,6 +29,7 @@ export const HomeScreen = () => {
   const [newlyAddedProducts, setNewlyAddedProducts] = useState([]);
   const [popularProducts, setPopularProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isloading, setIsLoading] = useState(false);
   const [userName, setUserName] = useState('');
 
   useEffect(() => {
@@ -73,6 +76,7 @@ export const HomeScreen = () => {
 
   const fetchPopularProducts = async () => {
     try {
+      setIsLoading(true);
       const response = await apiService.getPopularProducts();
       if (response.error) {
         throw new Error(response.message || 'Failed to fetch popular products');
@@ -80,23 +84,23 @@ export const HomeScreen = () => {
       setPopularProducts(response.data || []);
     } catch (error) {
       console.error('Error fetching popular products:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
-  const getUserName = async () => {
+  const getName = async () => {
     try {
-      const res = await auth().currentUser;
-      const response = await firestore()
-        .collection('users')
-        .doc(res?.email)
-        .get();
-      console.log('RESPONSE====>', response._data.userName);
-      setUserName(response?._data?.userName);
+      const storedName = await AsyncStorage.getItem('NAME');
+      if (storedName !== null) {
+        setUserName(storedName);
+      }
     } catch (error) {
-      console.log(error.message);
+      console.error('Error retrieving name from AsyncStorage:', error);
     }
   };
+
   useEffect(() => {
-    getUserName();
+    getName();
   }, []);
   const renderHeader = () => (
     <View style={styles.homeHeader}>
@@ -142,6 +146,64 @@ export const HomeScreen = () => {
     </View>
   );
 
+  //commented
+  // const renderNewlyAddedProducts = () => {
+  //   if (loading) {
+  //     // Render Skeletons
+  //     return (
+  //       <View style={styles.skeletonContainer}>
+  //         {[...Array(4)].map((_, index) => (
+  //           <SkeletonLoader
+  //             key={index}
+  //             width={'100%'}
+  //             height={100}
+  //             borderRadius={8}
+  //           />
+  //         ))}
+  //       </View>
+  //     );
+  //   }
+  //   // Render Actual Products
+  //   return <NewlyAdded products={newlyAddedProducts} loading={loading} />;
+  // };
+  // const renderPopularProducts = () => {
+  //   if (loading) {
+  //     // Render Skeletons
+  //     return (
+  //       <View style={styles.skeletonContainer}>
+  //         {[...Array(4)].map((_, index) => (
+  //           <SkeletonLoader
+  //             key={index}
+  //             width={'100%'}
+  //             height={150}
+  //             borderRadius={8}
+  //           />
+  //         ))}
+  //       </View>
+  //     );
+  //   }
+  //   // Render Actual Products
+  //   return <PopularProducts products={popularProducts} />;
+  // };
+
+  // const sections = useMemo(
+  //   () => [
+  //     {
+  //       title: 'Popular',
+  //       data: [popularProducts],
+  //       renderItem: renderPopularProducts,
+  //       showSeeMore: true,
+  //     },
+  //     {
+  //       title: 'Newly Added',
+  //       data: [newlyAddedProducts],
+  //       renderItem: renderNewlyAddedProducts,
+  //       showSeeMore: false,
+  //     },
+  //   ],
+  //   [popularProducts, newlyAddedProducts, loading],
+  // );
+
   const sections = useMemo(
     () => [
       {
@@ -149,7 +211,7 @@ export const HomeScreen = () => {
         data: [popularProducts],
         renderItem: () => (
           <View style={styles.popularProductsContainer}>
-            <PopularProducts products={popularProducts} />
+            <PopularProducts products={popularProducts} loading={isloading} />
           </View>
         ),
         showSeeMore: true,
@@ -181,6 +243,10 @@ export const HomeScreen = () => {
 
   const styles = useMemo(() => {
     return StyleSheet.create({
+      skeletonContainer: {
+        paddingHorizontal: hp(16),
+        marginVertical: hp(10),
+      },
       homeHeader: {
         height: hp(162),
         backgroundColor: appTheme.primary,

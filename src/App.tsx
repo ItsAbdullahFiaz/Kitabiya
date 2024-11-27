@@ -1,17 +1,19 @@
-import { SafeAreaView, StyleSheet } from 'react-native'
-import React, { useEffect, useMemo } from 'react'
-import Toast from 'react-native-toast-message'
+import 'react-native-reanimated';
+import 'react-native-gesture-handler';
+import {SafeAreaView, StyleSheet} from 'react-native';
+import React, {useEffect, useMemo} from 'react';
+import Toast from 'react-native-toast-message';
 import messaging from '@react-native-firebase/messaging';
 import notifee from '@notifee/react-native';
-import { RootNavigator } from './navigation';
-import { LeaderboardToast } from './components';
-import { useResponsiveDimensions } from './hooks';
-import { notificationService } from './services/NotificationService';
+import {RootNavigator} from './navigation';
+import {LeaderboardToast} from './components';
+import {useResponsiveDimensions} from './hooks';
+import {notificationService} from './services/NotificationService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { subscribeToTopics, unsubscribeFromTopics } from './utils/notifications';
+import {subscribeToTopics, unsubscribeFromTopics} from './utils/notifications';
 
 export default function App() {
-  const { wp, hp } = useResponsiveDimensions();
+  const {wp, hp} = useResponsiveDimensions();
 
   useEffect(() => {
     const setup = async () => {
@@ -23,7 +25,10 @@ export default function App() {
       if (initialNotification?.notification?.data?.type === 'chat') {
         // Store this information somewhere to be used after navigation is ready
         // You can use global state management (Redux/Context) or AsyncStorage
-        await AsyncStorage.setItem('initialNotification', JSON.stringify(initialNotification.notification.data));
+        await AsyncStorage.setItem(
+          'initialNotification',
+          JSON.stringify(initialNotification.notification.data),
+        );
       }
     };
 
@@ -38,13 +43,13 @@ export default function App() {
           remoteMessage.notification?.body || '',
           {
             senderId: remoteMessage.data.senderId,
-            receiverId: remoteMessage.data.receiverId
-          }
+            receiverId: remoteMessage.data.receiverId,
+          },
         );
       } else {
         await notificationService.displayNotification(
           remoteMessage.notification?.title || 'New Message',
-          remoteMessage.notification?.body || ''
+          remoteMessage.notification?.body || '',
         );
       }
     });
@@ -68,11 +73,19 @@ export default function App() {
   }, [hp, wp]);
 
   const toastConfig = {
-    successToast: ({ text1, text2 }: { text1?: string, text2?: string }) => (
-      <LeaderboardToast text1={text1 || ''} text2={text2 || ''} type="successLeaderboard" />
+    successToast: ({text1, text2}: {text1?: string; text2?: string}) => (
+      <LeaderboardToast
+        text1={text1 || ''}
+        text2={text2 || ''}
+        type="successLeaderboard"
+      />
     ),
-    errorToast: ({ text1, text2 }: { text1?: string, text2?: string }) => (
-      <LeaderboardToast text1={text1 || ''} text2={text2 || ''} type="errorLeaderboard" />
+    errorToast: ({text1, text2}: {text1?: string; text2?: string}) => (
+      <LeaderboardToast
+        text1={text1 || ''}
+        text2={text2 || ''}
+        type="errorLeaderboard"
+      />
     ),
   };
 
@@ -81,5 +94,5 @@ export default function App() {
       <RootNavigator />
       <Toast config={toastConfig} />
     </SafeAreaView>
-  )
+  );
 }

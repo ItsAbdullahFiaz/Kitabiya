@@ -17,6 +17,8 @@ import {apiService} from '../../../services/api';
 import {convertDate} from '../../../utils';
 import {RemoveAd} from './components';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {MotiView} from 'moti';
+import {SkeletonLoader} from '../../../components';
 
 export const MyBooksScreen = () => {
   const navigation = useNavigation<any>();
@@ -161,6 +163,25 @@ export const MyBooksScreen = () => {
       },
     });
   }, [hp, wp]);
+  if (loading) {
+    // Render skeleton loaders while loading.
+    return (
+      <MainContainer>
+        <Text style={styles.title}>{appLang.myads}</Text>
+        <View style={styles.listContainer}>
+          {Array.from({length: 5}).map((_, index) => (
+            <View key={index} style={styles.adContainer}>
+              <SkeletonLoader
+                width="100%"
+                height={hp(100)}
+                borderRadius={hp(8)}
+              />
+            </View>
+          ))}
+        </View>
+      </MainContainer>
+    );
+  }
   return (
     <MainContainer>
       <Text style={styles.title}>{appLang.myads}</Text>
