@@ -1,12 +1,30 @@
 import {ActivityIndicator, Image, StyleSheet, Text, View} from 'react-native';
-import React, {useContext, useMemo} from 'react';
+import React, {useContext, useEffect, useMemo, useState} from 'react';
 import {FONT, FONT_SIZE, OTHER_COLORS, TEXT_STYLE} from '../../../../enums';
 import {useResponsiveDimensions} from '../../../../hooks';
 import {AppDataContext} from '../../../../context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const ProfileHeader = ({userInfo}: any) => {
+  const [name, setName] = useState<string | null>(null);
   const {appTheme} = useContext(AppDataContext);
   const {hp, wp} = useResponsiveDimensions();
+
+  const getName = async () => {
+    try {
+      const storedName = await AsyncStorage.getItem('NAME');
+      if (storedName !== null) {
+        setName(storedName);
+      }
+    } catch (error) {
+      console.error('Error retrieving name from AsyncStorage:', error);
+    }
+  };
+
+  useEffect(() => {
+    getName();
+  }, []);
+
   const styles = useMemo(() => {
     return StyleSheet.create({
       profileHeader: {
@@ -48,7 +66,7 @@ export const ProfileHeader = ({userInfo}: any) => {
           <View style={styles.imgContainer}>
             <Image style={styles.img} source={{uri: userInfo.photoURL}} />
           </View>
-          <Text style={styles.name}>{userInfo.displayName}</Text>
+          <Text style={styles.name}>{name}</Text>
           <Text style={styles.gmail}>{userInfo.email}</Text>
         </View>
       ) : (

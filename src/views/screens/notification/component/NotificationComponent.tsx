@@ -9,14 +9,34 @@ import React, { useMemo, useContext, } from 'react';
 import { AppDataContext } from '../../../../context';
 import { useResponsiveDimensions } from '../../../../hooks';
 import { FONT_SIZE, TEXT_STYLE, } from '../../../../enums';
+
+interface NotificationProps {
+  id: string;
+  title: string;
+  opportunities: string;
+  image?: any;
+  timestamp?: string;
+  type?: string;
+  action?: string;
+}
+
 export const NotificationComponent = ({
   id,
   title,
   opportunities,
   image,
-}: any) => {
-  const { appTheme, appLang } = useContext(AppDataContext);
+  timestamp,
+  type,
+  action
+}: NotificationProps) => {
   const { hp, wp } = useResponsiveDimensions();
+  const { appTheme } = useContext(AppDataContext);
+
+  const formattedDate = useMemo(() => {
+    if (!timestamp) return '';
+    return new Date(timestamp).toLocaleDateString();
+  }, [timestamp]);
+
   const styles = useMemo(() => {
     return StyleSheet.create({
       container: {
@@ -104,6 +124,9 @@ export const NotificationComponent = ({
             <View>
               <Text style={styles.titleText}>{title}</Text>
               <Text style={styles.subtitleText}>{opportunities}</Text>
+              {timestamp && (
+                <Text style={styles.subtitleText}>{formattedDate}</Text>
+              )}
             </View>
           </View>
         </View>

@@ -23,7 +23,8 @@ export const API_ENDPOINTS = {
     PRODUCTS: `${BASE_URL}/products`,
 
     // Notifications
-    NOTIFICATIONS: `${BASE_URL}/notifications/send`
+    NOTIFICATIONS: `${BASE_URL}/notifications/send`,
+    NOTIFICATION_BROADCASTS: `${BASE_URL}/notifications/broadcasts`
 };
 
 

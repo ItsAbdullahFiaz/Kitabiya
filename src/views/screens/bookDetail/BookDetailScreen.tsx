@@ -1,25 +1,59 @@
+<<<<<<< HEAD
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useContext, useEffect, useMemo, useState} from 'react';
+=======
+import {Image, StyleSheet, Text, View} from 'react-native';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+>>>>>>> 2425ff24c5b47d6800d89a4d8530f8f2ca339625
 import {Header, MainButton, MainContainer} from '../../../components';
 import {FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE} from '../../../enums';
 import {useResponsiveDimensions} from '../../../hooks';
 import {AppDataContext} from '../../../context';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
+<<<<<<< HEAD
 import { apiService } from '../../../services/api';
 import Reports from './Reports';
+=======
+import {apiService} from '../../../services/api';
+>>>>>>> 2425ff24c5b47d6800d89a4d8530f8f2ca339625
 
 export const BookDetailScreen = ({route}: any) => {
   const navigation = useNavigation<any>();
   const {appTheme, appLang} = useContext(AppDataContext);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [productById, setProductById] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [item, setItem] = useState({});
   const [emailId, setEmailId] = useState('');
   const toggleText = () => setIsExpanded(!isExpanded);
   const {hp, wp} = useResponsiveDimensions();
   const data = route?.params?.product;
-  console.log('PARAM_DATA_BOOK===>', data);
+  // console.log('PARAM_DATA_BOOK===>', data);
   const shouldShowReadMore = data.description.length > 100;
+
+  const increseProductView = async () => {
+    try {
+      const response = await apiService.getProductById(data._id);
+      if (response.error) {
+        throw new Error(response.message || 'Failed to fetch popular products');
+      }
+    } catch (error) {
+      console.error('Error fetching popular products:', error);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      increseProductView();
+    }, []),
+  );
 
   const chatCredentials = async () => {
     try {
