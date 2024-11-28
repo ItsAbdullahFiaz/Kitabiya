@@ -1,11 +1,11 @@
-import React, {useContext, useEffect, useMemo, useState} from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import {
   AnyIcon,
   IconType,
   MainContainer,
   SkeletonLoader,
 } from '../../../components';
-import {AppDataContext} from '../../../context';
+import { AppDataContext } from '../../../context';
 import {
   Text,
   View,
@@ -14,18 +14,18 @@ import {
   TouchableOpacity,
   SectionList,
 } from 'react-native';
-import {FONT, FONT_SIZE, SCREENS} from '../../../enums';
-import {useResponsiveDimensions} from '../../../hooks';
-import {useNavigation} from '@react-navigation/native';
-import {HeaderButtons, PopularProducts, NewlyAdded} from './components';
-import {notificationService} from '../../../services/NotificationService';
+import { FONT, FONT_SIZE, SCREENS } from '../../../enums';
+import { useResponsiveDimensions } from '../../../hooks';
+import { useNavigation } from '@react-navigation/native';
+import { HeaderButtons, PopularProducts, NewlyAdded } from './components';
+import { notificationService } from '../../../services/NotificationService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {apiService} from '../../../services/api';
+import { apiService } from '../../../services/api';
 
 export const HomeScreen = () => {
   const navigation = useNavigation();
-  const {appTheme, appLang} = useContext(AppDataContext);
-  const {hp, wp} = useResponsiveDimensions();
+  const { appTheme, appLang } = useContext(AppDataContext);
+  const { hp, wp } = useResponsiveDimensions();
   const [newlyAddedProducts, setNewlyAddedProducts] = useState([]);
   const [popularProducts, setPopularProducts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -230,7 +230,7 @@ export const HomeScreen = () => {
     [popularProducts, newlyAddedProducts, loading],
   );
 
-  const renderSectionHeader = ({section}: {section: any}) => (
+  const renderSectionHeader = ({ section }: { section: any }) => (
     <View style={styles.sectionHeader}>
       <Text style={styles.heading}>{section.title}</Text>
       {section.showSeeMore && (
@@ -318,7 +318,7 @@ export const HomeScreen = () => {
       />
       <SectionList
         sections={sections}
-        renderItem={({section}) => section.renderItem()}
+        renderItem={({ section }) => section.renderItem()}
         renderSectionHeader={renderSectionHeader}
         ListHeaderComponent={renderHeader}
         stickySectionHeadersEnabled={false}
