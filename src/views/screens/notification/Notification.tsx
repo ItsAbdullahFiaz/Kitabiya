@@ -4,6 +4,7 @@ import {Header, MainContainer} from '../../../components';
 import {NotificationComponent} from './component';
 import {apiService} from '../../../services/api';
 import {useToast} from '../../../hooks';
+import {SkeletonLoader} from '../../../components';
 
 interface NotificationItem {
   _id: string;
@@ -43,33 +44,52 @@ export const Notification = () => {
     fetchNotifications();
   }, []);
 
+  const renderSkeletonLoader = () => {
+    return Array.from({length: 5}).map((_, index) => (
+      <View style={{marginVertical: 5}}>
+        <SkeletonLoader
+          key={index}
+          width="100%"
+          height={80}
+          borderRadius={8}
+          style={styles.skeletonPlaceholder}
+        />
+      </View>
+    ));
+  };
+
   return (
     <MainContainer>
       <Header title="notifications" />
       <View style={styles.listContainer}>
-        <FlatList
-          data={notifications}
-          renderItem={({item}) => {
-            const {_id, title, body, createdAt, data} = item;
-            return (
-              <NotificationComponent
-                id={_id}
-                title={title}
-                opportunities={body}
-                image={
-                  data.type === 'system'
-                    ? require('../../../assets/images/bellIcon.png')
-                    : undefined
-                }
-                timestamp={createdAt}
-                type={data.type}
-                action={data.action}
-              />
-            );
-          }}
-          refreshing={loading}
-          onRefresh={fetchNotifications}
-        />
+        {loading ? (
+          renderSkeletonLoader()
+        ) : (
+          <FlatList
+            data={notifications}
+            renderItem={({item}) => {
+              const {_id, title, body, createdAt, data} = item;
+              return (
+                <NotificationComponent
+                  id={_id}
+                  title={title}
+                  opportunities={body}
+                  image={
+                    data.type === 'system'
+                      ? require('../../../assets/images/bellIcon.png')
+                      : undefined
+                  }
+                  timestamp={createdAt}
+                  type={data.type}
+                  action={data.action}
+                />
+              );
+            }}
+            keyExtractor={item => item._id}
+            refreshing={loading}
+            onRefresh={fetchNotifications}
+          />
+        )}
       </View>
     </MainContainer>
   );
@@ -77,4 +97,5 @@ export const Notification = () => {
 
 const styles = StyleSheet.create({
   listContainer: {},
+  skeletonPlaceholder: {},
 });
