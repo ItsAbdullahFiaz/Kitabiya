@@ -11,6 +11,7 @@ import {
   Popular,
   SplashScreen,
 } from '../views/screens';
+import Reports from '../views/screens/bookDetail/Reports';
 
 const Stack = createNativeStackNavigator();
 
@@ -27,6 +28,7 @@ export const RootNavigator = () => {
         <Stack.Screen name={SCREENS.MY_BOOK} component={MyBooksScreen} />
         <Stack.Screen name={SCREENS.POPULAR} component={Popular} />
         <Stack.Screen name={SCREENS.ADD_SCREEN} component={AddScreen} />
+        <Stack.Screen name={SCREENS.REPORTS} component={Reports} />
       </Stack.Navigator>
     </NavigationContainer>
   );

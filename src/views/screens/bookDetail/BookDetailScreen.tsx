@@ -1,4 +1,4 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useContext, useEffect, useMemo, useState} from 'react';
 import {Header, MainButton, MainContainer} from '../../../components';
 import {FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE} from '../../../enums';
@@ -6,6 +6,8 @@ import {useResponsiveDimensions} from '../../../hooks';
 import {AppDataContext} from '../../../context';
 import {useNavigation} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
+import { apiService } from '../../../services/api';
+import Reports from './Reports';
 
 export const BookDetailScreen = ({route}: any) => {
   const navigation = useNavigation<any>();
@@ -41,6 +43,12 @@ export const BookDetailScreen = ({route}: any) => {
     isExpanded || !shouldShowReadMore
       ? data.description
       : `${data.description.slice(0, 100).trim()}... `;
+
+
+
+
+      // Add to recent searches
+   
 
   const styles = useMemo(() => {
     return StyleSheet.create({
@@ -217,6 +225,11 @@ export const BookDetailScreen = ({route}: any) => {
               </Text>
             )}
           </Text>
+        </View>
+        <View>
+          <TouchableOpacity onPress={() => navigation.navigate(SCREENS.REPORTS as never)} >
+            <Text> report</Text>
+          </TouchableOpacity>
         </View>
       </View>
       <View style={styles.chatBtnContainer}>
