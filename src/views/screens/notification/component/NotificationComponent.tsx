@@ -1,14 +1,8 @@
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Image,
-} from 'react-native';
-import React, { useMemo, useContext, } from 'react';
-import { AppDataContext } from '../../../../context';
-import { useResponsiveDimensions } from '../../../../hooks';
-import { FONT_SIZE, TEXT_STYLE, } from '../../../../enums';
+import {StyleSheet, Text, TouchableOpacity, View, Image} from 'react-native';
+import React, {useMemo, useContext} from 'react';
+import {AppDataContext} from '../../../../context';
+import {useResponsiveDimensions} from '../../../../hooks';
+import {FONT_SIZE, TEXT_STYLE} from '../../../../enums';
 
 interface NotificationProps {
   id: string;
@@ -27,10 +21,10 @@ export const NotificationComponent = ({
   image,
   timestamp,
   type,
-  action
+  action,
 }: NotificationProps) => {
-  const { hp, wp } = useResponsiveDimensions();
-  const { appTheme } = useContext(AppDataContext);
+  const {hp, wp} = useResponsiveDimensions();
+  const {appTheme} = useContext(AppDataContext);
 
   const formattedDate = useMemo(() => {
     if (!timestamp) return '';
@@ -42,8 +36,7 @@ export const NotificationComponent = ({
       container: {
         backgroundColor: appTheme.primaryBackground,
         height: hp(79),
-        width: "100%",
-        // width: hp(380),
+        width: '100%',
         flexDirection: 'row',
         borderWidth: 1,
         borderColor: appTheme.borderDefault,
@@ -63,13 +56,11 @@ export const NotificationComponent = ({
         height: hp(40),
         justifyContent: 'center',
         alignItems: 'center',
-
       },
       textWrapper: {
         width: hp(290),
         height: hp(47),
-        paddingLeft: 10
-
+        paddingLeft: 10,
       },
       titleText: {
         ...TEXT_STYLE.medium,
@@ -104,9 +95,7 @@ export const NotificationComponent = ({
         borderColor: appTheme.primaryBackground,
         borderWidth: 0.5,
       },
-      icon:
-        { width: hp(20), height: hp(20), }
-
+      icon: {width: hp(20), height: hp(20)},
     });
   }, [hp, wp]);
   return (

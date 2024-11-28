@@ -1,11 +1,11 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, {useContext, useEffect, useMemo, useState} from 'react';
 import {
   AnyIcon,
   IconType,
   MainContainer,
   SkeletonLoader,
 } from '../../../components';
-import { AppDataContext } from '../../../context';
+import {AppDataContext} from '../../../context';
 import {
   Text,
   View,
@@ -14,18 +14,18 @@ import {
   TouchableOpacity,
   SectionList,
 } from 'react-native';
-import { FONT, FONT_SIZE, SCREENS } from '../../../enums';
-import { useResponsiveDimensions } from '../../../hooks';
-import { useNavigation } from '@react-navigation/native';
-import { HeaderButtons, PopularProducts, NewlyAdded } from './components';
-import { notificationService } from '../../../services/NotificationService';
+import {FONT, FONT_SIZE, SCREENS} from '../../../enums';
+import {useResponsiveDimensions} from '../../../hooks';
+import {useNavigation} from '@react-navigation/native';
+import {HeaderButtons, PopularProducts, NewlyAdded} from './components';
+import {notificationService} from '../../../services/NotificationService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { apiService } from '../../../services/api';
+import {apiService} from '../../../services/api';
 
 export const HomeScreen = () => {
   const navigation = useNavigation();
-  const { appTheme, appLang } = useContext(AppDataContext);
-  const { hp, wp } = useResponsiveDimensions();
+  const {appTheme, appLang} = useContext(AppDataContext);
+  const {hp, wp} = useResponsiveDimensions();
   const [newlyAddedProducts, setNewlyAddedProducts] = useState([]);
   const [popularProducts, setPopularProducts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -35,14 +35,11 @@ export const HomeScreen = () => {
   useEffect(() => {
     const setupNotifications = async () => {
       try {
-        // Request permission
         const permissionGranted =
           await notificationService.requestUserPermission();
         if (permissionGranted) {
-          // Get userId from AsyncStorage
           const emailId = await AsyncStorage.getItem('EMAIL');
           if (emailId) {
-            // Save FCM token
             await notificationService.saveFCMToken(emailId);
           }
         }
@@ -82,6 +79,7 @@ export const HomeScreen = () => {
         throw new Error(response.message || 'Failed to fetch popular products');
       }
       setPopularProducts(response.data || []);
+      setIsLoading(false);
     } catch (error) {
       console.error('Error fetching popular products:', error);
     } finally {
@@ -146,64 +144,6 @@ export const HomeScreen = () => {
     </View>
   );
 
-  //commented
-  // const renderNewlyAddedProducts = () => {
-  //   if (loading) {
-  //     // Render Skeletons
-  //     return (
-  //       <View style={styles.skeletonContainer}>
-  //         {[...Array(4)].map((_, index) => (
-  //           <SkeletonLoader
-  //             key={index}
-  //             width={'100%'}
-  //             height={100}
-  //             borderRadius={8}
-  //           />
-  //         ))}
-  //       </View>
-  //     );
-  //   }
-  //   // Render Actual Products
-  //   return <NewlyAdded products={newlyAddedProducts} loading={loading} />;
-  // };
-  // const renderPopularProducts = () => {
-  //   if (loading) {
-  //     // Render Skeletons
-  //     return (
-  //       <View style={styles.skeletonContainer}>
-  //         {[...Array(4)].map((_, index) => (
-  //           <SkeletonLoader
-  //             key={index}
-  //             width={'100%'}
-  //             height={150}
-  //             borderRadius={8}
-  //           />
-  //         ))}
-  //       </View>
-  //     );
-  //   }
-  //   // Render Actual Products
-  //   return <PopularProducts products={popularProducts} />;
-  // };
-
-  // const sections = useMemo(
-  //   () => [
-  //     {
-  //       title: 'Popular',
-  //       data: [popularProducts],
-  //       renderItem: renderPopularProducts,
-  //       showSeeMore: true,
-  //     },
-  //     {
-  //       title: 'Newly Added',
-  //       data: [newlyAddedProducts],
-  //       renderItem: renderNewlyAddedProducts,
-  //       showSeeMore: false,
-  //     },
-  //   ],
-  //   [popularProducts, newlyAddedProducts, loading],
-  // );
-
   const sections = useMemo(
     () => [
       {
@@ -227,10 +167,10 @@ export const HomeScreen = () => {
         showSeeMore: false,
       },
     ],
-    [popularProducts, newlyAddedProducts, loading],
+    [popularProducts, newlyAddedProducts, loading, isloading],
   );
 
-  const renderSectionHeader = ({ section }: { section: any }) => (
+  const renderSectionHeader = ({section}: {section: any}) => (
     <View style={styles.sectionHeader}>
       <Text style={styles.heading}>{section.title}</Text>
       {section.showSeeMore && (
@@ -318,7 +258,7 @@ export const HomeScreen = () => {
       />
       <SectionList
         sections={sections}
-        renderItem={({ section }) => section.renderItem()}
+        renderItem={({section}) => section.renderItem()}
         renderSectionHeader={renderSectionHeader}
         ListHeaderComponent={renderHeader}
         stickySectionHeadersEnabled={false}
