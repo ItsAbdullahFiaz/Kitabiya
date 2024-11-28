@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useContext, useEffect, useMemo, useState} from 'react';
-=======
-import {Image, StyleSheet, Text, View} from 'react-native';
 import React, {
   useCallback,
   useContext,
@@ -10,19 +6,13 @@ import React, {
   useMemo,
   useState,
 } from 'react';
->>>>>>> 2425ff24c5b47d6800d89a4d8530f8f2ca339625
 import {Header, MainButton, MainContainer} from '../../../components';
 import {FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE} from '../../../enums';
 import {useResponsiveDimensions} from '../../../hooks';
 import {AppDataContext} from '../../../context';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
-<<<<<<< HEAD
-import { apiService } from '../../../services/api';
-import Reports from './Reports';
-=======
 import {apiService} from '../../../services/api';
->>>>>>> 2425ff24c5b47d6800d89a4d8530f8f2ca339625
 
 export const BookDetailScreen = ({route}: any) => {
   const navigation = useNavigation<any>();
