@@ -155,6 +155,12 @@ export const apiService = {
             URL: `${API_ENDPOINTS.PRODUCTS}/popular`,
             verb: 'GET'
         }),
+
+    getNotificationsList: () =>
+        ApiCall({
+            URL: API_ENDPOINTS.NOTIFICATION_BROADCASTS,
+            verb: 'GET'
+        }),
 };
 
 // New response types

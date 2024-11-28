@@ -1,5 +1,10 @@
 import React, {useContext, useEffect, useMemo, useState} from 'react';
-import {AnyIcon, IconType, MainContainer} from '../../../components';
+import {
+  AnyIcon,
+  IconType,
+  MainContainer,
+  SkeletonLoader,
+} from '../../../components';
 import {AppDataContext} from '../../../context';
 import {
   Text,
