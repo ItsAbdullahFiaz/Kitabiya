@@ -1,10 +1,5 @@
 import React, {useContext, useEffect, useMemo, useState} from 'react';
-import {
-  AnyIcon,
-  IconType,
-  MainContainer,
-  SkeletonLoader,
-} from '../../../components';
+import {AnyIcon, IconType, MainContainer} from '../../../components';
 import {AppDataContext} from '../../../context';
 import {
   Text,
@@ -35,14 +30,11 @@ export const HomeScreen = () => {
   useEffect(() => {
     const setupNotifications = async () => {
       try {
-        // Request permission
         const permissionGranted =
           await notificationService.requestUserPermission();
         if (permissionGranted) {
-          // Get userId from AsyncStorage
           const emailId = await AsyncStorage.getItem('EMAIL');
           if (emailId) {
-            // Save FCM token
             await notificationService.saveFCMToken(emailId);
           }
         }
@@ -82,6 +74,7 @@ export const HomeScreen = () => {
         throw new Error(response.message || 'Failed to fetch popular products');
       }
       setPopularProducts(response.data || []);
+      setIsLoading(false);
     } catch (error) {
       console.error('Error fetching popular products:', error);
     } finally {
@@ -146,64 +139,6 @@ export const HomeScreen = () => {
     </View>
   );
 
-  //commented
-  // const renderNewlyAddedProducts = () => {
-  //   if (loading) {
-  //     // Render Skeletons
-  //     return (
-  //       <View style={styles.skeletonContainer}>
-  //         {[...Array(4)].map((_, index) => (
-  //           <SkeletonLoader
-  //             key={index}
-  //             width={'100%'}
-  //             height={100}
-  //             borderRadius={8}
-  //           />
-  //         ))}
-  //       </View>
-  //     );
-  //   }
-  //   // Render Actual Products
-  //   return <NewlyAdded products={newlyAddedProducts} loading={loading} />;
-  // };
-  // const renderPopularProducts = () => {
-  //   if (loading) {
-  //     // Render Skeletons
-  //     return (
-  //       <View style={styles.skeletonContainer}>
-  //         {[...Array(4)].map((_, index) => (
-  //           <SkeletonLoader
-  //             key={index}
-  //             width={'100%'}
-  //             height={150}
-  //             borderRadius={8}
-  //           />
-  //         ))}
-  //       </View>
-  //     );
-  //   }
-  //   // Render Actual Products
-  //   return <PopularProducts products={popularProducts} />;
-  // };
-
-  // const sections = useMemo(
-  //   () => [
-  //     {
-  //       title: 'Popular',
-  //       data: [popularProducts],
-  //       renderItem: renderPopularProducts,
-  //       showSeeMore: true,
-  //     },
-  //     {
-  //       title: 'Newly Added',
-  //       data: [newlyAddedProducts],
-  //       renderItem: renderNewlyAddedProducts,
-  //       showSeeMore: false,
-  //     },
-  //   ],
-  //   [popularProducts, newlyAddedProducts, loading],
-  // );
-
   const sections = useMemo(
     () => [
       {
@@ -227,7 +162,7 @@ export const HomeScreen = () => {
         showSeeMore: false,
       },
     ],
-    [popularProducts, newlyAddedProducts, loading],
+    [popularProducts, newlyAddedProducts, loading, isloading],
   );
 
   const renderSectionHeader = ({section}: {section: any}) => (
