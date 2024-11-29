@@ -18,7 +18,7 @@ enum SCREENS {
   CHAT = 'CHAT',
   NOTIFICATION='NOTIFICATION',
   POPULAR = 'POPULAR',
-  REPORTS='REPORTS'
+  
 }
 enum STACK {
   MAIN = 'Main',

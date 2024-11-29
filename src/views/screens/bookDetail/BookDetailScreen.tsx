@@ -1,4 +1,4 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {
   useCallback,
   useContext,
@@ -13,6 +13,7 @@ import {AppDataContext} from '../../../context';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 import {apiService} from '../../../services/api';
+import { ReportSheet } from '../add/components';
 
 export const BookDetailScreen = ({route}: any) => {
   const navigation = useNavigation<any>();
@@ -22,6 +23,7 @@ export const BookDetailScreen = ({route}: any) => {
   const [loading, setLoading] = useState(false);
   const [item, setItem] = useState({});
   const [emailId, setEmailId] = useState('');
+  const [isModalOpen,setIsModalOpen]=useState(false);
   const toggleText = () => setIsExpanded(!isExpanded);
   const {hp, wp} = useResponsiveDimensions();
   const data = route?.params?.product;
@@ -54,7 +56,23 @@ export const BookDetailScreen = ({route}: any) => {
       console.log(error.message);
     }
   };
-
+ 
+  // const handleReportProduct = async () => {
+  //   try {
+  //     // console.warn("PRessed");
+      
+  //     const response = await apiService.reportProduct(); // Ensure your API accepts this data structure
+  //     console.log('repoted data====>',response)
+  //     if (response.error) {
+  //       console.log('Error Reporting');
+  //     } else {
+  //       console.log('Product reported successfully');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error reporting product:', error);
+  //   }
+  // };
+  
   useEffect(() => {
     chatCredentials();
   }, []);
@@ -72,6 +90,9 @@ export const BookDetailScreen = ({route}: any) => {
 
 
       // Add to recent searches
+      const handleModal=()=>{
+        setIsModalOpen(false)
+      }
    
 
   const styles = useMemo(() => {
@@ -169,9 +190,9 @@ export const BookDetailScreen = ({route}: any) => {
         width: '100%',
         alignSelf: 'center',
       },
-      report:{
+      textcentre:{
         justifyContent:"center",
-        alignItems:"center",
+        textAlign:"center",
       }
     });
   }, [hp, wp]);
@@ -254,12 +275,11 @@ export const BookDetailScreen = ({route}: any) => {
             )}
           </Text>
         </View>
-        <View>
-          <TouchableOpacity style={styles.report}
-          onPress={() => navigation.navigate(SCREENS.REPORTS as never)} >
-            <Text> report</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity     
+                onPress={() => setIsModalOpen(true)}>
+                <Text style={styles.textcentre} >Add Report</Text>
+              </TouchableOpacity>
+ 
       </View>
       <View style={styles.chatBtnContainer}>
         <MainButton
@@ -269,6 +289,9 @@ export const BookDetailScreen = ({route}: any) => {
           buttonText={appLang.chatnow}
         />
       </View>
+      <Modal visible={isModalOpen}>
+        <ReportSheet handleModal={handleModal} product={data} />
+      </Modal>
     </MainContainer>
   );
 };

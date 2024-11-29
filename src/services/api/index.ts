@@ -87,10 +87,12 @@ export const apiService = {
             verb: 'GET'
         }),
 
-        reportProduct:(productId:string)=>
+        reportProduct:(productId:string,data:any)=>
             ApiCall({
                 URL:`${API_ENDPOINTS.PRODUCTS}/${productId}/report`,
                 verb:"POST",
+                params:data,
+                isFormData:false
             }),
 
     getMyProducts: () =>

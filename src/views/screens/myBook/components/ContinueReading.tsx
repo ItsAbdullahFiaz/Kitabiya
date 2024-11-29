@@ -6,7 +6,6 @@ import { FlatList } from 'react-native';
 import { topTrending } from '../../../../utils';
 import { useNavigation } from '@react-navigation/native';
 import { AppDataContext } from '../../../../context';
-import auth from '@react-native-firebase/auth';
 
 export const ContinueReading = () => {
   const { appTheme, appLang } = useContext(AppDataContext);
