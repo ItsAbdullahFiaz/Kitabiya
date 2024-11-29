@@ -6,7 +6,6 @@ import { FlatList } from 'react-native';
 import { topTrending } from '../../../../utils';
 import { useNavigation } from '@react-navigation/native';
 import { AppDataContext } from '../../../../context';
-
 export const ContinueReading = () => {
   const { appTheme, appLang } = useContext(AppDataContext);
   const navigation = useNavigation<any>();
