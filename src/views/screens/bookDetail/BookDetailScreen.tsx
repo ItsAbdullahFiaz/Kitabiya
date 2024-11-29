@@ -169,6 +169,10 @@ export const BookDetailScreen = ({route}: any) => {
         width: '100%',
         alignSelf: 'center',
       },
+      report:{
+        justifyContent:"center",
+        alignItems:"center",
+      }
     });
   }, [hp, wp]);
 
@@ -251,7 +255,8 @@ export const BookDetailScreen = ({route}: any) => {
           </Text>
         </View>
         <View>
-          <TouchableOpacity onPress={() => navigation.navigate(SCREENS.REPORTS as never)} >
+          <TouchableOpacity style={styles.report}
+          onPress={() => navigation.navigate(SCREENS.REPORTS as never)} >
             <Text> report</Text>
           </TouchableOpacity>
         </View>

@@ -25,7 +25,7 @@ const handleReportProduct = async () => {
       <View style={styles.incentre}>
           <TouchableOpacity  onPress={handleReportProduct}
           >
-            <Text>Report</Text>
+            <Text style={styles.textreport}>Report</Text>
           </TouchableOpacity>
         </View>
         </MainContainer>
@@ -38,5 +38,10 @@ const styles = StyleSheet.create({
   incentre:{
     justifyContent:"center",
     alignItems:"center"
+  },
+  textreport:{
+    justifyContent:"center",
+    textAlign:"center",
+    margin:"auto"
   }
 })
