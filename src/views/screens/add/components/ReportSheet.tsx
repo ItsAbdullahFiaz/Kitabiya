@@ -32,7 +32,7 @@ export const ReportSheet = ({handleModal, product}: any) => {
         ...TEXT_STYLE.bold,
         fontSize: hp(FONT_SIZE.h1),
         color:appTheme.primaryTextColor,
-        marginBottom: hp(2),
+        marginBottom: hp(10),
       },
       radioButton: {
         height: hp(20),
@@ -61,12 +61,12 @@ export const ReportSheet = ({handleModal, product}: any) => {
         color: appTheme.primaryTextColor,
       },
       textInput: {
-        height: hp(90),
+        height: hp(110),
         width: '100%',
         borderColor: appTheme.primaryTextColor,
         borderWidth: 1,
         paddingHorizontal: hp(10),
-        marginTop: hp(2),
+        marginTop: hp(10),
         color: appTheme.primaryTextColor,
         fontSize: hp(FONT_SIZE.h4),
         textAlignVertical: 'top',
@@ -75,7 +75,7 @@ export const ReportSheet = ({handleModal, product}: any) => {
         flexDirection: 'row',
         justifyContent: 'flex-end',
         width: '100%',
-        marginTop: hp(2),
+        marginTop: hp(10),
       },
       button: {
         width: hp(70),
@@ -89,6 +89,7 @@ export const ReportSheet = ({handleModal, product}: any) => {
         color:appTheme.primaryTextColor,
         fontSize: hp(FONT_SIZE.h3),
         ...TEXT_STYLE.bold,
+        borderBottomWidth:1
       },
     });
   }, [appTheme]);
@@ -163,9 +164,11 @@ export const ReportSheet = ({handleModal, product}: any) => {
             padding: hp(20),
             
           }}>
-          <ScrollView contentContainerStyle={{paddingBottom: hp(2),}}>
-            <Text style={styles.sheetBtnText}>{appLang.reportad}</Text>
 
+            <View >
+            <Text style={styles.sheetBtnText}>{appLang.reportad}</Text>
+            </View>
+          <ScrollView contentContainerStyle={{paddingBottom: hp(2)}}>
             {/* Options */}
             {['inappropriate', 'spam', 'fake', 'offensive', 'other'].map(
               option => (
@@ -188,7 +191,7 @@ export const ReportSheet = ({handleModal, product}: any) => {
             {/* Text Input */}
             <TextInput
               style={styles.textInput}
-              placeholder="Comments"
+              placeholder="Comment"
               placeholderTextColor={appTheme.secondaryTextColor}
               value={message}
               onChangeText={setMessage}

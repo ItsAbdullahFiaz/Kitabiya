@@ -11,7 +11,6 @@ import {
   Popular,
   SplashScreen,
 } from '../views/screens';
-import Reports from '../views/screens/bookDetail/Reports';
 
 const Stack = createNativeStackNavigator();
 
