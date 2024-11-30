@@ -6,7 +6,7 @@ import { FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../../enums';
 import { AnyIcon, IconType } from '../../../../components';
 
 export const Condition = ({ handleSelect, selected }: any) => {
-  const { appTheme } = useContext(AppDataContext);
+  const { appTheme,appLang } = useContext(AppDataContext);
   const { hp, wp } = useResponsiveDimensions();
 
   const styles = useMemo(() => {
@@ -57,7 +57,7 @@ export const Condition = ({ handleSelect, selected }: any) => {
   return (
     <View style={styles.conditionContainer}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>condition</Text>
+        <Text style={styles.title}>{appLang.condition}</Text>
         <AnyIcon
           type={IconType.FontAwesome5}
           name='star-of-life'
@@ -81,7 +81,7 @@ export const Condition = ({ handleSelect, selected }: any) => {
               selected === 'NEW' && styles.selectedText,
             ]}
           >
-            NEW
+           {appLang.new}
           </Text>
         </TouchableOpacity>
 
@@ -99,7 +99,7 @@ export const Condition = ({ handleSelect, selected }: any) => {
               selected === 'USED' && styles.selectedText,
             ]}
           >
-            USED
+            {appLang.used}
           </Text>
         </TouchableOpacity>
       </View>

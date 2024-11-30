@@ -91,12 +91,11 @@ export const SignupScreen = () => {
     <MainContainer>
       <Header title={appLang.signUp} />
       <View style={styles.contentContainer}>
-        <Text style={styles.label}>Name</Text>
+        <Text style={styles.label}>{appLang.name}</Text>
         <CustomInput
           value={userName}
           setValue={setUserName}
-          // placeholder={appLang.email}
-          placeholder='Enter name'
+          placeholder={appLang.textname}
           textWrong={wrongNameError}
           onChange={() => setWrongNameError('')}
           bottomError={true}

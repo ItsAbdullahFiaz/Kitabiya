@@ -647,7 +647,7 @@ const notificationData = [
         id: '1',
         title: 'New Book Added',
         opportunities: 'Pakistan Study - inter part || ',
-        image: require('../assets/images/Vector.png'),
+        image: require('../assets/images/Logo.png'),
     },
     {
         id: '2',
@@ -659,7 +659,7 @@ const notificationData = [
         id: '3',
         title: 'New Book Added',
         opportunities: 'Chemistry - inter part || ',
-        image: require('../assets/images/Group.png'),
+        image: require('../assets/images/Logo.png'),
     },
     {
         id: '4',
@@ -671,7 +671,7 @@ const notificationData = [
         id: '5',
         title: 'New Book Added',
         opportunities: 'Chemistry - inter part || ',
-        image: require('../assets/images/Logo2.png'),
+        image: require('../assets/images/Logo.png'),
     },
     {
         id: '6',
@@ -683,13 +683,13 @@ const notificationData = [
         id: '7',
         title: 'New Book Added',
         opportunities: 'Chemistry - inter part || ',
-        image: require('../assets/images/Logo2.png'),
+        image: require('../assets/images/Logo.png'),
     },
     {
         id: '8',
         title: 'New Book Added',
         opportunities: 'Chemistry - inter part || ',
-        image: require('../assets/images/Group.png'),
+        image: require('../assets/images/Logo.png'),
     },
 ];
 

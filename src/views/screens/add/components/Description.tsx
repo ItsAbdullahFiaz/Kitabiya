@@ -6,7 +6,7 @@ import { FONT, FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../../enums';
 import { AnyIcon, IconType } from '../../../../components';
 
 export const Description = ({ description, handleDescription }: any) => {
-  const { appTheme } = useContext(AppDataContext);
+  const { appTheme,appLang } = useContext(AppDataContext);
   const { hp, wp } = useResponsiveDimensions();
 
   const styles = useMemo(() => {
@@ -44,7 +44,7 @@ export const Description = ({ description, handleDescription }: any) => {
   return (
     <View style={styles.conditionContainer}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>Description</Text>
+        <Text style={styles.title}>{appLang.description}</Text>
         <AnyIcon
           type={IconType.FontAwesome5}
           name="star-of-life"

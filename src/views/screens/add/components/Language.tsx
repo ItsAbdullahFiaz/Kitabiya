@@ -15,7 +15,7 @@ import { dropdownItems } from '../../../../utils';
 
 const genres = ['Horror', 'Comedy', 'Fantasy', 'Action', 'Romance', 'Drama'];
 export const Language = ({ handleSelectLanguage, language }: any) => {
-  const { appTheme } = useContext(AppDataContext);
+  const { appTheme,appLang } = useContext(AppDataContext);
   const { hp, wp } = useResponsiveDimensions();
   const [isModalVisible, setIsModalVisible] = useState(false);
 

@@ -11,7 +11,7 @@ export const BottomSheetComponent = ({
   handleCameraLaunch,
   openImagePicker,
 }: any) => {
-  const {appTheme} = useContext(AppDataContext);
+  const {appTheme,appLang} = useContext(AppDataContext);
   const {hp, wp} = useResponsiveDimensions();
   const handleSheetChanges = useCallback((index: number) => {
   }, []);
@@ -46,13 +46,13 @@ export const BottomSheetComponent = ({
             padding: 20,
           }}>
           <TouchableOpacity onPress={handleCameraLaunch}>
-            <Text style={styles.sheetBtnText}>Take a photo</Text>
+            <Text style={styles.sheetBtnText}>{appLang.takephoto}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={openImagePicker}>
-            <Text style={styles.sheetBtnText}>Pick from gallery</Text>
+            <Text style={styles.sheetBtnText}>{appLang.pickgallery}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => handleModal(false)}>
-            <Text style={styles.sheetBtnText}>Close</Text>
+            <Text style={styles.sheetBtnText}>{appLang.close}</Text>
           </TouchableOpacity>
         </BottomSheetView>
       </BottomSheet>

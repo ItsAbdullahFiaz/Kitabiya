@@ -6,7 +6,7 @@ import { AnyIcon, IconType } from '../../../../components';
 import { AppDataContext } from '../../../../context';
 
 export const AdTitle = ({ bookTitle, handleSelectTitle }: any) => {
-  const { appTheme } = useContext(AppDataContext);
+  const { appTheme,appLang } = useContext(AppDataContext);
   const { hp, wp } = useResponsiveDimensions();
   const styles = useMemo(() => {
     return StyleSheet.create({
@@ -41,7 +41,7 @@ export const AdTitle = ({ bookTitle, handleSelectTitle }: any) => {
   return (
     <View style={styles.conditionContainer}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>Ad Title</Text>
+        <Text style={styles.title}>{appLang.adTitle}</Text>
         <AnyIcon
           type={IconType.FontAwesome5}
           name='star-of-life'
