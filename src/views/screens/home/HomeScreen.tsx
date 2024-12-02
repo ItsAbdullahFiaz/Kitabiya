@@ -1,10 +1,5 @@
 import React, {useContext, useEffect, useMemo, useState} from 'react';
-import {
-  AnyIcon,
-  IconType,
-  MainContainer,
-  SkeletonLoader,
-} from '../../../components';
+import {AnyIcon, IconType, MainContainer} from '../../../components';
 import {AppDataContext} from '../../../context';
 import {
   Text,
@@ -13,6 +8,7 @@ import {
   StatusBar,
   TouchableOpacity,
   SectionList,
+  RefreshControl,
 } from 'react-native';
 import {FONT, FONT_SIZE, SCREENS} from '../../../enums';
 import {useResponsiveDimensions} from '../../../hooks';
@@ -31,6 +27,7 @@ export const HomeScreen = () => {
   const [loading, setLoading] = useState(false);
   const [isloading, setIsLoading] = useState(false);
   const [userName, setUserName] = useState('');
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     const setupNotifications = async () => {
@@ -85,6 +82,11 @@ export const HomeScreen = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await Promise.all([fetchProducts(), fetchPopularProducts()]); // Refresh both product lists
+    setRefreshing(false);
   };
   const getName = async () => {
     try {
@@ -264,6 +266,14 @@ export const HomeScreen = () => {
         stickySectionHeadersEnabled={false}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={[appTheme.primary]} // Android
+            tintColor={appTheme.primary} // iOS
+          />
+        }
       />
     </MainContainer>
   );

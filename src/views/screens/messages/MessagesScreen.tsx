@@ -70,7 +70,7 @@ export const MessagesScreen = () => {
               setUsers(updatedUsers);
 
               console.log(`User with email ${userName} deleted successfully`);
-            } catch (error) {
+            } catch (error: any) {
               console.log('Error deleting user:', error.message);
             }
           },
@@ -80,6 +80,7 @@ export const MessagesScreen = () => {
       {cancelable: true},
     );
   };
+
   const styles = useMemo(() => {
     return StyleSheet.create({
       title: {
@@ -178,6 +179,7 @@ export const MessagesScreen = () => {
         <FlatList
           data={users}
           renderItem={({item, index}: any) => {
+            console.log('USER_ITEM===>', item);
             return (
               <TouchableOpacity
                 style={styles.card}

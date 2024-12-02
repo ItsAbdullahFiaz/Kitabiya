@@ -28,7 +28,7 @@ export const Chat = ({route}: any) => {
       const parsedData = existingData ? JSON.parse(existingData) : [];
       const newData = [...parsedData, route?.params?.data];
       await AsyncStorage.setItem('MESSAGE_LIST', JSON.stringify(newData));
-    } catch (error) {
+    } catch (error: any) {
       console.log(error.message);
     }
   };
@@ -62,6 +62,7 @@ export const Chat = ({route}: any) => {
     const subscriber = firestore()
       .collection('chats')
       .doc(route.params.emailId + '-' + route.params.data.email)
+      // .doc(route.params.emailId + '-' + 'adeelauto12345678@gmail.com')
       .collection('messages')
       .orderBy('createdAt', 'desc')
       .onSnapshot(querySnapshot => {
@@ -108,7 +109,6 @@ export const Chat = ({route}: any) => {
         }
         throw new Error(response.message || 'Failed to send notification');
       }
-
       console.log('Notification sent:', response);
     } catch (error) {
       console.error('Error sending notification:', error);
@@ -207,6 +207,7 @@ export const Chat = ({route}: any) => {
       },
     });
   }, []);
+
   return (
     <MainContainer>
       <View style={styles.headerContainer}>
