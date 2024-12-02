@@ -73,7 +73,7 @@ export const ApiCall = async ({
                 }
             }
 
-            console.error('Error response:', data);
+            console.error('Error response:', response?.status);
             return { error: response.status, message: data };
         }
     } catch (error: any) {

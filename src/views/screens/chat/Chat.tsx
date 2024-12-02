@@ -75,6 +75,7 @@ export const Chat = ({route}: any) => {
             avatar: doc.data().user.avatar,
           },
         }));
+        console.log('ALL_INCOMING_MESSAGES===>', allMessages);
         setMessages(allMessages);
       });
     return () => subscriber();

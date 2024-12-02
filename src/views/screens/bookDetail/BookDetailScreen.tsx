@@ -1,4 +1,11 @@
-import {Image, Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {
   useCallback,
   useContext,
@@ -13,21 +20,19 @@ import {AppDataContext} from '../../../context';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 import {apiService} from '../../../services/api';
-import { ReportSheet } from '../add/components';
+import {ReportSheet} from '../add/components';
 
 export const BookDetailScreen = ({route}: any) => {
   const navigation = useNavigation<any>();
   const {appTheme, appLang} = useContext(AppDataContext);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [productById, setProductById] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [item, setItem] = useState({});
   const [emailId, setEmailId] = useState('');
-  const [isModalOpen,setIsModalOpen]=useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const toggleText = () => setIsExpanded(!isExpanded);
   const {hp, wp} = useResponsiveDimensions();
   const data = route?.params?.product;
-  // console.log('PARAM_DATA_BOOK===>', data);
+  console.log('PARAM_DATA_BOOK===>', data);
   const shouldShowReadMore = data.description.length > 100;
 
   const increseProductView = async () => {
@@ -51,49 +56,24 @@ export const BookDetailScreen = ({route}: any) => {
     try {
       const res = await auth().currentUser;
       setEmailId(res?.email);
-      setItem({email: data?.user.email, userName: data.user.name});
+      setItem({email: data?.userId.email, userName: data.userId.name});
     } catch (error) {
       console.log(error.message);
     }
   };
- 
-  // const handleReportProduct = async () => {
-  //   try {
-  //     // console.warn("PRessed");
-      
-  //     const response = await apiService.reportProduct(); // Ensure your API accepts this data structure
-  //     console.log('repoted data====>',response)
-  //     if (response.error) {
-  //       console.log('Error Reporting');
-  //     } else {
-  //       console.log('Product reported successfully');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error reporting product:', error);
-  //   }
-  // };
-  
+
   useEffect(() => {
     chatCredentials();
   }, []);
-  // const fullStars = Math.floor(data.rating);
-  // const halfStars = data.rating - fullStars >= 0.5 ? 1 : 0;
-  // const emptyStars = 5 - fullStars - halfStars;
 
-  // Truncate the text if needed and add the "Read more" link inline
   const displayText =
     isExpanded || !shouldShowReadMore
       ? data.description
       : `${data.description.slice(0, 100).trim()}... `;
 
-
-
-
-      // Add to recent searches
-      const handleModal=()=>{
-        setIsModalOpen(false)
-      }
-   
+  const handleModal = () => {
+    setIsModalOpen(false);
+  };
 
   const styles = useMemo(() => {
     return StyleSheet.create({
@@ -190,10 +170,10 @@ export const BookDetailScreen = ({route}: any) => {
         width: '100%',
         alignSelf: 'center',
       },
-      textcentre:{
-        justifyContent:"center",
-        textAlign:"center",
-      }
+      textcentre: {
+        justifyContent: 'center',
+        textAlign: 'center',
+      },
     });
   }, [hp, wp]);
 
@@ -209,53 +189,11 @@ export const BookDetailScreen = ({route}: any) => {
         </View>
         <View style={styles.nameContainer}>
           <Text style={styles.name}>{data.title}</Text>
-          {/* <Text style={styles.author}>{data.author}</Text> */}
-          {/* <View style={styles.starsContainer}>
-            {[...Array(fullStars)].map((_, index) => (
-              <AnyIcon
-                type={IconType.FontAwesome}
-                key={index}
-                name="star"
-                size={hp(FONT_SIZE.h6)}
-                color={OTHER_COLORS.yellow}
-              />
-            ))}
-            {halfStars === 1 && (
-              <AnyIcon
-                type={IconType.FontAwesome}
-                name="star-half"
-                size={hp(FONT_SIZE.h6)}
-                color={OTHER_COLORS.yellow}
-              />
-            )}
-            {[...Array(emptyStars)].map((_, index) => (
-              <AnyIcon
-                type={IconType.FontAwesome}
-                name="star-o"
-                size={hp(FONT_SIZE.h6)}
-                color={OTHER_COLORS.yellow}
-              />
-            ))}
-          </View> */}
           {data.price > 0 ? (
             <Text style={styles.price}>{`$${data.price}`}</Text>
           ) : (
             <Text style={styles.free}>{appLang.free}</Text>
           )}
-          {/* <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'flex-start',
-              alignItems: 'center',
-            }}>
-            {data.category.map((item: any, index: any) => {
-              return (
-                <View key={index} style={styles.genreContainer}>
-                  <Text style={styles.genreText}>{item}</Text>
-                </View>
-              );
-            })}
-          </View> */}
         </View>
       </View>
       <View style={styles.detailsContainer}>
@@ -275,11 +213,9 @@ export const BookDetailScreen = ({route}: any) => {
             )}
           </Text>
         </View>
-        <TouchableOpacity     
-                onPress={() => setIsModalOpen(true)}>
-                <Text style={styles.textcentre} >Add Report</Text>
-              </TouchableOpacity>
- 
+        <TouchableOpacity onPress={() => setIsModalOpen(true)}>
+          <Text style={styles.textcentre}>Add Report</Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.chatBtnContainer}>
         <MainButton
