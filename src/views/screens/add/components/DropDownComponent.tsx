@@ -6,21 +6,24 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useContext, useMemo, useRef, useState } from 'react';
-import { AppDataContext } from '../../../../context';
-import { useResponsiveDimensions } from '../../../../hooks';
-import { FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../../enums';
-import { AnyIcon, IconType } from '../../../../components';
-import { dropdownItems } from '../../../../utils';
+import React, {useContext, useMemo, useRef, useState} from 'react';
+import {AppDataContext} from '../../../../context';
+import {useResponsiveDimensions} from '../../../../hooks';
+import {FONT_SIZE, OTHER_COLORS, TEXT_STYLE} from '../../../../enums';
+import {AnyIcon, IconType} from '../../../../components';
 
-const genres = ['Horror', 'Comedy', 'Fantasy', 'Action', 'Romance', 'Drama'];
-export const Type = ({ handleSelectType, type }: any) => {
-  const { appTheme } = useContext(AppDataContext);
-  const { hp, wp } = useResponsiveDimensions();
+export const DropDownComponent = ({
+  handleSelectOption,
+  type,
+  label,
+  dropdownItems,
+}: any) => {
+  const {appTheme} = useContext(AppDataContext);
+  const {hp, wp} = useResponsiveDimensions();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleSelect = (genre: any) => {
-    handleSelectType(genre);
+    handleSelectOption(genre);
     setIsModalVisible(false);
   };
 
@@ -60,7 +63,7 @@ export const Type = ({ handleSelectType, type }: any) => {
       buttonText: {
         color: appTheme.primaryTextColor,
         fontSize: hp(FONT_SIZE.h3),
-        textTransform: "capitalize"
+        textTransform: 'capitalize',
       },
       modalContainer: {
         flex: 1,
@@ -107,7 +110,7 @@ export const Type = ({ handleSelectType, type }: any) => {
   return (
     <View style={styles.typeContainer}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>type</Text>
+        <Text style={styles.title}>{label}</Text>
         <AnyIcon
           type={IconType.FontAwesome5}
           name="star-of-life"
@@ -159,7 +162,7 @@ export const Type = ({ handleSelectType, type }: any) => {
               <FlatList
                 data={dropdownItems}
                 keyExtractor={(item, index) => `${item}-${index}`}
-                renderItem={({ item }) => (
+                renderItem={({item}) => (
                   <TouchableOpacity
                     onPress={() => handleSelect(item)}
                     style={{

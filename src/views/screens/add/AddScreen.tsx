@@ -9,24 +9,16 @@ import {
   View,
 } from 'react-native';
 import React, {useContext, useMemo, useState} from 'react';
-import {
-  FONT_SIZE,
-  OTHER_COLORS,
-  SCREENS,
-  STACK,
-  TEXT_STYLE,
-} from '../../../enums';
+import {FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE} from '../../../enums';
 import {useResponsiveDimensions, useToast} from '../../../hooks';
 import {
   AdTitle,
   BottomSheetComponent,
   Condition,
   Description,
-  Language,
-  Location,
+  DropDownComponent,
   Price,
   RemoveSheet,
-  Type,
 } from './components';
 import {AppDataContext} from '../../../context';
 import {
@@ -39,22 +31,20 @@ import {
 import {Instructions} from '../../../components/unused';
 import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
 import {apiService} from '../../../services/api';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
+import {dropdownItems} from '../../../utils';
 
 export const AddScreen = ({route}: any) => {
   const {dataType} = route.params || 'add';
   const {data} = route.params || [];
-  console.log('TYPE===>', dataType);
-  console.log('TYPE_DATA===>', data);
-  const [imagesList, setImagesList] = useState<any>(
-    dataType === 'edit' ? data?.images : [],
-  );
   const {appTheme} = useContext(AppDataContext);
   const {hp, wp} = useResponsiveDimensions();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
   const [myIndex, setMyIndex] = useState<any>('');
+  const [imagesList, setImagesList] = useState<any>(
+    dataType === 'edit' ? data?.images : [],
+  );
   const [selected, setSelected] = useState(
     dataType === 'edit' ? data?.condition : null,
   );
@@ -267,8 +257,7 @@ export const AddScreen = ({route}: any) => {
       }
 
       showToast('Product added successfully', 'successToast');
-      // navigation.goBack();
-      navigation.navigate(SCREENS.MY_BOOK as never);
+      navigation.goBack();
     } catch (error) {
       console.error('Error creating product:', error);
       showToast(
@@ -492,10 +481,17 @@ export const AddScreen = ({route}: any) => {
           )}
         </View>
         <Condition handleSelect={handleSelect} selected={selected} />
-        <Type handleSelectType={handleSelectType} type={type} />
-        <Language
-          handleSelectLanguage={handleSelectLanguage}
-          language={language}
+        <DropDownComponent
+          handleSelectOption={handleSelectType}
+          type={type}
+          dropdownItems={dropdownItems}
+          label="Type"
+        />
+        <DropDownComponent
+          handleSelectOption={handleSelectLanguage}
+          type={language}
+          dropdownItems={dropdownItems}
+          label="Language"
         />
         <View style={styles.border} />
         <AdTitle bookTitle={bookTitle} handleSelectTitle={handleSelectTitle} />
@@ -503,9 +499,11 @@ export const AddScreen = ({route}: any) => {
           handleDescription={handleDescription}
           description={description}
         />
-        <Location
-          handleSelectLocation={handleSelectLocation}
-          location={location}
+        <DropDownComponent
+          handleSelectOption={handleSelectLocation}
+          type={location}
+          dropdownItems={dropdownItems}
+          label="Location"
         />
         <View style={styles.border} />
         <Price handlePrice={handlePrice} price={price} />
