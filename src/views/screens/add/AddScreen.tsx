@@ -1,15 +1,6 @@
-import {
-  FlatList,
-  Image,
-  Modal,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Modal, ScrollView, StyleSheet, Text, View} from 'react-native';
 import React, {useContext, useMemo, useState} from 'react';
-import {FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE} from '../../../enums';
+import {FONT_SIZE, SCREENS, TEXT_STYLE} from '../../../enums';
 import {useResponsiveDimensions, useToast} from '../../../hooks';
 import {
   AdTitle,
@@ -21,18 +12,12 @@ import {
   RemoveSheet,
 } from './components';
 import {AppDataContext} from '../../../context';
-import {
-  AnyIcon,
-  Header,
-  IconType,
-  MainButton,
-  MainContainer,
-} from '../../../components';
-import {Instructions} from '../../../components/unused';
+import {Header, MainButton, MainContainer} from '../../../components';
 import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
 import {apiService} from '../../../services/api';
 import {useNavigation} from '@react-navigation/native';
 import {dropdownItems} from '../../../utils';
+import {ImageSelector} from './components/ImageSelector';
 
 export const AddScreen = ({route}: any) => {
   const {dataType} = route.params || 'add';
@@ -211,6 +196,9 @@ export const AddScreen = ({route}: any) => {
     setIsRemoveModalOpen(true);
     setMyIndex(index);
   };
+  const handleImageSelectorModal = (val: boolean) => {
+    setIsModalOpen(val);
+  };
   const removeImage = (id: any) => {
     const remaining = imagesList.filter(
       (item: any, index: any) => index !== id,
@@ -271,72 +259,6 @@ export const AddScreen = ({route}: any) => {
 
   const styles = useMemo(() => {
     return StyleSheet.create({
-      categoryContainer: {
-        marginTop: hp(30),
-      },
-      titleContainer: {
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-      },
-      title: {
-        ...TEXT_STYLE.bold,
-        fontSize: hp(FONT_SIZE.h3),
-        color: appTheme.primaryTextColor,
-        textTransform: 'capitalize',
-        marginRight: hp(5),
-      },
-      booksContainer: {
-        marginTop: hp(15),
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-      },
-      imgContainer: {
-        height: hp(50),
-        width: hp(50),
-        borderRadius: hp(25),
-        overflow: 'hidden',
-        marginRight: hp(10),
-      },
-      img: {
-        height: '100%',
-        width: '100%',
-      },
-      booksHeading: {
-        ...TEXT_STYLE.bold,
-        fontSize: hp(FONT_SIZE.h3),
-        color: appTheme.primaryTextColor,
-      },
-      books: {
-        ...TEXT_STYLE.regular,
-        fontSize: hp(FONT_SIZE.h4),
-        color: appTheme.tertiaryTextColor,
-      },
-      uploadContainer: {
-        marginTop: hp(10),
-        width: '100%',
-        height: hp(252),
-        borderWidth: 0.5,
-        borderColor: appTheme.borderDefault,
-        borderRadius: hp(8),
-        justifyContent: 'center',
-        alignItems: 'center',
-      },
-      imagesContainer: {
-        padding: hp(16),
-        marginTop: hp(10),
-        width: '100%',
-        height: hp(152),
-        borderWidth: 0.5,
-        borderColor: appTheme.borderDefault,
-        borderRadius: hp(8),
-        justifyContent: 'space-between',
-      },
-      dummyImg: {
-        width: hp(150),
-        height: hp(80),
-      },
       btnContainer: {
         marginVertical: hp(10),
         height: hp(44),
@@ -361,26 +283,6 @@ export const AddScreen = ({route}: any) => {
       nextBtnContainer: {
         marginTop: hp(20),
       },
-      addImage: {
-        height: hp(70),
-        width: hp(70),
-        borderWidth: 0.5,
-        borderColor: appTheme.tertiaryTextColor,
-        borderRadius: hp(8),
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginRight: hp(5),
-      },
-      listImg: {
-        height: hp(70),
-        width: hp(70),
-        borderRadius: hp(8),
-        overflow: 'hidden',
-        marginRight: hp(5),
-      },
-      listContainer: {
-        width: '100%',
-      },
       loadingContainer: {
         position: 'absolute',
         top: 0,
@@ -400,86 +302,11 @@ export const AddScreen = ({route}: any) => {
         <Header
           title={dataType === 'edit' ? 'edit ad details' : 'ad Details'}
         />
-        {/* <Header title="ad details"/> */}
-        <View style={styles.categoryContainer}>
-          <View style={styles.titleContainer}>
-            <Text style={styles.title}>Category</Text>
-            <AnyIcon
-              type={IconType.FontAwesome5}
-              name="star-of-life"
-              size={hp(8)}
-              color={OTHER_COLORS.red}
-            />
-          </View>
-          <View style={styles.booksContainer}>
-            <View style={styles.imgContainer}>
-              <Image
-                style={styles.img}
-                source={require('../../../assets/images/books.jpg')}
-              />
-            </View>
-            <View>
-              <Text style={styles.booksHeading}>Books, Sports & Hobbies</Text>
-              <Text style={styles.books}>Books</Text>
-            </View>
-          </View>
-          {imagesList.length > 0 ? (
-            <View style={styles.imagesContainer}>
-              <View style={{flexDirection: 'row'}}>
-                <TouchableOpacity
-                  style={styles.addImage}
-                  onPress={() => setIsModalOpen(true)}>
-                  <AnyIcon
-                    type={IconType.Ionicons}
-                    name="add"
-                    size={hp(20)}
-                    color="blue"
-                  />
-                </TouchableOpacity>
-                <View style={styles.listContainer}>
-                  <FlatList
-                    horizontal
-                    data={imagesList}
-                    renderItem={({item, index}) => {
-                      return (
-                        <TouchableOpacity
-                          style={styles.listImg}
-                          onPress={() => handleOpenAndDelete(index)}>
-                          <Image
-                            style={{width: '100%', height: '100%'}}
-                            source={{uri: item}}
-                          />
-                        </TouchableOpacity>
-                      );
-                    }}
-                  />
-                </View>
-              </View>
-              <View>
-                <Text>
-                  Top on images to edit them, or press, hold and move for
-                  reordering.
-                </Text>
-              </View>
-            </View>
-          ) : (
-            <View style={styles.uploadContainer}>
-              <Image
-                style={styles.dummyImg}
-                source={require('../../../assets/images/file.png')}
-              />
-              <TouchableOpacity
-                style={styles.btnContainer}
-                onPress={() => setIsModalOpen(true)}>
-                <Text style={styles.btnText}>Add Images</Text>
-              </TouchableOpacity>
-              <Instructions textAlign="center">
-                5MB maximum file size accepted in the following formats: .jpg
-                .jpeg .png .gif
-              </Instructions>
-            </View>
-          )}
-        </View>
+        <ImageSelector
+          imagesList={imagesList}
+          handleImageSelectorModal={handleImageSelectorModal}
+          handleOpenAndDelete={handleOpenAndDelete}
+        />
         <Condition handleSelect={handleSelect} selected={selected} />
         <DropDownComponent
           handleSelectOption={handleSelectType}
