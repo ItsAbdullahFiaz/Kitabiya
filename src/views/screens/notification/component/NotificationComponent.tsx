@@ -35,7 +35,7 @@ export const NotificationComponent = ({
     return StyleSheet.create({
       container: {
         backgroundColor: appTheme.primaryBackground,
-        height: hp(79),
+        height: hp(100),
         width: '100%',
         flexDirection: 'row',
         borderWidth: 1,
@@ -61,6 +61,8 @@ export const NotificationComponent = ({
         width: hp(290),
         height: hp(47),
         paddingLeft: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
       },
       titleText: {
         ...TEXT_STYLE.medium,
@@ -71,6 +73,7 @@ export const NotificationComponent = ({
         ...TEXT_STYLE.regular,
         color: appTheme.tertiaryTextColor,
         fontSize: FONT_SIZE.h5,
+       
       },
 
       outerCircle: {
@@ -96,6 +99,9 @@ export const NotificationComponent = ({
         borderWidth: 0.5,
       },
       icon: {width: hp(20), height: hp(20)},
+      datetext:{
+        marginTop:5
+      }
     });
   }, [hp, wp]);
   return (
@@ -113,13 +119,16 @@ export const NotificationComponent = ({
             <View>
               <Text style={styles.titleText}>{title}</Text>
               <Text style={styles.subtitleText}>{opportunities}</Text>
-              {timestamp && (
-                <Text style={styles.subtitleText}>{formattedDate}</Text>
-              )}
+             
             </View>
           </View>
         </View>
       </TouchableOpacity>
+      <View style={styles.datetext}>
+      {timestamp && (
+                <Text style={styles.subtitleText }>{formattedDate}</Text>
+              )}
+              </View>
     </View>
   );
 };
