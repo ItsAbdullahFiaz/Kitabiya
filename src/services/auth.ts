@@ -8,6 +8,22 @@ const registerUser = async (email: string, password: string) => {
         const userCredential = await auth().createUserWithEmailAndPassword(email, password);
         const token = await userCredential.user.getIdToken();
 
+        const response = await fetch(API_ENDPOINTS.LOGIN, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        const data = await response.json();
+
+        console.log('data', data);
+
+        if (!response.ok) {
+            throw new Error(data.message || 'Authentication failed');
+        }
+
         return { success: true, token: token };
     } catch (error: any) {
         console.log(error)
@@ -27,20 +43,6 @@ const loginUser = async (email: string, password: string) => {
     try {
         const userCredential = await auth().signInWithEmailAndPassword(email, password);
         const token = await userCredential.user.getIdToken();
-
-        const response = await fetch(API_ENDPOINTS.LOGIN, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.message || 'Authentication failed');
-        }
 
         return { success: true, token: token };
     } catch (error: any) {
