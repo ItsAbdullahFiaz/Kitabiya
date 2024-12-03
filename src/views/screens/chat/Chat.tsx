@@ -20,6 +20,7 @@ export const Chat = ({route}: any) => {
   const {appTheme} = useContext(AppDataContext);
   const {hp, wp} = useResponsiveDimensions();
   const [messages, setMessages] = useState<any>([]);
+  const [senderDetails, setSenderDetails] = useState<any>('');
   const [receiverToken, setReceiverToken] = useState<string>('');
 
   const saveUserData = async () => {
@@ -32,6 +33,20 @@ export const Chat = ({route}: any) => {
       console.log(error.message);
     }
   };
+
+  const getSenderDetail = async () => {
+    try {
+      const res = await AsyncStorage.getItem('SENDER_OBJECT');
+      const result = JSON.parse(res);
+      console.log('IRFAN_FAIZI===>', result);
+      setSenderDetails(result);
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  };
+  useEffect(() => {
+    getSenderDetail();
+  }, []);
 
   useEffect(() => {
     saveUserData();
@@ -61,8 +76,10 @@ export const Chat = ({route}: any) => {
   useEffect(() => {
     const subscriber = firestore()
       .collection('chats')
-      .doc(route.params.emailId + '-' + route.params.data.email)
-      // .doc(route.params.emailId + '-' + 'adeelauto12345678@gmail.com')
+      .doc(
+        route.params.emailId + '-' + route.params.data.email ||
+          senderDetails.data.senderId,
+      )
       .collection('messages')
       .orderBy('createdAt', 'desc')
       .onSnapshot(querySnapshot => {

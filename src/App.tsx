@@ -37,6 +37,10 @@ export default function App() {
     // Handle foreground messages from Firebase
     const unsubscribeForeground = messaging().onMessage(async remoteMessage => {
       console.log('Foreground message:', remoteMessage);
+      await AsyncStorage.setItem(
+        'SENDER_OBJECT',
+        JSON.stringify(remoteMessage),
+      );
       if (remoteMessage.data?.type === 'chat') {
         await notificationService.displayChatNotification(
           remoteMessage.notification?.title || 'New Message',
