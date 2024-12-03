@@ -35,7 +35,7 @@ export const PrivacyPolicyScreen = () => {
 
     return (
         <MainContainer>
-            <Header />
+            <Header  title=' privacy Policy'/>
             <ScrollView>
                 <Text style={styles.heading}>Privacy Policy</Text>
                 <Text style={styles.text}>
