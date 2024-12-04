@@ -8,13 +8,20 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useMemo, useContext, useState, useCallback} from 'react';
+import React, {
+  useMemo,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+} from 'react';
 import {AnyIcon, IconType, MainContainer} from '../../../components';
 import {useResponsiveDimensions} from '../../../hooks';
 import {FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE} from '../../../enums';
 import {AppDataContext} from '../../../context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import auth from '@react-native-firebase/auth';
 
 export const MessagesScreen = () => {
   const navigation = useNavigation<any>();
@@ -43,6 +50,18 @@ export const MessagesScreen = () => {
       getUser();
     }, []),
   );
+
+  const getCurrentUser = async () => {
+    try {
+      let res = await auth().currentUser;
+      setEmailId(res?.email);
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  };
+  useEffect(() => {
+    getCurrentUser();
+  }, []);
 
   const handleDeleteUser = (userEmail: any, userName: any) => {
     Alert.alert(
