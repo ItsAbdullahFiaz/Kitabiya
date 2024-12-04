@@ -21,6 +21,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 import {apiService} from '../../../services/api';
 import {ReportSheet} from '../add/components';
+import firestore from '@react-native-firebase/firestore';
 
 export const BookDetailScreen = ({route}: any) => {
   const navigation = useNavigation<any>();
@@ -32,7 +33,7 @@ export const BookDetailScreen = ({route}: any) => {
   const toggleText = () => setIsExpanded(!isExpanded);
   const {hp, wp} = useResponsiveDimensions();
   const data = route?.params?.product;
-  console.log('PARAM_DATA_BOOK===>', data);
+  // console.log('PARAM_DATA_BOOK===>', data);
   const shouldShowReadMore = data.description.length > 100;
 
   const increseProductView = async () => {
@@ -55,8 +56,16 @@ export const BookDetailScreen = ({route}: any) => {
   const chatCredentials = async () => {
     try {
       const res = await auth().currentUser;
+      const incomingUserData = await firestore()
+        .collection('users')
+        .doc(data?.userId.email)
+        .get();
+      // console.log('BOOK_DETAIL_WALA===>', incomingUserData?.data()?.userName);
       setEmailId(res?.email);
-      setItem({email: data?.userId.email, userName: data.userId.name});
+      setItem({
+        email: data?.userId.email,
+        userName: incomingUserData?.data()?.userName,
+      });
     } catch (error) {
       console.log(error.message);
     }
