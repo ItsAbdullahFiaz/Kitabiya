@@ -11,6 +11,7 @@ import {useResponsiveDimensions} from './hooks';
 import {notificationService} from './services/NotificationService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {subscribeToTopics, unsubscribeFromTopics} from './utils/notifications';
+import firestore from '@react-native-firebase/firestore';
 
 export default function App() {
   const {wp, hp} = useResponsiveDimensions();
@@ -37,10 +38,16 @@ export default function App() {
     // Handle foreground messages from Firebase
     const unsubscribeForeground = messaging().onMessage(async remoteMessage => {
       console.log('Foreground message:', remoteMessage);
-      await AsyncStorage.setItem(
-        'SENDER_OBJECT',
-        JSON.stringify(remoteMessage),
-      );
+      const incomingUserData = await firestore()
+        .collection('users')
+        .doc(remoteMessage?.data?.senderId)
+        .get();
+      console.log('RANA_ADEEL===>', incomingUserData?.data()?.userName);
+      const data = {
+        email: remoteMessage?.data?.senderId,
+        userName: incomingUserData?.data()?.userName,
+      };
+      await AsyncStorage.setItem('SENDER_OBJECT', JSON.stringify(data));
       if (remoteMessage.data?.type === 'chat') {
         await notificationService.displayChatNotification(
           remoteMessage.notification?.title || 'New Message',
