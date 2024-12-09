@@ -23,7 +23,8 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import Foundation from 'react-native-vector-icons/Foundation';
 
 import Fontisto from 'react-native-vector-icons/Fontisto';
-import EvilIcons from 'react-native-vector-icons/Fontisto';
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
 export const IconType = {
   MaterialCommunityIcons,
@@ -50,6 +51,7 @@ export const IconType = {
 
   Fontisto,
   EvilIcons,
+  FontAwesome6,
 };
 
 interface AnyIconProps {
@@ -61,7 +63,7 @@ interface AnyIconProps {
 }
 
 export const AnyIcon = (props: AnyIconProps) => {
-  const { type, name, color, size = 25, style } = props;
+  const {type, name, color, size = 25, style} = props;
   const Tag = type;
   return (
     <>

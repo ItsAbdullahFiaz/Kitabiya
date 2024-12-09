@@ -17,6 +17,7 @@ import {HeaderButtons, PopularProducts, NewlyAdded} from './components';
 import {notificationService} from '../../../services/NotificationService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {apiService} from '../../../services/api';
+// import useUserPresence from '../../../hooks/useUserPresence';
 
 export const HomeScreen = () => {
   const navigation = useNavigation();
@@ -28,6 +29,8 @@ export const HomeScreen = () => {
   const [isloading, setIsLoading] = useState(false);
   const [userName, setUserName] = useState('');
   const [refreshing, setRefreshing] = useState(false);
+
+  // useUserPresence();
 
   useEffect(() => {
     const setupNotifications = async () => {

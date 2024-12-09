@@ -22,6 +22,7 @@ import {AppDataContext} from '../../../context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 export const MessagesScreen = () => {
   const navigation = useNavigation<any>();
@@ -61,6 +62,22 @@ export const MessagesScreen = () => {
   };
   useEffect(() => {
     getCurrentUser();
+  }, []);
+
+  const liveUsers = () => {
+    firestore()
+      .collection('presence')
+      .where('online', '==', true)
+      .onSnapshot(snapshot => {
+        const liveUsers = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        console.log('Live users:', JSON.stringify(liveUsers));
+      });
+  };
+  useEffect(() => {
+    liveUsers();
   }, []);
 
   const handleDeleteUser = (userEmail: any, userName: any) => {
