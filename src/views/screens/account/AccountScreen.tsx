@@ -9,7 +9,7 @@ import {
 import React, {useContext, useEffect, useMemo, useState} from 'react';
 import {AnyIcon, IconType, MainContainer} from '../../../components';
 import {useResponsiveDimensions} from '../../../hooks';
-import {FONT_SIZE, TEXT_STYLE} from '../../../enums';
+import {FONT_SIZE, SCREENS, TEXT_STYLE} from '../../../enums';
 import {signOutUser} from '../../../services';
 import {useNavigation} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
@@ -89,7 +89,8 @@ export const AccountScreen = () => {
     <MainContainer>
       <ProfileHeader userInfo={userInfo} />
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity style={styles.btnContainer}>
+        <TouchableOpacity   onPress={() => navigation.navigate(SCREENS.PROFILE as never)}
+        style={styles.btnContainer}>
           <AnyIcon
             type={IconType.Octicons}
             name="person"
@@ -99,7 +100,8 @@ export const AccountScreen = () => {
           <Text style={styles.btnText}>{appLang.Profile}</Text>
         </TouchableOpacity>
         <View style={styles.border} />
-        <TouchableOpacity style={styles.secondBtnContainer}>
+        <TouchableOpacity  onPress={() => navigation.navigate(SCREENS.LANGUAGE as never)}
+         style={styles.secondBtnContainer}>
           <View style={styles.btnContainer}>
             <AnyIcon
               type={IconType.Fontisto}
@@ -112,7 +114,8 @@ export const AccountScreen = () => {
           <Text>{appLang.English}</Text>
         </TouchableOpacity>
         <View style={styles.border} />
-        <TouchableOpacity style={styles.btnContainer}>
+        <TouchableOpacity   onPress={() => navigation.navigate(SCREENS.PRIVACY_POLICY as never)}
+         style={styles.btnContainer}>
           <AnyIcon
             type={IconType.MaterialIcons}
             name="lock-outline"
@@ -122,7 +125,8 @@ export const AccountScreen = () => {
           <Text style={styles.btnText}>{appLang.PrivacyPolicy}</Text>
         </TouchableOpacity>
         <View style={styles.border} />
-        <TouchableOpacity style={styles.btnContainer}>
+        <TouchableOpacity  onPress={() => navigation.navigate(SCREENS.HELP_CENTER as never)}
+         style={styles.btnContainer}>
           <AnyIcon
             type={IconType.MaterialIcons}
             name="info-outline"
@@ -132,7 +136,8 @@ export const AccountScreen = () => {
           <Text style={styles.btnText}>{appLang.HelpCenter}</Text>
         </TouchableOpacity>
         <View style={styles.border} />
-        <TouchableOpacity style={styles.btnContainer}>
+        <TouchableOpacity  onPress={() => navigation.navigate(SCREENS.SETTING as never)} 
+        style={styles.btnContainer}>
           <AnyIcon
             type={IconType.Ionicons}
             name="settings-outline"

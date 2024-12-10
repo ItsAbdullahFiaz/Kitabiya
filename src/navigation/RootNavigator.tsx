@@ -9,8 +9,13 @@ import {
   MyBooksScreen,
   Notification,
   Popular,
+  PrivacyPolicyScreen,
   SplashScreen,
 } from '../views/screens';
+import { ProfileScreen } from '../views/screens/profile';
+import { LanguageScreen } from '../views/screens/language';
+import { HelpCenter } from '../views/screens/helpcenter';
+import { SettingScreen } from '../views/screens/setting';
 
 const Stack = createNativeStackNavigator();
 
@@ -27,8 +32,13 @@ export const RootNavigator = () => {
         <Stack.Screen name={SCREENS.MY_BOOK} component={MyBooksScreen} />
         <Stack.Screen name={SCREENS.POPULAR} component={Popular} />
         <Stack.Screen name={SCREENS.ADD_SCREEN} component={AddScreen} />
-       
+        <Stack.Screen name={SCREENS.PROFILE} component={ProfileScreen} />
+        <Stack.Screen name={SCREENS.LANGUAGE} component={LanguageScreen} />
+        <Stack.Screen name={SCREENS.PRIVACY_POLICY} component={PrivacyPolicyScreen} />
+        <Stack.Screen name={SCREENS.HELP_CENTER} component={HelpCenter} />
+        <Stack.Screen name={SCREENS.SETTING} component={SettingScreen} />
       </Stack.Navigator>
     </NavigationContainer>
+
   );
 };
