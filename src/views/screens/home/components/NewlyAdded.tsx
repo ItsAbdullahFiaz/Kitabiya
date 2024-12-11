@@ -155,7 +155,7 @@ export const NewlyAdded = ({products, loading}: NewlyAddedProps) => {
           </View>
         </View>
         <View style={styles.viewContainer}>
-          <Text style={styles.views}>${item.price}</Text>
+          <Text style={styles.views}>PKR {item.price}</Text>
         </View>
       </TouchableOpacity>
     );
