@@ -69,12 +69,12 @@ export const BookDetailScreen = ({route}: any) => {
       const res = await auth().currentUser;
       const incomingUserData = await firestore()
         .collection('users')
-        .doc(data?.userId.email)
+        .doc(data?.user.email)
         .get();
-      // console.log('BOOK_DETAIL_WALA===>', incomingUserData?.data()?.userName);
+      console.log('INCOMING_USER_DATA===>', incomingUserData);
       setEmailId(res?.email);
       setItem({
-        email: data?.userId.email,
+        email: data?.user.email,
         userName: incomingUserData?.data()?.userName,
       });
     } catch (error) {
