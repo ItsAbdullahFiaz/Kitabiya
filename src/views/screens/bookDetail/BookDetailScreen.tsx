@@ -72,12 +72,13 @@ export const BookDetailScreen = ({route}: any) => {
         .doc(data?.user.email)
         .get();
       console.log('INCOMING_USER_DATA===>', incomingUserData);
-      setEmailId(res?.email);
+      // console.log('BOOK_DETAIL_WALA===>', incomingUserData?.data()?.userName);
+      setEmailId(res?.email || '');
       setItem({
         email: data?.user.email,
         userName: incomingUserData?.data()?.userName,
       });
-    } catch (error) {
+    } catch (error: any) {
       console.log(error.message);
     }
   };
@@ -376,9 +377,12 @@ export const BookDetailScreen = ({route}: any) => {
               </Text>
             </View>
             <View style={styles.border} />
-            <TouchableOpacity onPress={() => setIsModalOpen(true)}>
-              <Text style={styles.textcentre}>Add Report</Text>
-            </TouchableOpacity>
+
+            <MainButton
+              onPress={() => setIsModalOpen(true)}
+              buttonText={'Report Ad'}
+              dismissiveButton
+            />
           </View>
         </ScrollView>
         <View style={styles.chatBtnContainer}>

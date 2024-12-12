@@ -1,27 +1,51 @@
 import {
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
-  NativeModules,
-  Platform,
+  FlatList,
 } from 'react-native';
-import React, {useContext, useEffect, useMemo, useState} from 'react';
-import {AnyIcon, IconType, MainContainer} from '../../../components';
-import {useResponsiveDimensions} from '../../../hooks';
-import {FONT_SIZE, SCREENS, TEXT_STYLE} from '../../../enums';
-import {signOutUser} from '../../../services';
-import {useNavigation} from '@react-navigation/native';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { AnyIcon, IconType, MainButton, MainContainer } from '../../../components';
+import { useResponsiveDimensions } from '../../../hooks';
+import { FONT_SIZE, SCREENS, SIZES, TEXT_STYLE } from '../../../enums';
+import { signOutUser } from '../../../services';
+import { useNavigation } from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
-import {ProfileHeader} from './components';
-import {AppDataContext} from '../../../context';
+import { ProfileHeader } from './components';
+import { AppDataContext, AUTO_THEME_MODE, DARK_THEME_MODE, LIGHT_THEME_MODE } from '../../../context';
+import { ButtonRow, CustomModal } from '../../../components/unused';
+import { storeStringValue } from '../../../utils';
 
 export const AccountScreen = () => {
   const [userInfo, setUserInfo] = useState<any>('');
   const [appVersion, setAppVersion] = useState('1.0.1');
-  const {appTheme, appLang} = useContext(AppDataContext);
-  const {hp, wp} = useResponsiveDimensions();
+  const { appLang, appTheme, setActiveThemeMode, activeThemeMode, setActiveLang, activeLang, langTranslations } = useContext(AppDataContext);
+  const { hp, wp } = useResponsiveDimensions();
   const navigation = useNavigation();
+  const [langModalVisible, setLangModalVisible] = useState(false);
+  const [themeModalVisible, setThemeModalVisible] = useState(false)
+
+  const switchTheme = (themeMode: string) => {
+    setActiveThemeMode(themeMode);
+    storeStringValue('@ThemeState', themeMode)
+  }
+
+  const switchLanguage = (lang: string) => {
+    setActiveLang(lang)
+  }
+
+  const renderItem = ({ item, index }: { item: any, index: number }) => {
+    return (
+      <ButtonRow
+        onPress={() => switchLanguage(item.value)}
+        title={item.key}
+        index={index}
+        bgStyle={{ backgroundColor: item.value == activeLang ? appTheme.primary : appTheme.secondaryBackground }}
+        titleStyle={{ color: item.value == activeLang ? appTheme.quaternaryTextColor : appTheme.primaryTextColor }}
+      />
+    )
+  }
+
   const userDetails = async () => {
     try {
       const user = await auth().currentUser;
@@ -34,47 +58,11 @@ export const AccountScreen = () => {
   useEffect(() => {
     userDetails();
   }, []);
+
   const styles = useMemo(() => {
     return StyleSheet.create({
       buttonsContainer: {
         marginTop: hp(50),
-      },
-      btnContainer: {
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-      },
-      btnText: {
-        ...TEXT_STYLE.medium,
-        marginLeft: hp(20),
-        fontSize: hp(FONT_SIZE.h4),
-        color: appTheme.secondaryTextColor,
-      },
-      border: {
-        borderWidth: 0.3,
-        borderColor: appTheme.tertiaryTextColor,
-        marginVertical: hp(20),
-      },
-      secondBtnContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-      },
-      logoutContainer: {
-        marginTop: hp(40),
-        height: hp(48),
-        width: '100%',
-        borderRadius: hp(16),
-        borderWidth: 0.5,
-        borderColor: appTheme.primary,
-        justifyContent: 'center',
-        alignItems: 'center',
-      },
-      logoutText: {
-        ...TEXT_STYLE.medium,
-        fontSize: hp(FONT_SIZE.h3),
-        color: appTheme.primary,
-        textTransform: 'capitalize',
       },
       versionText: {
         ...TEXT_STYLE.medium,
@@ -83,78 +71,154 @@ export const AccountScreen = () => {
         textAlign: 'center',
         marginTop: hp(20),
       },
+      languageRow: {
+        paddingHorizontal: hp(6)
+      },
+      themeCustomModalContainer: {
+        height: SIZES.height - hp(700)
+      },
+      langCustomModalContainer: {
+        height: SIZES.height - hp(330)
+      },
+      logoutButtonContainer: {
+        marginTop: hp(40)
+      }
     });
   }, [hp, wp]);
+
   return (
     <MainContainer>
       <ProfileHeader userInfo={userInfo} />
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity   onPress={() => navigation.navigate(SCREENS.PROFILE as never)}
-        style={styles.btnContainer}>
-          <AnyIcon
-            type={IconType.Octicons}
-            name="person"
-            size={hp(24)}
-            color={appTheme.primary}
-          />
-          <Text style={styles.btnText}>{appLang.Profile}</Text>
-        </TouchableOpacity>
-        <View style={styles.border} />
-        <TouchableOpacity  onPress={() => navigation.navigate(SCREENS.LANGUAGE as never)}
-         style={styles.secondBtnContainer}>
-          <View style={styles.btnContainer}>
+
+        <ButtonRow
+          onPress={() => navigation.navigate(SCREENS.PROFILE as never)}
+          contentRight={
+            <AnyIcon
+              type={IconType.Octicons}
+              name="person"
+              size={hp(20)}
+              color={appTheme.primary}
+            />
+          }
+          contentRightStyle={styles.languageRow}
+          title={appLang.Profile}
+        />
+
+        <ButtonRow
+          onPress={() => setLangModalVisible(true)}
+          contentRight={
             <AnyIcon
               type={IconType.Fontisto}
               name="world-o"
               size={hp(20)}
               color={appTheme.primary}
             />
-            <Text style={styles.btnText}>{appLang.Language}</Text>
-          </View>
-          <Text>{appLang.English}</Text>
-        </TouchableOpacity>
-        <View style={styles.border} />
-        <TouchableOpacity   onPress={() => navigation.navigate(SCREENS.PRIVACY_POLICY as never)}
-         style={styles.btnContainer}>
-          <AnyIcon
-            type={IconType.MaterialIcons}
-            name="lock-outline"
-            size={hp(20)}
-            color={appTheme.primary}
-          />
-          <Text style={styles.btnText}>{appLang.PrivacyPolicy}</Text>
-        </TouchableOpacity>
-        <View style={styles.border} />
-        <TouchableOpacity  onPress={() => navigation.navigate(SCREENS.HELP_CENTER as never)}
-         style={styles.btnContainer}>
-          <AnyIcon
-            type={IconType.MaterialIcons}
-            name="info-outline"
-            size={hp(20)}
-            color={appTheme.primary}
-          />
-          <Text style={styles.btnText}>{appLang.HelpCenter}</Text>
-        </TouchableOpacity>
-        <View style={styles.border} />
-        <TouchableOpacity  onPress={() => navigation.navigate(SCREENS.SETTING as never)} 
-        style={styles.btnContainer}>
-          <AnyIcon
-            type={IconType.Ionicons}
-            name="settings-outline"
-            size={hp(20)}
-            color={appTheme.primary}
-          />
-          <Text style={styles.btnText}>{appLang.Setting}</Text>
-        </TouchableOpacity>
+          }
+          contentRightStyle={styles.languageRow}
+          title={appLang.Language}
+        />
+
+        <ButtonRow
+          onPress={() => setThemeModalVisible(true)}
+          contentRight={
+            <AnyIcon
+              type={IconType.Ionicons}
+              name='invert-mode'
+              size={hp(20)}
+              color={appTheme.primary}
+            />
+          }
+          contentRightStyle={styles.languageRow}
+          title={appLang.theme_mode}
+        />
+
+        <ButtonRow
+          onPress={() => navigation.navigate(SCREENS.PRIVACY_POLICY as never)}
+          contentRight={
+            <AnyIcon
+              type={IconType.MaterialIcons}
+              name="lock-outline"
+              size={hp(20)}
+              color={appTheme.primary}
+            />
+          }
+          contentRightStyle={styles.languageRow}
+          title={appLang.PrivacyPolicy}
+        />
+
+        <ButtonRow
+          onPress={() => navigation.navigate(SCREENS.HELP_CENTER as never)}
+          contentRight={
+            <AnyIcon
+              type={IconType.MaterialIcons}
+              name="info-outline"
+              size={hp(20)}
+              color={appTheme.primary}
+            />
+          }
+          contentRightStyle={styles.languageRow}
+          title={appLang.HelpCenter}
+          hideBorder={true}
+        />
       </View>
-      <TouchableOpacity
-        onPress={() => signOutUser(navigation)}
-        style={styles.logoutContainer}>
-        <Text style={styles.logoutText}>{appLang.logout}</Text>
-      </TouchableOpacity>
+
+      <View style={styles.logoutButtonContainer}>
+        <MainButton
+          onPress={() => signOutUser(navigation)}
+          buttonText={appLang.logout}
+          dismissiveButton
+        />
+      </View>
+
       <Text style={styles.versionText}>
         {appLang.version} {appVersion}
       </Text>
+
+      <CustomModal
+        visible={langModalVisible}
+        onClose={() => setLangModalVisible(false)}
+        title={appLang.change_lang}
+      >
+        <View style={styles.langCustomModalContainer}>
+          <FlatList
+            data={langTranslations}
+            renderItem={renderItem}
+            showsVerticalScrollIndicator={false}
+          />
+        </View>
+      </CustomModal>
+
+      <CustomModal
+        visible={themeModalVisible}
+        onClose={() => setThemeModalVisible(false)}
+        title={appLang.theme_mode}
+      >
+        <View style={styles.themeCustomModalContainer}>
+          <ButtonRow
+            onPress={() => switchTheme(AUTO_THEME_MODE)}
+            title={appLang.auto}
+            bgStyle={{ backgroundColor: activeThemeMode == AUTO_THEME_MODE ? appTheme.primary : appTheme.secondaryBackground }}
+            titleStyle={{ color: activeThemeMode == AUTO_THEME_MODE ? appTheme.quaternaryTextColor : appTheme.primaryTextColor }}
+          />
+
+          <ButtonRow
+            onPress={() => switchTheme(LIGHT_THEME_MODE)}
+            title={appLang.light}
+            bgStyle={{ backgroundColor: activeThemeMode == LIGHT_THEME_MODE ? appTheme.primary : appTheme.secondaryBackground }}
+            titleStyle={{ color: activeThemeMode == LIGHT_THEME_MODE ? appTheme.quaternaryTextColor : appTheme.primaryTextColor }}
+          />
+
+          <ButtonRow
+            onPress={() => switchTheme(DARK_THEME_MODE)}
+            title={appLang.dark}
+            bgStyle={{ backgroundColor: activeThemeMode == DARK_THEME_MODE ? appTheme.primary : appTheme.secondaryBackground }}
+            titleStyle={{ color: activeThemeMode == DARK_THEME_MODE ? appTheme.quaternaryTextColor : appTheme.primaryTextColor }}
+            hideBorder={true}
+          />
+        </View>
+      </CustomModal>
+
     </MainContainer>
   );
 };

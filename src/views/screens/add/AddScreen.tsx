@@ -16,7 +16,7 @@ import {Header, MainButton, MainContainer} from '../../../components';
 import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
 import {apiService} from '../../../services/api';
 import {useNavigation} from '@react-navigation/native';
-import {dropdownItems} from '../../../utils';
+import {dropdownItems, languageitem, typeitem} from '../../../utils';
 import {ImageSelector} from './components/ImageSelector';
 
 export const AddScreen = ({route}: any) => {
@@ -311,13 +311,13 @@ export const AddScreen = ({route}: any) => {
         <DropDownComponent
           handleSelectOption={handleSelectType}
           type={type}
-          dropdownItems={dropdownItems}
+          dropdownItems={typeitem}
           label="Type"
         />
         <DropDownComponent
           handleSelectOption={handleSelectLanguage}
           type={language}
-          dropdownItems={dropdownItems}
+          dropdownItems={languageitem}
           label="Language"
         />
         <View style={styles.border} />

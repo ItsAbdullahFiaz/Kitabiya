@@ -712,6 +712,7 @@ const saveToLocal = async (name: string, email: string, token: string) => {
         throw error;
     }
 };
-
+const typeitem=['Childrens Books','Education & Training','Literature & Fiction','Other Books']
+const languageitem =['Urdu','English','Arabic','Others']
 const dropdownItems = ['acer', 'alcatel', 'apple iphone', 'asus', 'black berry', 'calme', 'club', "g'give", 'google', 'gright', 'haier', 'oppo', 'redmi', 'realme', 'infinix'];
-export { resetAndGo, isEmptyString, storeStringValue, getStoredStringValue, topTrending, validateEmail, validatePassword, validateName, setEmailError, setPasswordError, setNameError, dropdownItems, notificationData, convertDate, saveToLocal }
+export { resetAndGo, isEmptyString, storeStringValue, getStoredStringValue, topTrending, validateEmail, validatePassword, validateName, setEmailError, setPasswordError, setNameError, dropdownItems, notificationData, convertDate, saveToLocal,typeitem,languageitem }

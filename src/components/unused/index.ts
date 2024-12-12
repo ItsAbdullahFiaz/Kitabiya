@@ -1,5 +1,5 @@
-export * from './ButtonRow'
-export * from './CustomModal'
+export * from '../ButtonRow'
+export * from '../CustomModal'
 export * from './IconButton'
 export * from './Instructions'
 export * from './MainHeading'
