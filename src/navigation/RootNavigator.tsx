@@ -1,9 +1,9 @@
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {NavigationHandler} from './NavigationHandler';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {SCREENS, STACK} from '../enums';
-import {AuthStack, MainStack, OnboardingStack} from '.';
+import { NavigationContainer } from '@react-navigation/native';
+import { NavigationHandler } from './NavigationHandler';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { SCREENS, STACK } from '../enums';
+import { AuthStack, MainStack, OnboardingStack } from '.';
 import {
   AddScreen,
   MyBooksScreen,
@@ -13,9 +13,7 @@ import {
   SplashScreen,
 } from '../views/screens';
 import { ProfileScreen } from '../views/screens/profile';
-import { LanguageScreen } from '../views/screens/language';
 import { HelpCenter } from '../views/screens/helpcenter';
-import { SettingScreen } from '../views/screens/setting';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,7 +21,7 @@ export const RootNavigator = () => {
   return (
     <NavigationContainer>
       <NavigationHandler />
-      <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name={SCREENS.SPLASH} component={SplashScreen} />
         <Stack.Screen name={STACK.ONBOARDING} component={OnboardingStack} />
         <Stack.Screen name={STACK.AUTH} component={AuthStack} />
@@ -33,10 +31,8 @@ export const RootNavigator = () => {
         <Stack.Screen name={SCREENS.POPULAR} component={Popular} />
         <Stack.Screen name={SCREENS.ADD_SCREEN} component={AddScreen} />
         <Stack.Screen name={SCREENS.PROFILE} component={ProfileScreen} />
-        <Stack.Screen name={SCREENS.LANGUAGE} component={LanguageScreen} />
         <Stack.Screen name={SCREENS.PRIVACY_POLICY} component={PrivacyPolicyScreen} />
         <Stack.Screen name={SCREENS.HELP_CENTER} component={HelpCenter} />
-        <Stack.Screen name={SCREENS.SETTING} component={SettingScreen} />
       </Stack.Navigator>
     </NavigationContainer>
 

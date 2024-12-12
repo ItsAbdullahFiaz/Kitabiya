@@ -2,7 +2,7 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SCREENS, STACK } from '../enums';
 import BottomStack from './BottomStack';
-import { AddScreen, AudioScreen, BookDetailScreen, FavouritesScreen, SearchScreen } from '../views/screens';
+import { AddScreen, AudioScreen, BookDetailScreen, SearchScreen } from '../views/screens';
 import { Chat } from '../views/screens/chat';
 
 const Stack = createNativeStackNavigator();
@@ -14,7 +14,6 @@ export const MainStack = () => {
             <Stack.Screen name={SCREENS.SEARCH} component={SearchScreen} />
             <Stack.Screen name={SCREENS.AUDIO} component={AudioScreen} />
             <Stack.Screen name={SCREENS.BOOK_DETAIL} component={BookDetailScreen} />
-            <Stack.Screen name={SCREENS.FAVOURITES} component={FavouritesScreen} />
             <Stack.Screen name={SCREENS.ADD_SCREEN} component={AddScreen} />
             <Stack.Screen name={SCREENS.CHAT} component={Chat} />
         </Stack.Navigator>
