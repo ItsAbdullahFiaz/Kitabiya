@@ -1,10 +1,10 @@
 // CustomModal.tsx
 import React, { ReactNode, useContext, useMemo } from 'react';
 import { Modal, View, Text, StyleSheet } from 'react-native';
-import { useResponsiveDimensions } from '../../hooks';
-import { AppDataContext } from '../../context';
-import { MainButton } from '../MainButton';
-import { TEXT_STYLE } from '../../enums';
+import { useResponsiveDimensions } from '../hooks';
+import { AppDataContext } from '../context';
+import { MainButton } from './MainButton';
+import { FONT } from '../enums';
 
 interface CustomModalProps {
     visible: boolean;
@@ -30,7 +30,7 @@ export const CustomModal: React.FC<CustomModalProps> = ({ visible, onClose, titl
                 backgroundColor: appTheme.primaryBackground,
                 borderRadius: hp(18),
                 paddingVertical: hp(35),
-                shadowColor: appTheme.primaryBackground,
+                shadowColor: appTheme.primary,
                 shadowOffset: {
                     width: 0,
                     height: 2,
@@ -41,7 +41,7 @@ export const CustomModal: React.FC<CustomModalProps> = ({ visible, onClose, titl
                 width: '80%',
             },
             modalTitle: {
-                ...TEXT_STYLE.regular,
+                fontFamily: FONT.PoppinsMedium,
                 color: appTheme.primaryTextColor,
                 fontSize: hp(20),
                 marginBottom: hp(15),

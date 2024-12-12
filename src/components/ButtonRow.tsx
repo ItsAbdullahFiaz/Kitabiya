@@ -1,8 +1,8 @@
 import React, { useContext, useMemo } from 'react';
 import { TouchableOpacity, View, Text, StyleSheet, StyleProp, ViewStyle, TextStyle } from 'react-native';
-import { AppDataContext } from '../../context';
-import { useResponsiveDimensions } from '../../hooks';
-import { TEXT_STYLE } from '../../enums';
+import { AppDataContext } from '../context';
+import { useResponsiveDimensions } from '../hooks';
+import { FONT } from '../enums';
 
 interface ButtonRowProps {
   icon?: React.ReactNode;
@@ -25,14 +25,14 @@ export const ButtonRow = (props: ButtonRowProps) => {
   const styles = useMemo(() => {
     return StyleSheet.create({
       wrapRow: {
-        backgroundColor: appTheme.secondaryBackground,
+        // backgroundColor: 'red',
         borderBottomWidth: lalangTranslationsLength == index || hideBorder ? 0 : hp(0.3),
         borderBottomColor: appLang.primary,
         // borderRadius: hp(4),
         height: hp(64),
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        // justifyContent: 'space-between',
         paddingRight: hp(16),
         paddingLeft: hp(20),
       },
@@ -42,12 +42,12 @@ export const ButtonRow = (props: ButtonRowProps) => {
         alignItems: 'center',
       },
       titleRow: {
-        ...TEXT_STYLE.regular,
+        fontFamily: FONT.PoppinsMedium,
         fontSize: hp(15),
         color: appTheme.primaryTextColor,
       },
       contentRight: {
-        paddingLeft: hp(4)
+        paddingRight: hp(16)
       }
     });
   }, [wp, hp, appTheme, appLang]);
@@ -57,14 +57,14 @@ export const ButtonRow = (props: ButtonRowProps) => {
       onPress={onPress}
       activeOpacity={0.8}
       style={[styles.wrapRow, bgStyle]}>
+      <View style={[styles.contentRight, contentRightStyle]}>
+        {contentRight}
+      </View>
       <View>
         {icon}
         <Text numberOfLines={1} style={[styles.titleRow, titleStyle]}>
           {title}
         </Text>
-      </View>
-      <View style={[styles.contentRight, contentRightStyle]}>
-        {contentRight}
       </View>
     </TouchableOpacity>
   );

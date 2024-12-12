@@ -1,6 +1,6 @@
-import React, {useContext, useEffect, useMemo, useState} from 'react';
-import {AnyIcon, IconType, MainContainer} from '../../../components';
-import {AppDataContext} from '../../../context';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { AnyIcon, IconType, MainContainer } from '../../../components';
+import { AppDataContext } from '../../../context';
 import {
   Text,
   View,
@@ -10,19 +10,19 @@ import {
   SectionList,
   RefreshControl,
 } from 'react-native';
-import {FONT, FONT_SIZE, SCREENS} from '../../../enums';
-import {useResponsiveDimensions} from '../../../hooks';
-import {useNavigation} from '@react-navigation/native';
-import {HeaderButtons, PopularProducts, NewlyAdded} from './components';
-import {notificationService} from '../../../services/NotificationService';
+import { FONT, FONT_SIZE, SCREENS } from '../../../enums';
+import { useResponsiveDimensions } from '../../../hooks';
+import { useNavigation } from '@react-navigation/native';
+import { HeaderButtons, PopularProducts, NewlyAdded } from './components';
+import { notificationService } from '../../../services/NotificationService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {apiService} from '../../../services/api';
+import { apiService } from '../../../services/api';
 // import useUserPresence from '../../../hooks/useUserPresence';
 
 export const HomeScreen = () => {
   const navigation = useNavigation();
-  const {appTheme, appLang} = useContext(AppDataContext);
-  const {hp, wp} = useResponsiveDimensions();
+  const { appTheme, appLang } = useContext(AppDataContext);
+  const { hp, wp } = useResponsiveDimensions();
   const [newlyAddedProducts, setNewlyAddedProducts] = useState([]);
   const [popularProducts, setPopularProducts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -111,15 +111,6 @@ export const HomeScreen = () => {
         <Text style={styles.userName}>{`Hello, ${userName}`}</Text>
         <View style={styles.iconContainer}>
           <View style={styles.cartIconContainer}>
-            <HeaderButtons
-              onPress={() => navigation.navigate(SCREENS.FAVOURITES as never)}>
-              <AnyIcon
-                type={IconType.Ionicons}
-                name="heart-outline"
-                color={appTheme.primaryTextColor}
-                size={20}
-              />
-            </HeaderButtons>
           </View>
           <HeaderButtons
             onPress={() => navigation.navigate(SCREENS.NOTIFICATION as never)}>
@@ -175,7 +166,7 @@ export const HomeScreen = () => {
     [popularProducts, newlyAddedProducts, loading, isloading],
   );
 
-  const renderSectionHeader = ({section}: {section: any}) => (
+  const renderSectionHeader = ({ section }: { section: any }) => (
     <View style={styles.sectionHeader}>
       <Text style={styles.heading}>{section.title}</Text>
       {section.showSeeMore && (
@@ -263,7 +254,7 @@ export const HomeScreen = () => {
       />
       <SectionList
         sections={sections}
-        renderItem={({section}) => section.renderItem()}
+        renderItem={({ section }) => section.renderItem()}
         renderSectionHeader={renderSectionHeader}
         ListHeaderComponent={renderHeader}
         stickySectionHeadersEnabled={false}
