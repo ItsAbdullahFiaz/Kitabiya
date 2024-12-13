@@ -66,9 +66,9 @@ const Name = () => {
       },
       image: {
         position: 'absolute',
-        right: 10, // Place image on the right side
-        top: '50%', // Center the image vertically
-        transform: [{translateY: -hp(10)}], // Adjust to fine-tune vertical alignment
+        right: 15, 
+        top: '50%', 
+        transform: [{translateY: -hp(10)}], 
         width: hp(20),
         height: hp(20),
       },
@@ -97,7 +97,7 @@ const Name = () => {
           secureTextEntry={true}
         />
       </View>
-      <View>
+      <View style={styles.inputContainer}>
         <Text style={styles.label}>Date of Birth</Text>
         <View style={styles.inputContainerWithImage}>
           <TextInput style={styles.input} placeholder="11/12/2024" />
@@ -107,7 +107,7 @@ const Name = () => {
           />
         </View>
       </View>
-      <View>
+      <View style={styles.inputContainer}>
         <Text style={styles.label}>Country/Region</Text>
         <View style={styles.inputContainerWithImage}>
           <TextInput style={styles.input} placeholder="Pakistan" />
