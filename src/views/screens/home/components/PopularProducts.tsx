@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -7,10 +7,11 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {AppDataContext} from '../../../../context';
 import {SCREENS} from '../../../../enums';
 import {SkeletonLoader} from '../../../../components';
+import {apiService} from '../../../../services/api';
 
 interface Product {
   _id: string;
@@ -20,14 +21,35 @@ interface Product {
   condition: string;
 }
 
-interface PopularProductsProps {
-  products: Product[];
-  loading: boolean;
-}
-
-export const PopularProducts = ({products, loading}: PopularProductsProps) => {
+export const PopularProducts = () => {
   const navigation = useNavigation<any>();
   const {appTheme} = useContext(AppDataContext);
+  const [loading, setLoading] = useState(true);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [myAdsList, setMyAdsList] = useState([]);
+
+  const fetchPopularProducts = async () => {
+    try {
+      setLoading(true);
+      const response = await apiService.getPopularProducts();
+      console.log('API_RESPONSE_POPLAR===>', response?.data);
+      if (response.error) {
+        throw new Error(response.message || 'Failed to fetch popular products');
+      }
+      setMyAdsList(response.data || []);
+    } catch (error) {
+      console.error('Error fetching popular products:', error);
+    } finally {
+      setLoading(false);
+      setIsInitialLoad(false);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchPopularProducts();
+    }, []),
+  );
 
   const getImageSource = (images: string[]) => {
     if (images && images.length > 0 && images[0]) {
@@ -52,31 +74,34 @@ export const PopularProducts = ({products, loading}: PopularProductsProps) => {
     </View>
   );
 
-  const renderItem = ({item}: {item: Product}) => (
-    <TouchableOpacity
-      style={styles.productCard}
-      onPress={() => navigation.navigate(SCREENS.BOOK_DETAIL, {product: item})}>
-      <Image
-        source={getImageSource(item.images)}
-        style={styles.productImage}
-        resizeMode="cover"
-        defaultSource={require('../../../../assets/images/books.jpg')}
-      />
-      <View style={styles.productInfo}>
-        <Text style={styles.productTitle} numberOfLines={1}>
-          {item.title || 'Untitled'}
-        </Text>
-        <Text style={styles.productPrice}>Rs. {item.price || '0'}</Text>
-        <Text style={styles.productCondition}>{item.condition || 'N/A'}</Text>
-      </View>
-    </TouchableOpacity>
-  );
+  const renderItem = ({item}: {item: Product}) => {
+    return (
+      <TouchableOpacity
+        style={styles.productCard}
+        onPress={() =>
+          navigation.navigate(SCREENS.BOOK_DETAIL, {product: item})
+        }>
+        <Image
+          source={getImageSource(item.images)}
+          style={styles.productImage}
+          resizeMode="cover"
+          defaultSource={require('../../../../assets/images/books.jpg')}
+        />
+        <View style={styles.productInfo}>
+          <Text style={styles.productTitle} numberOfLines={1}>
+            {item.title || 'Untitled'}
+          </Text>
+          <Text style={styles.productPrice}>Rs. {item.price || '0'}</Text>
+          <Text style={styles.productCondition}>{item.condition || 'N/A'}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
-  if (loading) {
-    // Show skeleton loaders when loading
+  if (isInitialLoad || loading) {
     return (
       <FlatList
-        data={Array(5).fill({})} // Render 5 skeleton items as placeholders
+        data={Array(5).fill({})}
         renderItem={renderSkeletonItem}
         keyExtractor={(item, index) => `skeleton-${index}`}
         horizontal
@@ -86,7 +111,7 @@ export const PopularProducts = ({products, loading}: PopularProductsProps) => {
     );
   }
 
-  if (!products || products.length === 0) {
+  if (!loading && myAdsList.length === 0) {
     return (
       <View style={styles.emptyContainer}>
         <Text style={styles.emptyText}>No products available</Text>
@@ -96,9 +121,9 @@ export const PopularProducts = ({products, loading}: PopularProductsProps) => {
 
   return (
     <FlatList
-      data={products}
+      data={myAdsList}
       renderItem={renderItem}
-      keyExtractor={item => item._id}
+      keyExtractor={item => item?._id}
       horizontal
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={styles.container}

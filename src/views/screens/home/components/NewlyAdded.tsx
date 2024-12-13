@@ -6,12 +6,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useContext, useMemo} from 'react';
+import React, {useCallback, useContext, useMemo, useState} from 'react';
 import {useResponsiveDimensions} from '../../../../hooks';
 import {FONT_SIZE, SCREENS, TEXT_STYLE} from '../../../../enums';
 import {AppDataContext} from '../../../../context';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {SkeletonLoader} from '../../../../components';
+import {apiService} from '../../../../services/api';
 
 interface User {
   id: string;
@@ -32,15 +33,36 @@ interface Product {
   createdAt: string;
 }
 
-interface NewlyAddedProps {
-  products: Product[];
-  loading: boolean;
-}
-
-export const NewlyAdded = ({products, loading}: NewlyAddedProps) => {
+export const NewlyAdded = () => {
   const navigation = useNavigation<any>();
   const {appTheme} = useContext(AppDataContext);
   const {hp, wp} = useResponsiveDimensions();
+  const [loading, setLoading] = useState(true);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [newlyAddedProducts, setNewlyAddedProducts] = useState([]);
+
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const response = await apiService.getProducts();
+      if (response.error) {
+        throw new Error(response.message || 'Failed to fetch products');
+      }
+      setNewlyAddedProducts(response.data.products || []);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    } finally {
+      setLoading(false);
+      setIsInitialLoad(false);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchProducts();
+    }, []),
+  );
+
   const styles = useMemo(() => {
     return StyleSheet.create({
       container: {
@@ -97,10 +119,19 @@ export const NewlyAdded = ({products, loading}: NewlyAddedProps) => {
         color: appTheme.tertiaryTextColor,
         textTransform: 'capitalize',
       },
+      emptyContainer: {
+        padding: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      emptyText: {
+        fontSize: 14,
+        color: '#666',
+      },
     });
   }, [hp, wp]);
 
-  if (loading) {
+  if (isInitialLoad || loading) {
     return (
       <View style={styles.container}>
         {Array.from({length: 5}).map((_, index) => (
@@ -161,10 +192,18 @@ export const NewlyAdded = ({products, loading}: NewlyAddedProps) => {
     );
   };
 
+  if (!loading && newlyAddedProducts.length === 0) {
+    return (
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyText}>No products available</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <FlatList
-        data={products}
+        data={newlyAddedProducts}
         renderItem={renderItems}
         keyExtractor={item => item._id}
         showsVerticalScrollIndicator={false}

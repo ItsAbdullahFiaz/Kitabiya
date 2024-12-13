@@ -22,27 +22,27 @@ import {
   MainButton,
   MainContainer,
 } from '../../../components';
-import { FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE } from '../../../enums';
-import { useResponsiveDimensions } from '../../../hooks';
-import { AppDataContext } from '../../../context';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import {FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE} from '../../../enums';
+import {useResponsiveDimensions} from '../../../hooks';
+import {AppDataContext} from '../../../context';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
-import { apiService } from '../../../services/api';
-import { ReportSheet } from '../add/components';
+import {apiService} from '../../../services/api';
+import {ReportSheet} from '../add/components';
 import firestore from '@react-native-firebase/firestore';
 import SwiperFlatList from 'react-native-swiper-flatlist';
 
-export const BookDetailScreen = ({ route }: any) => {
+export const BookDetailScreen = ({route}: any) => {
   const screenWidth = useWindowDimensions().width;
   const navigation = useNavigation<any>();
   const [activeIndex, setActiveIndex] = useState(0);
-  const { appTheme, appLang } = useContext(AppDataContext);
+  const {appTheme, appLang} = useContext(AppDataContext);
   const [isExpanded, setIsExpanded] = useState(false);
   const [item, setItem] = useState({});
   const [emailId, setEmailId] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const toggleText = () => setIsExpanded(!isExpanded);
-  const { hp, wp } = useResponsiveDimensions();
+  const {hp, wp} = useResponsiveDimensions();
   const data = route?.params?.product;
   console.log('PARAM_DATA_BOOK===>', data);
   const shouldShowReadMore = data.description.length > 100;
@@ -69,12 +69,13 @@ export const BookDetailScreen = ({ route }: any) => {
       const res = await auth().currentUser;
       const incomingUserData = await firestore()
         .collection('users')
-        .doc(data?.userId.email)
+        .doc(data?.user.email)
         .get();
+      console.log('INCOMING_USER_DATA===>', incomingUserData);
       // console.log('BOOK_DETAIL_WALA===>', incomingUserData?.data()?.userName);
       setEmailId(res?.email || '');
       setItem({
-        email: data?.userId.email,
+        email: data?.user.email,
         userName: incomingUserData?.data()?.userName,
       });
     } catch (error: any) {
@@ -260,18 +261,18 @@ export const BookDetailScreen = ({ route }: any) => {
 
   return (
     <MainContainer fullWidth={true}>
-      <View style={{ paddingHorizontal: 16 }}>
+      <View style={{paddingHorizontal: 16}}>
         <Header title={appLang.bookdetail} />
       </View>
       <View style={styles.sliderContainer}>
         <SwiperFlatList
           data={data?.images}
-          renderItem={({ item }) => (
+          renderItem={({item}) => (
             <View style={styles.slideContainer}>
               <Image
                 style={styles.image}
                 resizeMode={'cover'}
-                source={{ uri: item }}
+                source={{uri: item}}
               />
             </View>
           )}
@@ -280,14 +281,14 @@ export const BookDetailScreen = ({ route }: any) => {
           paginationStyleItem={styles.paginationStyleItem}
           paginationStyleItemInactive={styles.inactiveDot}
           paginationStyleItemActive={styles.activeDot}
-          onChangeIndex={({ index }) => setActiveIndex(index)}
+          onChangeIndex={({index}) => setActiveIndex(index)}
         />
       </View>
-      <View style={{ flex: 1, padding: 16 }}>
+      <View style={{flex: 1, padding: 16}}>
         <ScrollView>
-          <View style={[styles.detailsContainer, { paddingBottom: hp(100) }]}>
+          <View style={[styles.detailsContainer, {paddingBottom: hp(100)}]}>
             <Text style={styles.detailHeading}>{`Rs ${data?.price}`}</Text>
-            <Text style={[styles.detailHeading, { fontSize: hp(FONT_SIZE.h1) }]}>
+            <Text style={[styles.detailHeading, {fontSize: hp(FONT_SIZE.h1)}]}>
               {data?.title}
             </Text>
             <View style={styles.locationOuterContainer}>
@@ -305,7 +306,7 @@ export const BookDetailScreen = ({ route }: any) => {
             <View style={styles.border} />
             <View style={styles.textContainer}>
               <Text
-                style={[styles.detailHeading, { fontSize: hp(FONT_SIZE.h1) }]}>
+                style={[styles.detailHeading, {fontSize: hp(FONT_SIZE.h1)}]}>
                 {appLang.details}
               </Text>
               <View style={styles.detailsContainer}>
@@ -358,7 +359,7 @@ export const BookDetailScreen = ({ route }: any) => {
               </View>
               <View style={styles.border} />
               <Text
-                style={[styles.detailHeading, { fontSize: hp(FONT_SIZE.h1) }]}>
+                style={[styles.detailHeading, {fontSize: hp(FONT_SIZE.h1)}]}>
                 description
               </Text>
               <Text style={styles.text}>
@@ -387,7 +388,7 @@ export const BookDetailScreen = ({ route }: any) => {
         <View style={styles.chatBtnContainer}>
           <MainButton
             onPress={() =>
-              navigation.navigate(SCREENS.CHAT as never, { data: item, emailId })
+              navigation.navigate(SCREENS.CHAT as never, {data: item, emailId})
             }
             buttonText={appLang.chatnow}
           />
