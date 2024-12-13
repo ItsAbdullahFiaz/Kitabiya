@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { AnyIcon, IconType, MainContainer } from '../../../components';
-import { AppDataContext } from '../../../context';
+import React, {useContext, useEffect, useMemo, useState} from 'react';
+import {AnyIcon, IconType, MainContainer} from '../../../components';
+import {AppDataContext} from '../../../context';
 import {
   Text,
   View,
@@ -10,23 +10,20 @@ import {
   SectionList,
   RefreshControl,
 } from 'react-native';
-import { FONT, FONT_SIZE, SCREENS } from '../../../enums';
-import { useResponsiveDimensions } from '../../../hooks';
-import { useNavigation } from '@react-navigation/native';
-import { HeaderButtons, PopularProducts, NewlyAdded } from './components';
-import { notificationService } from '../../../services/NotificationService';
+import {FONT, FONT_SIZE, SCREENS} from '../../../enums';
+import {useResponsiveDimensions} from '../../../hooks';
+import {useNavigation} from '@react-navigation/native';
+import {HeaderButtons, PopularProducts, NewlyAdded} from './components';
+import {notificationService} from '../../../services/NotificationService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { apiService } from '../../../services/api';
 // import useUserPresence from '../../../hooks/useUserPresence';
 
 export const HomeScreen = () => {
   const navigation = useNavigation();
-  const { appTheme, appLang } = useContext(AppDataContext);
-  const { hp, wp } = useResponsiveDimensions();
+  const {appTheme, appLang} = useContext(AppDataContext);
+  const {hp, wp} = useResponsiveDimensions();
   const [newlyAddedProducts, setNewlyAddedProducts] = useState([]);
   const [popularProducts, setPopularProducts] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [isloading, setIsLoading] = useState(false);
   const [userName, setUserName] = useState('');
   const [refreshing, setRefreshing] = useState(false);
 
@@ -51,46 +48,11 @@ export const HomeScreen = () => {
     setupNotifications();
   }, []);
 
-  useEffect(() => {
-    fetchProducts();
-    fetchPopularProducts();
-  }, []);
-
-  const fetchProducts = async () => {
-    try {
-      setLoading(true);
-      const response = await apiService.getProducts();
-      if (response.error) {
-        throw new Error(response.message || 'Failed to fetch products');
-      }
-      setNewlyAddedProducts(response.data.products || []);
-    } catch (error) {
-      console.error('Error fetching products:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchPopularProducts = async () => {
-    try {
-      setIsLoading(true);
-      const response = await apiService.getPopularProducts();
-      if (response.error) {
-        throw new Error(response.message || 'Failed to fetch popular products');
-      }
-      setPopularProducts(response.data || []);
-      setIsLoading(false);
-    } catch (error) {
-      console.error('Error fetching popular products:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await Promise.all([fetchProducts(), fetchPopularProducts()]); // Refresh both product lists
-    setRefreshing(false);
-  };
+  // const onRefresh = async () => {
+  //   setRefreshing(true);
+  //   await Promise.all([fetchPopularFunc()]);
+  //   setRefreshing(false);
+  // };
   const getName = async () => {
     try {
       const storedName = await AsyncStorage.getItem('NAME');
@@ -110,8 +72,7 @@ export const HomeScreen = () => {
       <View style={styles.headerContainer}>
         <Text style={styles.userName}>{`Hello, ${userName}`}</Text>
         <View style={styles.iconContainer}>
-          <View style={styles.cartIconContainer}>
-          </View>
+          <View style={styles.cartIconContainer}></View>
           <HeaderButtons
             onPress={() => navigation.navigate(SCREENS.NOTIFICATION as never)}>
             <AnyIcon
@@ -147,7 +108,7 @@ export const HomeScreen = () => {
         data: [popularProducts],
         renderItem: () => (
           <View style={styles.popularProductsContainer}>
-            <PopularProducts products={popularProducts} loading={isloading} />
+            <PopularProducts />
           </View>
         ),
         showSeeMore: true,
@@ -157,20 +118,20 @@ export const HomeScreen = () => {
         data: [newlyAddedProducts],
         renderItem: () => (
           <View style={styles.newlyAddedContainer}>
-            <NewlyAdded products={newlyAddedProducts} loading={loading} />
+            <NewlyAdded />
           </View>
         ),
         showSeeMore: false,
       },
     ],
-    [popularProducts, newlyAddedProducts, loading, isloading],
+    [popularProducts, newlyAddedProducts],
   );
 
-  const renderSectionHeader = ({ section }: { section: any }) => (
+  const renderSectionHeader = ({section}: {section: any}) => (
     <View style={styles.sectionHeader}>
       <Text style={styles.heading}>{section.title}</Text>
       {section.showSeeMore && (
-        <TouchableOpacity onPress={fetchPopularProducts}>
+        <TouchableOpacity>
           <Text>{appLang.Seemore}</Text>
         </TouchableOpacity>
       )}
@@ -254,7 +215,7 @@ export const HomeScreen = () => {
       />
       <SectionList
         sections={sections}
-        renderItem={({ section }) => section.renderItem()}
+        renderItem={({section}) => section.renderItem()}
         renderSectionHeader={renderSectionHeader}
         ListHeaderComponent={renderHeader}
         stickySectionHeadersEnabled={false}
@@ -263,7 +224,7 @@ export const HomeScreen = () => {
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
-            onRefresh={onRefresh}
+            // onRefresh={onRefresh}
             colors={[appTheme.primary]} // Android
             tintColor={appTheme.primary} // iOS
           />

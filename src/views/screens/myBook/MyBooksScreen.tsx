@@ -17,17 +17,18 @@ import {apiService} from '../../../services/api';
 import {convertDate} from '../../../utils';
 import {RemoveAd} from './components';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import {MotiView} from 'moti';
 import {SkeletonLoader} from '../../../components';
 
 export const MyBooksScreen = () => {
   const navigation = useNavigation<any>();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [myAdsList, setMyAdsList] = useState([]);
   const [index, setIndex] = useState<any>('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const {hp, wp} = useResponsiveDimensions();
   const {appTheme, appLang} = useContext(AppDataContext);
+
   const fetchProducts = async () => {
     try {
       setLoading(true);
@@ -44,6 +45,7 @@ export const MyBooksScreen = () => {
       console.error('Error fetching products:', error);
     } finally {
       setLoading(false);
+      setIsInitialLoad(false);
     }
   };
 
@@ -163,8 +165,8 @@ export const MyBooksScreen = () => {
       },
     });
   }, [hp, wp]);
-  if (loading) {
-    // Render skeleton loaders while loading.
+
+  if (isInitialLoad || loading) {
     return (
       <MainContainer>
         <Text style={styles.title}>{appLang.myads}</Text>
@@ -182,12 +184,24 @@ export const MyBooksScreen = () => {
       </MainContainer>
     );
   }
+
+  if (!loading && myAdsList.length === 0) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <Text>No ads here yet!</Text>
+        <Text>Start sharing your offers or items today.</Text>
+        <TouchableOpacity style={styles.adBtnContainer}>
+          <Text style={styles.adBtnText}>Post Your First Ad</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
   return (
     <MainContainer>
       <Text style={styles.title}>{appLang.myads}</Text>
-      {myAdsList.length > 0 ? (
+      {myAdsList && (
         <View style={styles.listContainer}>
-          {loading && <ActivityIndicator />}
           <FlatList
             data={myAdsList}
             renderItem={({item}) => {
@@ -258,14 +272,6 @@ export const MyBooksScreen = () => {
               );
             }}
           />
-        </View>
-      ) : (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <Text>No ads here yet!</Text>
-          <Text>Start sharing your offers or items today.</Text>
-          <TouchableOpacity style={styles.adBtnContainer}>
-            <Text style={styles.adBtnText}>Post Your First Ad</Text>
-          </TouchableOpacity>
         </View>
       )}
       <Modal visible={isModalVisible} transparent>
