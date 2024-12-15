@@ -1,18 +1,18 @@
-import React, {useContext, useMemo} from 'react';
-import {TouchableOpacity, View, StyleSheet} from 'react-native';
+import React, { useContext, useMemo } from 'react';
+import { TouchableOpacity, View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
-import {FONT_SIZE, SCREENS} from '../enums';
-import {AnyIcon, IconType} from './AnyIcon';
-import {AppDataContext} from '../context';
-import {useResponsiveDimensions} from '../hooks';
+import { FONT_SIZE, SCREENS } from '../enums';
+import { AnyIcon, IconType } from './AnyIcon';
+import { AppDataContext } from '../context';
+import { useResponsiveDimensions } from '../hooks';
 
 const SIZE = 40;
 
-export const AddButton = ({navigation}: any) => {
-  const {appTheme} = useContext(AppDataContext);
-  const {hp, wp} = useResponsiveDimensions();
+export const AddButton = ({ navigation }: any) => {
+  const { appTheme } = useContext(AppDataContext);
+  const { hp, wp } = useResponsiveDimensions();
   const toggleView = () => {
-    navigation.navigate(SCREENS.ADD_SCREEN);
+    navigation.navigate('Sell', { dataType: 'add' });
   };
 
   const styles = useMemo(() => {
@@ -51,9 +51,9 @@ export const AddButton = ({navigation}: any) => {
   );
 };
 
-const SubAddButton = ({style, icon, onPress}: any) => {
-  const {appTheme} = useContext(AppDataContext);
-  const {hp, wp} = useResponsiveDimensions();
+const SubAddButton = ({ style, icon, onPress }: any) => {
+  const { appTheme } = useContext(AppDataContext);
+  const { hp, wp } = useResponsiveDimensions();
   const styles = useMemo(() => {
     return StyleSheet.create({
       subButton: {

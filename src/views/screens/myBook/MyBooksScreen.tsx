@@ -8,60 +8,58 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useContext, useMemo, useState} from 'react';
-import {AnyIcon, IconType, MainContainer} from '../../../components';
-import {FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE} from '../../../enums';
-import {useResponsiveDimensions} from '../../../hooks';
-import {AppDataContext} from '../../../context';
-import {apiService} from '../../../services/api';
-import {convertDate} from '../../../utils';
-import {RemoveAd} from './components';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import {SkeletonLoader} from '../../../components';
+import React, { useContext, useMemo, useState, useCallback } from 'react';
+import { AnyIcon, IconType, MainContainer } from '../../../components';
+import { FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE } from '../../../enums';
+import { useResponsiveDimensions } from '../../../hooks';
+import { AppDataContext } from '../../../context';
+import { convertDate } from '../../../utils';
+import { RemoveAd } from './components';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { SkeletonLoader } from '../../../components';
+import { useMyProducts, useDeleteProduct } from '../../../hooks/useProducts';
 
 export const MyBooksScreen = () => {
   const navigation = useNavigation<any>();
-  const [loading, setLoading] = useState(true);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
-  const [myAdsList, setMyAdsList] = useState([]);
-  const [index, setIndex] = useState<any>('');
+  const [selectedProductId, setSelectedProductId] = useState<string>('');
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const {hp, wp} = useResponsiveDimensions();
-  const {appTheme, appLang} = useContext(AppDataContext);
+  const { hp, wp } = useResponsiveDimensions();
+  const { appTheme, appLang } = useContext(AppDataContext);
 
-  const fetchProducts = async () => {
-    try {
-      setLoading(true);
-      const response = await apiService.getMyProducts();
-      console.log(
-        'PRODUCTS_BY_USERID_RESPONSE===>',
-        JSON.stringify(response.data),
-      );
-      if (response.error) {
-        throw new Error(response.message || 'Failed to fetch products');
-      }
-      setMyAdsList(response.data || []);
-    } catch (error) {
-      console.error('Error fetching products:', error);
-    } finally {
-      setLoading(false);
-      setIsInitialLoad(false);
-    }
-  };
+  // Use React Query hooks
+  const {
+    data: myAdsList = [],
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useMyProducts();
 
-  useFocusEffect(
-    useCallback(() => {
-      fetchProducts();
-    }, [isModalVisible]),
-  );
+  const deleteProduct = useDeleteProduct();
 
-  const handleOpenModal = (id: any) => {
-    setIndex(id);
+  const handleOpenModal = (id: string) => {
+    setSelectedProductId(id);
     setIsModalVisible(true);
   };
-  const handleRemoveModal = (val: any) => {
-    setIsModalVisible(val);
+
+  const handleRemoveModal = async (shouldDelete: boolean) => {
+    if (shouldDelete && selectedProductId) {
+      try {
+        await deleteProduct.mutateAsync(selectedProductId);
+      } catch (error) {
+        console.error('Error deleting product:', error);
+      }
+    }
+    setIsModalVisible(false);
   };
+
+  // Refetch data when screen is focused
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [refetch])
+  );
+
   const styles = useMemo(() => {
     return StyleSheet.create({
       title: {
@@ -104,7 +102,7 @@ export const MyBooksScreen = () => {
         overflow: 'hidden',
         marginRight: hp(10),
       },
-      img: {height: '100%', width: '100%'},
+      img: { height: '100%', width: '100%' },
       adTitle: {
         ...TEXT_STYLE.medium,
         fontSize: hp(FONT_SIZE.h3),
@@ -166,12 +164,23 @@ export const MyBooksScreen = () => {
     });
   }, [hp, wp]);
 
-  if (isInitialLoad || loading) {
+  if (isError) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Error: {error instanceof Error ? error.message : 'Unknown error'}</Text>
+        <TouchableOpacity style={styles.adBtnContainer} onPress={() => refetch()}>
+          <Text style={styles.adBtnText}>Retry</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  if (isLoading) {
     return (
       <MainContainer>
         <Text style={styles.title}>{appLang.myads}</Text>
         <View style={styles.listContainer}>
-          {Array.from({length: 5}).map((_, index) => (
+          {Array.from({ length: 5 }).map((_, index) => (
             <View key={index} style={styles.adContainer}>
               <SkeletonLoader
                 width="100%"
@@ -185,12 +194,15 @@ export const MyBooksScreen = () => {
     );
   }
 
-  if (!loading && myAdsList.length === 0) {
+  if (!isLoading && myAdsList.length === 0) {
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text>No ads here yet!</Text>
         <Text>Start sharing your offers or items today.</Text>
-        <TouchableOpacity style={styles.adBtnContainer}>
+        <TouchableOpacity
+          style={styles.adBtnContainer}
+          onPress={() => navigation.navigate(SCREENS.ADD_SCREEN)}
+        >
           <Text style={styles.adBtnText}>Post Your First Ad</Text>
         </TouchableOpacity>
       </View>
@@ -200,82 +212,81 @@ export const MyBooksScreen = () => {
   return (
     <MainContainer>
       <Text style={styles.title}>{appLang.myads}</Text>
-      {myAdsList && (
-        <View style={styles.listContainer}>
-          <FlatList
-            data={myAdsList}
-            renderItem={({item}) => {
-              console.log('MY_ADS===>', item);
-              return (
-                <TouchableOpacity style={styles.adContainer}>
-                  <View style={styles.card}>
-                    <View style={styles.upperContainer}>
-                      <View style={styles.imgContainer}>
-                        <Image
-                          style={styles.img}
-                          source={{uri: item.images[0]}}
-                        />
-                      </View>
-                      <View style={styles.textContainer}>
-                        <Text style={styles.adTitle}>{item.title}</Text>
-                        <Text
-                          style={[
-                            styles.adTitle,
-                            {...TEXT_STYLE.regular},
-                          ]}>{`Rs ${item.price}`}</Text>
-                        <Text style={[styles.adTitle, {...TEXT_STYLE.regular}]}>
-                          {item.type}
-                        </Text>
-                      </View>
-                    </View>
-                    <TouchableOpacity onPress={() => handleOpenModal(item._id)}>
-                      <AnyIcon
-                        type={IconType.SimpleLineIcons}
-                        name="options-vertical"
-                        size={hp(FONT_SIZE.h1)}
-                        color={appTheme.primaryTextColor}
-                      />
-                    </TouchableOpacity>
+      <View style={styles.listContainer}>
+        <FlatList
+          data={myAdsList}
+          renderItem={({ item }) => (
+            <TouchableOpacity style={styles.adContainer}>
+              <View style={styles.card}>
+                <View style={styles.upperContainer}>
+                  <View style={styles.imgContainer}>
+                    <Image
+                      style={styles.img}
+                      source={{ uri: item.images[0] }}
+                    />
                   </View>
-                  <View style={styles.bottomContainer}>
-                    <Text
-                      style={[
-                        styles.adTitle,
-                        {...TEXT_STYLE.regular},
-                      ]}>{`Active from ${convertDate(item.createdAt)}`}</Text>
-                    <View style={styles.viewsContainer}>
-                      <AnyIcon
-                        type={IconType.Ionicons}
-                        name="eye-outline"
-                        size={hp(FONT_SIZE.h3)}
-                        color={appTheme.primaryTextColor}
-                      />
-                      <Text
-                        style={[
-                          styles.adTitle,
-                          {...TEXT_STYLE.regular, marginLeft: hp(10)},
-                        ]}>{`0 Views`}</Text>
-                    </View>
-                    <Text style={styles.active}>Active</Text>
-                    <TouchableOpacity
-                      style={styles.editContainer}
-                      onPress={() =>
-                        navigation.navigate(SCREENS.ADD_SCREEN as never, {
-                          data: item,
-                          dataType: 'edit',
-                        })
-                      }>
-                      <Text style={styles.edit}>edit</Text>
-                    </TouchableOpacity>
+                  <View style={styles.textContainer}>
+                    <Text style={styles.adTitle}>{item.title}</Text>
+                    <Text style={[styles.adTitle, { ...TEXT_STYLE.regular }]}>
+                      {`Rs ${item.price}`}
+                    </Text>
+                    <Text style={[styles.adTitle, { ...TEXT_STYLE.regular }]}>
+                      {item.type}
+                    </Text>
                   </View>
+                </View>
+                <TouchableOpacity onPress={() => handleOpenModal(item._id)}>
+                  <AnyIcon
+                    type={IconType.SimpleLineIcons}
+                    name="options-vertical"
+                    size={hp(FONT_SIZE.h1)}
+                    color={appTheme.primaryTextColor}
+                  />
                 </TouchableOpacity>
-              );
-            }}
-          />
-        </View>
-      )}
+              </View>
+              <View style={styles.bottomContainer}>
+                <Text
+                  style={[
+                    styles.adTitle,
+                    { ...TEXT_STYLE.regular },
+                  ]}>{`Active from ${convertDate(item.createdAt)}`}</Text>
+                <View style={styles.viewsContainer}>
+                  <AnyIcon
+                    type={IconType.Ionicons}
+                    name="eye-outline"
+                    size={hp(FONT_SIZE.h3)}
+                    color={appTheme.primaryTextColor}
+                  />
+                  <Text
+                    style={[
+                      styles.adTitle,
+                      { ...TEXT_STYLE.regular, marginLeft: hp(10) },
+                    ]}>{`0 Views`}</Text>
+                </View>
+                <Text style={styles.active}>Active</Text>
+                <TouchableOpacity
+                  style={styles.editContainer}
+                  onPress={() =>
+                    navigation.navigate(SCREENS.ADD_SCREEN as never, {
+                      data: item,
+                      dataType: 'edit',
+                    })
+                  }>
+                  <Text style={styles.edit}>edit</Text>
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
+          )}
+          keyExtractor={item => item._id}
+          refreshing={isLoading}
+          onRefresh={refetch}
+        />
+      </View>
       <Modal visible={isModalVisible} transparent>
-        <RemoveAd handleRemoveModal={handleRemoveModal} index={index} />
+        <RemoveAd
+          handleRemoveModal={handleRemoveModal}
+          index={selectedProductId}
+        />
       </Modal>
     </MainContainer>
   );
