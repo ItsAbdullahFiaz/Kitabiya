@@ -109,10 +109,10 @@ export const AddScreen = ({ route }: any) => {
       showToast('Please enter description', 'errorToast');
       return false;
     }
-    // if (!location || location === 'choose') {
-    //   showToast('Please select location', 'errorToast');
-    //   return false;
-    // }
+    if (!location || location === 'choose') {
+      showToast('Please select location', 'errorToast');
+      return false;
+    }
     if (!price.trim()) {
       showToast('Please enter price', 'errorToast');
       return false;
@@ -232,10 +232,21 @@ export const AddScreen = ({ route }: any) => {
     formData.append('type', type);
     formData.append('language', language);
     formData.append('description', description);
-    formData.append('locationAddress', 'Zahirpir');
+    formData.append('locationAddress', location);
 
     console.log('FormData:', formData);
     return formData;
+  };
+
+  const resetForm = () => {
+    setImagesList([]);
+    setSelected(null);
+    setType('choose');
+    setLanguage('choose');
+    setLocation('choose');
+    setBookTitle('');
+    setDescription('');
+    setPrice('');
   };
 
   const handleSubmit = async () => {
@@ -246,7 +257,7 @@ export const AddScreen = ({ route }: any) => {
       await createProduct.mutateAsync(formData, {
         onSuccess: () => {
           showToast('Product added successfully', 'successToast');
-          // Force refetch of MyProducts when navigating back
+          resetForm();
           queryClient.invalidateQueries([QUERY_KEYS.MY_PRODUCTS]);
           navigation.navigate(SCREENS.MY_BOOK as never);
         },
