@@ -1,20 +1,30 @@
 import 'react-native-reanimated';
 import 'react-native-gesture-handler';
-import {SafeAreaView, StyleSheet} from 'react-native';
-import React, {useEffect, useMemo} from 'react';
+import { SafeAreaView, StyleSheet } from 'react-native';
+import React, { useEffect, useMemo } from 'react';
 import Toast from 'react-native-toast-message';
 import messaging from '@react-native-firebase/messaging';
 import notifee from '@notifee/react-native';
-import {RootNavigator} from './navigation';
-import {LeaderboardToast} from './components';
-import {useResponsiveDimensions} from './hooks';
-import {notificationService} from './services/NotificationService';
+import { RootNavigator } from './navigation';
+import { LeaderboardToast } from './components';
+import { useResponsiveDimensions } from './hooks';
+import { notificationService } from './services/NotificationService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {subscribeToTopics, unsubscribeFromTopics} from './utils/notifications';
+import { subscribeToTopics, unsubscribeFromTopics } from './utils/notifications';
 import firestore from '@react-native-firebase/firestore';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 2,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 export default function App() {
-  const {wp, hp} = useResponsiveDimensions();
+  const { wp, hp } = useResponsiveDimensions();
 
   useEffect(() => {
     const setup = async () => {
@@ -84,14 +94,14 @@ export default function App() {
   }, [hp, wp]);
 
   const toastConfig = {
-    successToast: ({text1, text2}: {text1?: string; text2?: string}) => (
+    successToast: ({ text1, text2 }: { text1?: string; text2?: string }) => (
       <LeaderboardToast
         text1={text1 || ''}
         text2={text2 || ''}
         type="successLeaderboard"
       />
     ),
-    errorToast: ({text1, text2}: {text1?: string; text2?: string}) => (
+    errorToast: ({ text1, text2 }: { text1?: string; text2?: string }) => (
       <LeaderboardToast
         text1={text1 || ''}
         text2={text2 || ''}
@@ -101,9 +111,11 @@ export default function App() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <RootNavigator />
-      <Toast config={toastConfig} />
-    </SafeAreaView>
+    <QueryClientProvider client={queryClient}>
+      <SafeAreaView style={styles.container}>
+        <RootNavigator />
+        <Toast config={toastConfig} />
+      </SafeAreaView>
+    </QueryClientProvider>
   );
 }

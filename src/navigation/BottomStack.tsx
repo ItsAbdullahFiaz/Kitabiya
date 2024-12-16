@@ -1,22 +1,23 @@
-import React, {useContext, useMemo} from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {TouchableWithoutFeedback, View, Text, StyleSheet} from 'react-native';
-import {AddButton, AnyIcon, IconType} from '../components';
-import {FONT_SIZE, TEXT_STYLE, SCREENS} from '../enums';
+import React, { useContext, useMemo } from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { TouchableWithoutFeedback, View, Text, StyleSheet } from 'react-native';
+import { AddButton, AnyIcon, IconType } from '../components';
+import { FONT_SIZE, TEXT_STYLE, SCREENS } from '../enums';
 import {
   HomeScreen,
   MyBooksScreen,
   MessagesScreen,
   AccountScreen,
+  AddScreen,
 } from '../views/screens';
-import {useResponsiveDimensions} from '../hooks';
-import {AppDataContext} from '../context';
+import { useResponsiveDimensions } from '../hooks';
+import { AppDataContext } from '../context';
 
 const Bottom = createBottomTabNavigator();
 
 const BottomStack = () => {
-  const {wp, hp} = useResponsiveDimensions();
-  const {appTheme} = useContext(AppDataContext);
+  const { wp, hp } = useResponsiveDimensions();
+  const { appTheme } = useContext(AppDataContext);
 
   const styles = useMemo(() => {
     return StyleSheet.create({
@@ -59,14 +60,14 @@ const BottomStack = () => {
       }}
       tabBar={props => {
         const {
-          state: {index, routes},
+          state: { index, routes },
           descriptors,
           navigation,
         } = props;
         return (
           <View style={styles.tabBarContainer}>
             {routes.map((route, idx) => {
-              const {options} = descriptors[route.key];
+              const { options } = descriptors[route.key];
               const color =
                 index === idx
                   ? options.tabBarActiveTintColor
@@ -89,14 +90,14 @@ const BottomStack = () => {
                           color: color || 'defaultColor',
                           size: 20,
                         })}
-                      <Text style={[styles.tabLabel, {color}]}>
+                      <Text style={[styles.tabLabel, { color }]}>
                         {typeof label === 'function'
                           ? label({
-                              focused: index === idx,
-                              color: color || 'defaultColor',
-                              position: 'below-icon',
-                              children: route.name,
-                            })
+                            focused: index === idx,
+                            color: color || 'defaultColor',
+                            position: 'below-icon',
+                            children: route.name,
+                          })
                           : label}
                       </Text>
                     </View>
@@ -112,7 +113,7 @@ const BottomStack = () => {
         component={HomeScreen}
         options={{
           tabBarLabel: 'Home',
-          tabBarIcon: ({color}) => (
+          tabBarIcon: ({ color }) => (
             <AnyIcon
               type={IconType.AntDesign}
               name="home"
@@ -127,7 +128,7 @@ const BottomStack = () => {
         component={MyBooksScreen}
         options={{
           tabBarLabel: 'My Books',
-          tabBarIcon: ({color}) => (
+          tabBarIcon: ({ color }) => (
             <AnyIcon
               type={IconType.Feather}
               name="book"
@@ -139,18 +140,20 @@ const BottomStack = () => {
       />
       <Bottom.Screen
         name="Sell"
-        options={({navigation}) => ({
+        component={AddScreen}
+        options={({ navigation }) => ({
+          tabBarLabel: 'Sell',
           tabBarIcon: () => <AddButton navigation={navigation} />,
-        })}>
-        {() => null}
-      </Bottom.Screen>
+        })}
+        initialParams={{ dataType: 'add' }}
+      />
 
       <Bottom.Screen
         name={SCREENS.MESSAGE}
         component={MessagesScreen}
         options={{
           tabBarLabel: 'Message',
-          tabBarIcon: ({color}) => (
+          tabBarIcon: ({ color }) => (
             <AnyIcon
               type={IconType.Feather}
               name="message-square"
@@ -165,7 +168,7 @@ const BottomStack = () => {
         component={AccountScreen}
         options={{
           tabBarLabel: 'Account',
-          tabBarIcon: ({color}) => (
+          tabBarIcon: ({ color }) => (
             <AnyIcon
               type={IconType.Feather}
               name="user"
