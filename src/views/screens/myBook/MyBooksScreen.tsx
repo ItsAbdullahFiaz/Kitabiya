@@ -236,6 +236,7 @@ export const MyBooksScreen = () => {
                       <Image
                         source={require('../../../assets/images/appLogo.png')}
                         style={styles.img}
+                        resizeMode={'center'}
                       />
                     )}
                     <Image
