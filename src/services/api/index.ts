@@ -164,6 +164,13 @@ export const apiService = {
             verb: 'GET'
         }),
 
+    //Get User Profile Data
+    getUserProfileData:()=>
+        ApiCall({
+            URL:`${API_ENDPOINTS.USERPROFILE}`,
+            verb:'GET'
+        }),    
+
     getNotificationsList: () =>
         ApiCall({
             URL: API_ENDPOINTS.NOTIFICATION_BROADCASTS,

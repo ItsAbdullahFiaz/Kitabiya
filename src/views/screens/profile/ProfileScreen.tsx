@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useContext, useMemo, useState} from 'react';
+import React, {useContext, useEffect, useMemo, useState} from 'react';
 import {
   AnyIcon,
   CustomInput,
@@ -18,24 +18,53 @@ import {
 import {useResponsiveDimensions} from '../../../hooks';
 import {AppDataContext} from '../../../context';
 import {FONT_SIZE, OTHER_COLORS, TEXT_STYLE} from '../../../enums';
-import {BottomSheetComponent} from '../add/components';
+import {BottomSheetComponent, DropDownComponent} from '../add/components';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import DatePicker from 'react-native-date-picker';
+import {dropdownItems} from '../../../utils';
+import {useToast} from '../../../hooks';
+import {apiService} from '../../../services/api';
 
 export const ProfileScreen = () => {
   const [userName, setUserName] = useState('');
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [dateOfBirth, setDateOfBirth] = useState('Select your date of birth');
   const [profileImage, setProfileImage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [location, setLocation] = useState('choose');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [wrongNameError, setWrongNameError] = useState('');
   const [wrongEmailError, setWrongEmailError] = useState('');
+  const [userProfileData, setUserProfileData] = useState('');
   const [wrongPasswordError, setWrongPasswordError] = useState('');
   const {hp, wp} = useResponsiveDimensions();
   const {appTheme, appLang} = useContext(AppDataContext);
+  const showToast = useToast();
+
+  const fetchUserProfileData = async () => {
+    try {
+      const response = await apiService.getUserProfileData();
+      if (!response.success) {
+        throw new Error(
+          response.message || 'Failed to fetch User Profile Data',
+        );
+      }
+
+      setUserProfileData(response.data.broadcasts || []);
+    } catch (error: any) {
+      console.error('Error fetching notifications:', error);
+      showToast(error.message, 'errorToast');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserProfileData();
+  }, []);
 
   const handleModal = (val: any) => {
     setIsModalOpen(val);
@@ -81,6 +110,11 @@ export const ProfileScreen = () => {
         setIsModalOpen(false);
       }
     });
+  };
+
+  const handleSelectLocation = (type: any) => {
+    console.log('Location===>', type);
+    setLocation(type);
   };
 
   const styles = useMemo(() => {
@@ -174,18 +208,12 @@ export const ProfileScreen = () => {
           onChange={() => setWrongEmailError('')}
           bottomError={true}
         />
-        <Text style={[styles.label, {marginTop: hp(20)}]}>
-          {appLang.password}
-        </Text>
-        <CustomInput
-          value={password}
-          setValue={setPassword}
-          placeholder={appLang.textpassword}
-          textWrong={wrongPasswordError}
-          onChange={() => setWrongPasswordError('')}
-          bottomError={true}
-          twoLinesError={true}
-          secureTextEntry={true}
+        <DropDownComponent
+          handleSelectOption={handleSelectLocation}
+          type={location}
+          dropdownItems={dropdownItems}
+          label="Location"
+          component="profile"
         />
         <Text style={[styles.label, {marginTop: hp(20)}]}>
           {appLang.dateofbirth}
@@ -193,7 +221,7 @@ export const ProfileScreen = () => {
         <TouchableOpacity
           style={styles.birthContainer}
           onPress={() => setOpen(true)}>
-          <Text style={styles.birthText}>Select your date of birth</Text>
+          <Text style={styles.birthText}>{dateOfBirth}</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.signupContainer}>
@@ -221,8 +249,8 @@ export const ProfileScreen = () => {
           const month = String(date.getMonth() + 1).padStart(2, '0');
           const year = date.getFullYear();
           const formattedDate = `${day}-${month}-${year}`;
+          setDateOfBirth(formattedDate);
           setOpen(false);
-          // setDate(formattedDate);
         }}
         onCancel={() => {
           setOpen(false);
