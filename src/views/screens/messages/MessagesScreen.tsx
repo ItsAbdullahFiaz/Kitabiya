@@ -143,7 +143,9 @@ export const MessagesScreen = () => {
         paddingTop: hp(5),
         color: appTheme.secondaryTextColor,
       },
-      listContainer: {},
+      listContainer: {
+        flex: 1,
+      },
       card: {
         marginTop: hp(20),
         flexDirection: 'row',
@@ -211,37 +213,45 @@ export const MessagesScreen = () => {
           placeholderTextColor={appTheme.tertiaryTextColor}
         />
       </View>
-      <View style={styles.listContainer}>
-        <FlatList
-          data={users}
-          renderItem={({item, index}: any) => {
-            console.log('USER_ITEM===>', item);
-            return (
-              <TouchableOpacity
-                style={styles.card}
-                onPress={() =>
-                  navigation.navigate(SCREENS.CHAT as never, {
-                    data: item,
-                    emailId: emailId,
-                  })
-                }
-                onLongPress={() => handleDeleteUser(item.email, item.userName)}>
-                <View style={styles.firstContainer}>
-                  <View style={styles.imgContainer}>
-                    <Image
-                      style={styles.img}
-                      source={require('../../../assets/images/user.png')}
-                    />
+      {users.length > 0 ? (
+        <View style={styles.listContainer}>
+          <FlatList
+            data={users}
+            renderItem={({item, index}: any) => {
+              console.log('USER_ITEM===>', item);
+              return (
+                <TouchableOpacity
+                  style={styles.card}
+                  onPress={() =>
+                    navigation.navigate(SCREENS.CHAT as never, {
+                      data: item,
+                      emailId: emailId,
+                    })
+                  }
+                  onLongPress={() =>
+                    handleDeleteUser(item.email, item.userName)
+                  }>
+                  <View style={styles.firstContainer}>
+                    <View style={styles.imgContainer}>
+                      <Image
+                        style={styles.img}
+                        source={require('../../../assets/images/user.png')}
+                      />
+                    </View>
+                    <View style={styles.textContainer}>
+                      <Text style={styles.name}>{item.userName}</Text>
+                    </View>
                   </View>
-                  <View style={styles.textContainer}>
-                    <Text style={styles.name}>{item.userName}</Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            );
-          }}
-        />
-      </View>
+                </TouchableOpacity>
+              );
+            }}
+          />
+        </View>
+      ) : (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <Text>No messages yet</Text>
+        </View>
+      )}
     </MainContainer>
   );
 };

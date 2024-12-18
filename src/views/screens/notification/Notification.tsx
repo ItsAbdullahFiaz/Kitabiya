@@ -1,4 +1,4 @@
-import {FlatList, StyleSheet, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Header, MainContainer} from '../../../components';
 import {NotificationComponent} from './component';
@@ -19,12 +19,11 @@ interface NotificationItem {
 
 export const Notification = () => {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const showToast = useToast();
 
   const fetchNotifications = async () => {
     try {
-      setLoading(true);
       const response = await apiService.getNotificationsList();
 
       if (!response.success) {
@@ -44,9 +43,9 @@ export const Notification = () => {
     fetchNotifications();
   }, []);
 
-  const renderSkeletonLoader = () => {
+  if (loading) {
     return Array.from({length: 5}).map((_, index) => (
-      <View style={{marginVertical: 5}}>
+      <View style={{marginVertical: 5}} key={index}>
         <SkeletonLoader
           key={index}
           width="100%"
@@ -56,40 +55,44 @@ export const Notification = () => {
         />
       </View>
     ));
-  };
+  }
+
+  if (!loading && notifications.length === 0) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <Text>No Notifications yet!</Text>
+      </View>
+    );
+  }
 
   return (
     <MainContainer>
       <Header title="notifications" />
       <View style={styles.listContainer}>
-        {loading ? (
-          renderSkeletonLoader()
-        ) : (
-          <FlatList
-            data={notifications}
-            renderItem={({item}) => {
-              const {_id, title, body, createdAt, data} = item;
-              return (
-                <NotificationComponent
-                  id={_id}
-                  title={title}
-                  opportunities={body}
-                  image={
-                    data.type === 'system'
-                      ? require('../../../assets/images/bellIcon.png')
-                      : undefined
-                  }
-                  timestamp={createdAt}
-                  type={data.type}
-                  action={data.action}
-                />
-              );
-            }}
-            keyExtractor={item => item._id}
-            refreshing={loading}
-            onRefresh={fetchNotifications}
-          />
-        )}
+        <FlatList
+          data={notifications}
+          renderItem={({item}) => {
+            const {_id, title, body, createdAt, data} = item;
+            return (
+              <NotificationComponent
+                id={_id}
+                title={title}
+                opportunities={body}
+                image={
+                  data.type === 'system'
+                    ? require('../../../assets/images/bellIcon.png')
+                    : undefined
+                }
+                timestamp={createdAt}
+                type={data.type}
+                action={data.action}
+              />
+            );
+          }}
+          keyExtractor={item => item._id}
+          refreshing={loading}
+          onRefresh={fetchNotifications}
+        />
       </View>
     </MainContainer>
   );

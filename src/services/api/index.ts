@@ -164,6 +164,22 @@ export const apiService = {
             verb: 'GET'
         }),
 
+    //Get User Profile Data
+    getUserProfileData:()=>
+        ApiCall({
+            URL:`${API_ENDPOINTS.USERPROFILE}`,
+            verb:'GET'
+        }),    
+
+    //Update User Profile Data
+    updateUserProfileData: (productData: FormData) =>
+        ApiCall({
+            URL: `${API_ENDPOINTS.USERPROFILE}`,
+            verb: 'PUT',
+            params: productData,
+            isFormData: true
+        }),
+
     getNotificationsList: () =>
         ApiCall({
             URL: API_ENDPOINTS.NOTIFICATION_BROADCASTS,

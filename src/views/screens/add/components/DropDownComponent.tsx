@@ -15,12 +15,17 @@ import {AnyIcon, Header, IconType, MainContainer} from '../../../../components';
 import Geolocation from '@react-native-community/geolocation';
 import axios from 'axios';
 
-export const DropDownComponent = ({
-  handleSelectOption,
-  type,
-  label,
-  dropdownItems,
-}: any) => {
+interface headerProps {
+  handleSelectOption: any;
+  type: string;
+  label: string;
+  dropdownItems: any;
+  component?: string;
+}
+
+export const DropDownComponent = (props: headerProps) => {
+  const {handleSelectOption, type, label, dropdownItems, component} = props;
+  console.log('COMPONENT===>', component);
   const {appTheme} = useContext(AppDataContext);
   const {hp, wp} = useResponsiveDimensions();
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -60,6 +65,12 @@ export const DropDownComponent = ({
         justifyContent: 'flex-start',
         alignItems: 'center',
       },
+      label: {
+        ...TEXT_STYLE.regular,
+        fontSize: hp(FONT_SIZE.h3),
+        color: appTheme.primaryTextColor,
+        textTransform: 'capitalize',
+      },
       title: {
         ...TEXT_STYLE.bold,
         fontSize: hp(FONT_SIZE.h3),
@@ -75,7 +86,7 @@ export const DropDownComponent = ({
         alignItems: 'center',
       },
       dropdownButton: {
-        marginTop: hp(10),
+        marginTop: component === 'profile' ? hp(5) : hp(10),
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -170,15 +181,22 @@ export const DropDownComponent = ({
 
   return (
     <View style={styles.typeContainer}>
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>{label}</Text>
-        <AnyIcon
-          type={IconType.FontAwesome5}
-          name="star-of-life"
-          size={hp(8)}
-          color={OTHER_COLORS.red}
-        />
-      </View>
+      {component === 'profile' ? (
+        <View style={styles.titleContainer}>
+          <Text style={styles.label}>{label}</Text>
+        </View>
+      ) : (
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>{label}</Text>
+          <AnyIcon
+            type={IconType.FontAwesome5}
+            name="star-of-life"
+            size={hp(8)}
+            color={OTHER_COLORS.red}
+          />
+        </View>
+      )}
+
       <View style={styles.container}>
         <TouchableOpacity
           style={styles.dropdownButton}

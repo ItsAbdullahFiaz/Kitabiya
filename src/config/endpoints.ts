@@ -15,6 +15,8 @@ const CONFIG = {
 export const BASE_URL = CONFIG[ENV].API_URL;
 
 export const API_ENDPOINTS = {
+    //User Profile Data
+    USERPROFILE:`${BASE_URL}/users/profile`,
     // Auth
     REGISTER: `${BASE_URL}/users/register`,
     LOGIN: `${BASE_URL}/auth/login`,
