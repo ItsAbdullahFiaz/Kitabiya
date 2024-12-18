@@ -6,34 +6,34 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useContext, useMemo, useState } from 'react';
+import React, {useContext, useMemo, useState} from 'react';
 import {
   CustomInput,
   Header,
   MainButton,
   MainContainer,
 } from '../../../components';
-import { useResponsiveDimensions, useToast } from '../../../hooks';
-import { AppDataContext } from '../../../context';
-import { FONT_SIZE, SCREENS, TEXT_STYLE } from '../../../enums';
-import { BottomSheetComponent, DropDownComponent } from '../add/components';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import {useResponsiveDimensions, useToast} from '../../../hooks';
+import {AppDataContext} from '../../../context';
+import {FONT_SIZE, SCREENS, TEXT_STYLE} from '../../../enums';
+import {BottomSheetComponent, DropDownComponent} from '../add/components';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import DatePicker from 'react-native-date-picker';
-import { dropdownItems } from '../../../utils';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { apiService } from '../../../services/api';
+import {dropdownItems} from '../../../utils';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {apiService} from '../../../services/api';
 
 export const ProfileScreen = () => {
   const navigation = useNavigation<any>();
   const route = useRoute();
-  const { userData } = route?.params;
+  const {userData} = route?.params;
   console.log('USER_DATA===>', userData);
   const [userName, setUserName] = useState(userData?.name || '');
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [dateOfBirth, setDateOfBirth] = useState(
-    userData?.dateOfBirth || 'Select your date of birth'
+    userData?.dateOfBirth || 'Select your date of birth',
   );
   const [profileImage, setProfileImage] = useState(userData?.photoUrl || '');
   const [loading, setLoading] = useState(false);
@@ -41,8 +41,8 @@ export const ProfileScreen = () => {
   const [email, setEmail] = useState(userData?.email || '');
   const [wrongNameError, setWrongNameError] = useState('');
   const [wrongEmailError, setWrongEmailError] = useState('');
-  const { hp, wp } = useResponsiveDimensions();
-  const { appTheme, appLang } = useContext(AppDataContext);
+  const {hp, wp} = useResponsiveDimensions();
+  const {appTheme, appLang} = useContext(AppDataContext);
   const showToast = useToast();
 
   const validateName = (name: string) => {
@@ -58,10 +58,12 @@ export const ProfileScreen = () => {
 
     const hasNameChanged = userName.trim() !== (userData?.name || '');
     const hasLocationChanged = location !== (userData?.location || 'choose');
-    const hasDateChanged = dateOfBirth !== (userData?.dateOfBirth || 'Select your date of birth');
+    const hasDateChanged =
+      dateOfBirth !== (userData?.dateOfBirth || 'Select your date of birth');
     const hasImageChanged = profileImage !== (userData?.photoUrl || '');
 
-    const isChanged = hasNameChanged || hasLocationChanged || hasDateChanged || hasImageChanged;
+    const isChanged =
+      hasNameChanged || hasLocationChanged || hasDateChanged || hasImageChanged;
     console.log('Form changed:', isChanged);
 
     return isChanged;
@@ -140,18 +142,20 @@ export const ProfileScreen = () => {
 
       if (response.error) {
         // Handle nested error message structure
-        const errorMessage = response.message?.message || response.message || 'Failed to update profile';
+        const errorMessage =
+          response.message?.message ||
+          response.message ||
+          'Failed to update profile';
         throw new Error(errorMessage);
       }
 
       showToast('Profile updated successfully', 'successToast');
-      // navigation.navigate(SCREENS.ACCOUNT as never);
-
+      navigation.navigate(SCREENS.ACCOUNT as never);
     } catch (error: any) {
       console.error('Error updating profile:', error);
       showToast(
         error instanceof Error ? error.message : 'Failed to update profile',
-        'errorToast'
+        'errorToast',
       );
     } finally {
       setLoading(false);
@@ -268,7 +272,7 @@ export const ProfileScreen = () => {
           style={styles.img}
           source={
             profileImage
-              ? { uri: profileImage }
+              ? {uri: profileImage}
               : require('../../../assets/images/user.png')
           }
         />
@@ -276,7 +280,7 @@ export const ProfileScreen = () => {
           style={styles.btnContainer}
           onPress={() => handleModal(true)}>
           <Image
-            style={{ height: hp(20), width: hp(20) }}
+            style={{height: hp(20), width: hp(20)}}
             source={require('../../../assets/images/camera.png')}
           />
         </TouchableOpacity>
@@ -291,7 +295,7 @@ export const ProfileScreen = () => {
           onChange={() => setWrongNameError('')}
           bottomError={true}
         />
-        <Text style={[styles.label, { marginTop: hp(20) }]}>{appLang.email}</Text>
+        <Text style={[styles.label, {marginTop: hp(20)}]}>{appLang.email}</Text>
         <CustomInput
           value={email}
           setValue={setEmail}
@@ -308,7 +312,7 @@ export const ProfileScreen = () => {
           label="Location"
           component="profile"
         />
-        <Text style={[styles.label, { marginTop: hp(20) }]}>
+        <Text style={[styles.label, {marginTop: hp(20)}]}>
           {appLang.dateofbirth}
         </Text>
         <TouchableOpacity

@@ -1,5 +1,11 @@
 import {StyleSheet, Text, View, FlatList} from 'react-native';
-import React, {useContext, useEffect, useMemo, useState} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import {
   AnyIcon,
   IconType,
@@ -9,7 +15,7 @@ import {
 import {useResponsiveDimensions, useToast} from '../../../hooks';
 import {FONT_SIZE, SCREENS, SIZES, TEXT_STYLE} from '../../../enums';
 import {signOutUser} from '../../../services';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {ProfileHeader} from './components';
 import {
   AppDataContext,
@@ -57,9 +63,11 @@ export const AccountScreen = () => {
     }
   };
 
-  useEffect(() => {
-    fetchUserProfileData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchUserProfileData();
+    }, [fetchUserProfileData]),
+  );
 
   const switchTheme = (themeMode: string) => {
     setActiveThemeMode(themeMode);
