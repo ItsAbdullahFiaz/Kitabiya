@@ -6,108 +6,156 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useContext, useMemo, useState} from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import {
   CustomInput,
   Header,
   MainButton,
   MainContainer,
 } from '../../../components';
-import {useResponsiveDimensions, useToast} from '../../../hooks';
-import {AppDataContext} from '../../../context';
-import {FONT_SIZE, SCREENS, TEXT_STYLE} from '../../../enums';
-import {BottomSheetComponent, DropDownComponent} from '../add/components';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { useResponsiveDimensions, useToast } from '../../../hooks';
+import { AppDataContext } from '../../../context';
+import { FONT_SIZE, SCREENS, TEXT_STYLE } from '../../../enums';
+import { BottomSheetComponent, DropDownComponent } from '../add/components';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import DatePicker from 'react-native-date-picker';
-import {dropdownItems} from '../../../utils';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {apiService} from '../../../services/api';
+import { dropdownItems } from '../../../utils';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { apiService } from '../../../services/api';
 
 export const ProfileScreen = () => {
   const navigation = useNavigation<any>();
   const route = useRoute();
-  const {userData} = route?.params;
+  const { userData } = route?.params;
   console.log('USER_DATA===>', userData);
-  const [userName, setUserName] = useState(
-    userData?.name === null ? '' : userData?.name,
-  );
+  const [userName, setUserName] = useState(userData?.name || '');
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [dateOfBirth, setDateOfBirth] = useState(
-    userData?.dateOfBirth === null
-      ? 'Select your date of birth'
-      : userData?.dateOfBirth,
+    userData?.dateOfBirth || 'Select your date of birth'
   );
-  const [profileImage, setProfileImage] = useState(
-    userData?.photoUrl === null ? '' : userData?.photoUrl,
-  );
+  const [profileImage, setProfileImage] = useState(userData?.photoUrl || '');
   const [loading, setLoading] = useState(false);
-  const [location, setLocation] = useState(
-    userData?.location === null ? 'choose' : userData?.location,
-  );
-  const [email, setEmail] = useState(
-    userData?.email === null ? '' : userData?.email,
-  );
+  const [location, setLocation] = useState(userData?.location || 'choose');
+  const [email, setEmail] = useState(userData?.email || '');
   const [wrongNameError, setWrongNameError] = useState('');
   const [wrongEmailError, setWrongEmailError] = useState('');
-  const {hp, wp} = useResponsiveDimensions();
-  const {appTheme, appLang} = useContext(AppDataContext);
+  const { hp, wp } = useResponsiveDimensions();
+  const { appTheme, appLang } = useContext(AppDataContext);
   const showToast = useToast();
 
-  const updateuserDetails = async () => {
-    try {
-      if (!validateInputs()) return;
-      setLoading(true);
-      const formData = await createFormData();
-      const response = await apiService.updateUserProfileData(formData);
-      if (response.error) {
-        throw new Error(response.message || 'Failed to update User Details');
-      }
-      showToast('User Details updated successfully', 'successToast');
-      navigation.navigate(SCREENS.ACCOUNT as never);
-    } catch (error) {
-      console.error('Error updating User Details:', error);
-      showToast(
-        error instanceof Error
-          ? error.message
-          : 'Failed to update User Details',
-        'errorToast',
-      );
-    } finally {
-      setLoading(false);
-    }
+  const validateName = (name: string) => {
+    const nameRegex = /^[a-zA-Z\s]{2,30}$/;
+    return nameRegex.test(name);
+  };
+
+  const isFormChanged = () => {
+    console.log('Name comparison:', userName.trim(), userData?.name);
+    console.log('Location comparison:', location, userData?.location);
+    console.log('Date comparison:', dateOfBirth, userData?.dateOfBirth);
+    console.log('Image comparison:', profileImage, userData?.photoUrl);
+
+    const hasNameChanged = userName.trim() !== (userData?.name || '');
+    const hasLocationChanged = location !== (userData?.location || 'choose');
+    const hasDateChanged = dateOfBirth !== (userData?.dateOfBirth || 'Select your date of birth');
+    const hasImageChanged = profileImage !== (userData?.photoUrl || '');
+
+    const isChanged = hasNameChanged || hasLocationChanged || hasDateChanged || hasImageChanged;
+    console.log('Form changed:', isChanged);
+
+    return isChanged;
   };
 
   const validateInputs = () => {
-    if (!profileImage.length) {
-      showToast('Please add at least one image', 'errorToast');
-      return false;
+    setWrongNameError('');
+
+    // Validate name if changed
+    if (userName?.trim() !== userData?.name) {
+      if (!userName?.trim()) {
+        setWrongNameError('Name is required');
+        showToast('Please enter your name', 'errorToast');
+        return false;
+      }
+
+      if (!validateName(userName.trim())) {
+        setWrongNameError('Please enter a valid name (2-30 letters only)');
+        showToast('Please enter a valid name', 'errorToast');
+        return false;
+      }
     }
-    if (!location || location === 'choose') {
-      showToast('Please select location', 'errorToast');
-      return false;
-    }
-    if (!userName || userName === 'Enter UserName') {
-      showToast('Please enter userName', 'errorToast');
-      return false;
-    }
-    if (!dateOfBirth || dateOfBirth === 'Enter Date Of Birth') {
-      showToast('Please enter Date of birth', 'errorToast');
-      return false;
-    }
+
     return true;
+  };
+
+  const formatDateForAPI = (dateString: string) => {
+    // Convert from DD-MM-YYYY to YYYY-MM-DD
+    if (!dateString || dateString === 'Select your date of birth') return '';
+
+    const [day, month, year] = dateString.split('-');
+    return `${year}-${month}-${day}`;
   };
 
   const createFormData = async () => {
     const formData = new FormData();
-    // Add only the required fields that match the API
-    formData.append('name', userName);
-    formData.append('location', location);
-    formData.append('dateOfBirth', dateOfBirth);
-    formData.append('photo', profileImage);
+
+    // Add images
+    if (profileImage && profileImage !== userData?.photoUrl) {
+      formData.append('photo', {
+        uri: profileImage,
+        type: 'image/jpeg',
+        name: 'profile-photo.jpg',
+      });
+    }
+
+    // Add other fields only if they've changed
+    if (userName.trim() !== userData?.name) {
+      formData.append('name', userName.trim());
+    }
+
+    if (location !== userData?.location) {
+      formData.append('location', location);
+    }
+
+    if (dateOfBirth !== userData?.dateOfBirth) {
+      const formattedDate = formatDateForAPI(dateOfBirth);
+      if (formattedDate) {
+        formData.append('dateOfBirth', formattedDate);
+      }
+    }
+
     console.log('FormData:', formData);
     return formData;
+  };
+
+  const updateuserDetails = async () => {
+    try {
+      if (!validateInputs()) return;
+
+      setLoading(true);
+      const formData = await createFormData();
+
+      const response = await apiService.updateUserProfileData(formData);
+      console.log('Update Response:', response);
+
+      if (response.error) {
+        // Handle nested error message structure
+        const errorMessage = response.message?.message || response.message || 'Failed to update profile';
+        throw new Error(errorMessage);
+      }
+
+      showToast('Profile updated successfully', 'successToast');
+      // navigation.navigate(SCREENS.ACCOUNT as never);
+
+    } catch (error: any) {
+      console.error('Error updating profile:', error);
+      showToast(
+        error instanceof Error ? error.message : 'Failed to update profile',
+        'errorToast'
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleModal = (val: any) => {
@@ -125,7 +173,7 @@ export const ProfileScreen = () => {
     launchCamera(options, response => {
       if (response.didCancel) {
         console.log('User cancelled camera');
-      } else if (response.error) {
+      } else if (response?.error) {
         console.log('Camera Error: ', response.error);
       } else {
         let imageUri = response.uri || response.assets?.[0]?.uri;
@@ -220,7 +268,7 @@ export const ProfileScreen = () => {
           style={styles.img}
           source={
             profileImage
-              ? {uri: profileImage}
+              ? { uri: profileImage }
               : require('../../../assets/images/user.png')
           }
         />
@@ -228,7 +276,7 @@ export const ProfileScreen = () => {
           style={styles.btnContainer}
           onPress={() => handleModal(true)}>
           <Image
-            style={{height: hp(20), width: hp(20)}}
+            style={{ height: hp(20), width: hp(20) }}
             source={require('../../../assets/images/camera.png')}
           />
         </TouchableOpacity>
@@ -243,7 +291,7 @@ export const ProfileScreen = () => {
           onChange={() => setWrongNameError('')}
           bottomError={true}
         />
-        <Text style={[styles.label, {marginTop: hp(20)}]}>{appLang.email}</Text>
+        <Text style={[styles.label, { marginTop: hp(20) }]}>{appLang.email}</Text>
         <CustomInput
           value={email}
           setValue={setEmail}
@@ -251,6 +299,7 @@ export const ProfileScreen = () => {
           textWrong={wrongEmailError}
           onChange={() => setWrongEmailError('')}
           bottomError={true}
+          editable={false}
         />
         <DropDownComponent
           handleSelectOption={handleSelectLocation}
@@ -259,7 +308,7 @@ export const ProfileScreen = () => {
           label="Location"
           component="profile"
         />
-        <Text style={[styles.label, {marginTop: hp(20)}]}>
+        <Text style={[styles.label, { marginTop: hp(20) }]}>
           {appLang.dateofbirth}
         </Text>
         <TouchableOpacity
@@ -273,6 +322,7 @@ export const ProfileScreen = () => {
           onPress={updateuserDetails}
           buttonText={appLang.savechanges}
           isLoading={loading}
+          disableBtn={!isFormChanged()}
         />
       </View>
       <Modal visible={isModalOpen} transparent>
@@ -292,7 +342,7 @@ export const ProfileScreen = () => {
           const day = String(date.getDate()).padStart(2, '0');
           const month = String(date.getMonth() + 1).padStart(2, '0');
           const year = date.getFullYear();
-          const formattedDate = `${day}-${month}-${year}`;
+          const formattedDate = `${day}-${month}-${year}`; // Store in DD-MM-YYYY format for display
           setDateOfBirth(formattedDate);
           setOpen(false);
         }}
