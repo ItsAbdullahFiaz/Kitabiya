@@ -14,7 +14,7 @@ import {FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE} from '../../../enums';
 import {useResponsiveDimensions} from '../../../hooks';
 import {AppDataContext} from '../../../context';
 import {convertDate} from '../../../utils';
-import {RemoveAd} from './components';
+import {MyAdLoader, RemoveAd} from './components';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {SkeletonLoader} from '../../../components';
 import {useMyProducts, useDeleteProduct} from '../../../hooks/useProducts';
@@ -154,7 +154,7 @@ export const MyBooksScreen = () => {
         fontSize: hp(FONT_SIZE.h3),
         color: appTheme.primaryTextColor,
         textTransform: 'capitalize',
-      },
+      }, 
       adBtnContainer: {
         marginTop: hp(20),
         height: hp(48),
@@ -190,20 +190,7 @@ export const MyBooksScreen = () => {
 
   if (isLoading) {
     return (
-      <MainContainer>
-        <Text style={styles.title}>{appLang.myads}</Text>
-        <View style={styles.listContainer}>
-          {Array.from({length: 5}).map((_, index) => (
-            <View key={index} style={styles.adContainer}>
-              <SkeletonLoader
-                width="100%"
-                height={hp(100)}
-                borderRadius={hp(8)}
-              />
-            </View>
-          ))}
-        </View>
-      </MainContainer>
+      <MyAdLoader/>
     );
   }
 
