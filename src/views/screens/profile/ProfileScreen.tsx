@@ -1,6 +1,8 @@
 import {
   Image,
+  KeyboardAvoidingView,
   Modal,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -265,6 +267,12 @@ export const ProfileScreen = () => {
     });
   }, [hp, wp]);
   return (
+     <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+
+      
     <MainContainer>
       <Header title="edit profile" />
       <View style={styles.imgContainer}>
@@ -355,5 +363,6 @@ export const ProfileScreen = () => {
         }}
       />
     </MainContainer>
+    </KeyboardAvoidingView>
   );
 };
