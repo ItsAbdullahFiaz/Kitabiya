@@ -1,7 +1,7 @@
-import { Modal, ScrollView, StyleSheet, Text, View } from 'react-native';
-import React, { useContext, useMemo, useState } from 'react';
-import { FONT_SIZE, SCREENS, TEXT_STYLE } from '../../../enums';
-import { useResponsiveDimensions, useToast } from '../../../hooks';
+import {Modal, ScrollView, StyleSheet, Text, View} from 'react-native';
+import React, {useContext, useMemo, useState} from 'react';
+import {FONT_SIZE, SCREENS, TEXT_STYLE} from '../../../enums';
+import {useResponsiveDimensions, useToast} from '../../../hooks';
 import {
   AdTitle,
   BottomSheetComponent,
@@ -11,22 +11,26 @@ import {
   Price,
   RemoveSheet,
 } from './components';
-import { AppDataContext } from '../../../context';
-import { Header, MainButton, MainContainer } from '../../../components';
-import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
-import { apiService } from '../../../services/api';
-import { useNavigation } from '@react-navigation/native';
-import { dropdownItems, languageitem, typeitem } from '../../../utils';
-import { ImageSelector } from './components/ImageSelector';
-import { useCreateProduct, useDeleteProduct, useMyProducts } from '../../../hooks/useProducts';
-import { useQueryClient } from '@tanstack/react-query';
-import { QUERY_KEYS } from '../../../hooks/useProducts';
+import {AppDataContext} from '../../../context';
+import {Header, MainButton, MainContainer} from '../../../components';
+import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
+import {apiService} from '../../../services/api';
+import {useNavigation} from '@react-navigation/native';
+import {dropdownItems, languageitem, typeitem} from '../../../utils';
+import {ImageSelector} from './components/ImageSelector';
+import {
+  useCreateProduct,
+  useDeleteProduct,
+  useMyProducts,
+} from '../../../hooks/useProducts';
+import {useQueryClient} from '@tanstack/react-query';
+import {QUERY_KEYS} from '../../../hooks/useProducts';
 
-export const AddScreen = ({ route }: any) => {
-  const { dataType } = route.params || 'add';
-  const { data } = route.params || [];
-  const { appTheme } = useContext(AppDataContext);
-  const { hp, wp } = useResponsiveDimensions();
+export const AddScreen = ({route}: any) => {
+  const {dataType} = route.params || 'add';
+  const {data} = route.params || [];
+  const {appTheme} = useContext(AppDataContext);
+  const {hp, wp} = useResponsiveDimensions();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
   const [myIndex, setMyIndex] = useState<any>('');
@@ -264,7 +268,7 @@ export const AddScreen = ({ route }: any) => {
         onError: (error: any) => {
           showToast(
             error instanceof Error ? error.message : 'Failed to create product',
-            'errorToast'
+            'errorToast',
           );
         },
       });
@@ -272,7 +276,7 @@ export const AddScreen = ({ route }: any) => {
       console.error('Error creating product:', error);
       showToast(
         error instanceof Error ? error.message : 'Failed to create product',
-        'errorToast'
+        'errorToast',
       );
     }
   };
@@ -318,7 +322,7 @@ export const AddScreen = ({ route }: any) => {
 
   return (
     <MainContainer>
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <ScrollView contentContainerStyle={{flexGrow: 1}}>
         <Header
           title={dataType === 'edit' ? 'edit ad details' : 'ad Details'}
         />

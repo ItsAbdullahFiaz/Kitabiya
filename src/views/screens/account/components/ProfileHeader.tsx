@@ -1,29 +1,16 @@
 import {ActivityIndicator, Image, StyleSheet, Text, View} from 'react-native';
-import React, {useContext, useEffect, useMemo, useState} from 'react';
-import {FONT, FONT_SIZE, OTHER_COLORS, TEXT_STYLE} from '../../../../enums';
+import React, {useContext, useMemo} from 'react';
+import {FONT_SIZE, TEXT_STYLE} from '../../../../enums';
 import {useResponsiveDimensions} from '../../../../hooks';
 import {AppDataContext} from '../../../../context';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const ProfileHeader = ({userInfo}: any) => {
-  const [name, setName] = useState<string | null>(null);
+interface headerProps {
+  userInfo?: any;
+}
+export const ProfileHeader = (props: headerProps) => {
+  const {userInfo} = props;
   const {appTheme} = useContext(AppDataContext);
   const {hp, wp} = useResponsiveDimensions();
-
-  const getName = async () => {
-    try {
-      const storedName = await AsyncStorage.getItem('NAME');
-      if (storedName !== null) {
-        setName(storedName);
-      }
-    } catch (error) {
-      console.error('Error retrieving name from AsyncStorage:', error);
-    }
-  };
-
-  useEffect(() => {
-    getName();
-  }, []);
 
   const styles = useMemo(() => {
     return StyleSheet.create({
@@ -64,10 +51,17 @@ export const ProfileHeader = ({userInfo}: any) => {
       {userInfo ? (
         <View style={styles.profileHeader}>
           <View style={styles.imgContainer}>
-            <Image style={styles.img} source={{uri: userInfo.photoURL}} />
+            <Image
+              style={styles.img}
+              source={
+                userInfo?.photoUrl === null
+                  ? require('../../../../assets/images/user.png')
+                  : {uri: userInfo?.photoUrl}
+              }
+            />
           </View>
-          <Text style={styles.name}>{name}</Text>
-          <Text style={styles.gmail}>{userInfo.email}</Text>
+          <Text style={styles.name}>{userInfo?.name}</Text>
+          <Text style={styles.gmail}>{userInfo?.email}</Text>
         </View>
       ) : (
         <ActivityIndicator />

@@ -6,65 +6,109 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useContext, useEffect, useMemo, useState} from 'react';
+import React, {useContext, useMemo, useState} from 'react';
 import {
-  AnyIcon,
   CustomInput,
   Header,
-  IconType,
   MainButton,
   MainContainer,
 } from '../../../components';
-import {useResponsiveDimensions} from '../../../hooks';
+import {useResponsiveDimensions, useToast} from '../../../hooks';
 import {AppDataContext} from '../../../context';
-import {FONT_SIZE, OTHER_COLORS, TEXT_STYLE} from '../../../enums';
+import {FONT_SIZE, SCREENS, TEXT_STYLE} from '../../../enums';
 import {BottomSheetComponent, DropDownComponent} from '../add/components';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import DatePicker from 'react-native-date-picker';
 import {dropdownItems} from '../../../utils';
-import {useToast} from '../../../hooks';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {apiService} from '../../../services/api';
 
 export const ProfileScreen = () => {
-  const [userName, setUserName] = useState('');
+  const navigation = useNavigation<any>();
+  const route = useRoute();
+  const {userData} = route?.params;
+  console.log('USER_DATA===>', userData);
+  const [userName, setUserName] = useState(
+    userData?.name === null ? '' : userData?.name,
+  );
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [dateOfBirth, setDateOfBirth] = useState('Select your date of birth');
-  const [profileImage, setProfileImage] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState(
+    userData?.dateOfBirth === null
+      ? 'Select your date of birth'
+      : userData?.dateOfBirth,
+  );
+  const [profileImage, setProfileImage] = useState(
+    userData?.photoUrl === null ? '' : userData?.photoUrl,
+  );
   const [loading, setLoading] = useState(false);
-  const [location, setLocation] = useState('choose');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [location, setLocation] = useState(
+    userData?.location === null ? 'choose' : userData?.location,
+  );
+  const [email, setEmail] = useState(
+    userData?.email === null ? '' : userData?.email,
+  );
   const [wrongNameError, setWrongNameError] = useState('');
   const [wrongEmailError, setWrongEmailError] = useState('');
-  const [userProfileData, setUserProfileData] = useState('');
-  const [wrongPasswordError, setWrongPasswordError] = useState('');
   const {hp, wp} = useResponsiveDimensions();
   const {appTheme, appLang} = useContext(AppDataContext);
   const showToast = useToast();
 
-  const fetchUserProfileData = async () => {
+  const updateuserDetails = async () => {
     try {
-      const response = await apiService.getUserProfileData();
-      if (!response.success) {
-        throw new Error(
-          response.message || 'Failed to fetch User Profile Data',
-        );
+      if (!validateInputs()) return;
+      setLoading(true);
+      const formData = await createFormData();
+      const response = await apiService.updateUserProfileData(formData);
+      if (response.error) {
+        throw new Error(response.message || 'Failed to update User Details');
       }
-
-      setUserProfileData(response.data.broadcasts || []);
-    } catch (error: any) {
-      console.error('Error fetching notifications:', error);
-      showToast(error.message, 'errorToast');
+      showToast('User Details updated successfully', 'successToast');
+      navigation.navigate(SCREENS.ACCOUNT as never);
+    } catch (error) {
+      console.error('Error updating User Details:', error);
+      showToast(
+        error instanceof Error
+          ? error.message
+          : 'Failed to update User Details',
+        'errorToast',
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchUserProfileData();
-  }, []);
+  const validateInputs = () => {
+    if (!profileImage.length) {
+      showToast('Please add at least one image', 'errorToast');
+      return false;
+    }
+    if (!location || location === 'choose') {
+      showToast('Please select location', 'errorToast');
+      return false;
+    }
+    if (!userName || userName === 'Enter UserName') {
+      showToast('Please enter userName', 'errorToast');
+      return false;
+    }
+    if (!dateOfBirth || dateOfBirth === 'Enter Date Of Birth') {
+      showToast('Please enter Date of birth', 'errorToast');
+      return false;
+    }
+    return true;
+  };
+
+  const createFormData = async () => {
+    const formData = new FormData();
+    // Add only the required fields that match the API
+    formData.append('name', userName);
+    formData.append('location', location);
+    formData.append('dateOfBirth', dateOfBirth);
+    formData.append('photo', profileImage);
+    console.log('FormData:', formData);
+    return formData;
+  };
 
   const handleModal = (val: any) => {
     setIsModalOpen(val);
@@ -226,7 +270,7 @@ export const ProfileScreen = () => {
       </View>
       <View style={styles.signupContainer}>
         <MainButton
-          onPress={() => console.warn('Pressed')}
+          onPress={updateuserDetails}
           buttonText={appLang.savechanges}
           isLoading={loading}
         />
