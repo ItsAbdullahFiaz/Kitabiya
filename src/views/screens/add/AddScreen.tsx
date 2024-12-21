@@ -1,6 +1,14 @@
-import {Modal, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native';
 import React, {useContext, useMemo, useState} from 'react';
-import {FONT_SIZE, SCREENS, TEXT_STYLE} from '../../../enums';
+import {FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE} from '../../../enums';
 import {useResponsiveDimensions, useToast} from '../../../hooks';
 import {
   AdTitle,
@@ -12,7 +20,13 @@ import {
   RemoveSheet,
 } from './components';
 import {AppDataContext} from '../../../context';
-import {Header, MainButton, MainContainer} from '../../../components';
+import {
+  AnyIcon,
+  Header,
+  IconType,
+  MainButton,
+  MainContainer,
+} from '../../../components';
 import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
 import {apiService} from '../../../services/api';
 import {useNavigation} from '@react-navigation/native';
@@ -25,6 +39,8 @@ import {
 } from '../../../hooks/useProducts';
 import {useQueryClient} from '@tanstack/react-query';
 import {QUERY_KEYS} from '../../../hooks/useProducts';
+import Geolocation from '@react-native-community/geolocation';
+import axios from 'axios';
 
 export const AddScreen = ({route}: any) => {
   const {dataType} = route.params || 'add';
@@ -34,6 +50,8 @@ export const AddScreen = ({route}: any) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
   const [myIndex, setMyIndex] = useState<any>('');
+  const [searchText, setSearchText] = useState('');
+  const [locationLoading, setLocationLoading] = useState(false);
   const [imagesList, setImagesList] = useState<any>(
     dataType === 'edit' ? data?.images : [],
   );
@@ -63,6 +81,32 @@ export const AddScreen = ({route}: any) => {
   const createProduct = useCreateProduct();
   const queryClient = useQueryClient();
 
+  const fetchLocation = async () => {
+    try {
+      setLocationLoading(true); 
+      Geolocation.getCurrentPosition(info =>{
+        getLocationName(info.coords.latitude, info.coords.longitude);
+        setLocationLoading(false);
+      } 
+      );
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  };
+  const getLocationName = async (latitude: number, longitude: number) => {
+    try {
+      const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
+      const response = await axios.get(url);
+      const address = response.data.name;
+      console.log('Location Name:', address);
+      setSearchText(address);
+      setLocationLoading(false);
+    } catch (error) {
+      console.error('Error getting location name:', error);
+      setLocationLoading(false);
+      return null;
+    }
+  };
   const updateProduct = async (productId: string) => {
     try {
       if (!validateInputs()) return;
@@ -317,6 +361,38 @@ export const AddScreen = ({route}: any) => {
         alignItems: 'center',
         backgroundColor: 'rgba(0,0,0,0.3)',
       },
+      titleContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+      },
+      label: {
+        ...TEXT_STYLE.regular,
+        fontSize: hp(FONT_SIZE.h3),
+        color: appTheme.primaryTextColor,
+        textTransform: 'capitalize',
+      },
+      title: {
+        ...TEXT_STYLE.bold,
+        fontSize: hp(FONT_SIZE.h3),
+        color: appTheme.primaryTextColor,
+        textTransform: 'capitalize',
+        marginRight: hp(5),
+      },
+      inputContainer: {
+        flexDirection: 'row', 
+        alignItems: 'center', 
+        borderWidth: 0.5,
+        borderColor: '#ccc',
+        borderRadius: 5,
+        paddingHorizontal: 10,
+        marginTop: 10,
+      },
+      textInput: {
+        flex: 1, 
+        fontSize: 14,
+        marginRight: 10, 
+      },
     });
   }, [hp, wp, appTheme]);
 
@@ -350,12 +426,51 @@ export const AddScreen = ({route}: any) => {
           handleDescription={handleDescription}
           description={description}
         />
-        <DropDownComponent
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>Address</Text>
+          <AnyIcon
+            type={IconType.FontAwesome5}
+            name="star-of-life"
+            size={hp(8)}
+            color={OTHER_COLORS.red}
+          />
+        </View>
+        <View style={styles.inputContainer}>
+  <TextInput
+    placeholder="Write area, city or country"
+    style={styles.textInput}
+    value={searchText} 
+    onChangeText={setSearchText}
+    
+  />
+  <TouchableOpacity onPress={fetchLocation} disabled={locationLoading}>
+    {locationLoading ? (
+      <AnyIcon
+        type={IconType.FontAwesome5}
+        name="spinner"
+        size={20}
+        color={appTheme.primary}
+        style={{transform: [{rotate: '360deg'}]}}
+      />
+    ) : (
+      <AnyIcon
+        type={IconType.FontAwesome6}
+        name="location-crosshairs"
+        size={20}
+        color={appTheme.primary}
+      />
+    )}
+  </TouchableOpacity>
+ 
+</View>
+
+
+        {/* <DropDownComponent
           handleSelectOption={handleSelectLocation}
           type={location}
           dropdownItems={dropdownItems}
           label="Location"
-        />
+        /> */}
         <View style={styles.border} />
         <Price handlePrice={handlePrice} price={price} />
         <View style={styles.nextBtnContainer}>
