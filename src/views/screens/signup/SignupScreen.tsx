@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
 import React, { useContext, useMemo, useState } from 'react';
 import { CustomInput, Header, MainButton, MainContainer, SocialLogins } from '../../../components';
 import { useResponsiveDimensions, useToast } from '../../../hooks';
@@ -88,6 +88,10 @@ export const SignupScreen = () => {
   }, [hp, wp]);
 
   return (
+    <KeyboardAvoidingView
+    style={{ flex: 1 }}
+    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+  >
     <MainContainer>
       <Header title={appLang.signUp} />
       <View style={styles.contentContainer}>
@@ -130,5 +134,7 @@ export const SignupScreen = () => {
         <SocialLogins />
       </View>
     </MainContainer>
+  
+    </KeyboardAvoidingView>
   );
 };

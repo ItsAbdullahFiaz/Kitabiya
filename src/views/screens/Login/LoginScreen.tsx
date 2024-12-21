@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
 import React, { useContext, useMemo, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { CustomInput, Header, MainButton, MainContainer, SocialLogins } from '../../../components';
@@ -132,6 +132,12 @@ export const LoginScreen = () => {
   }, [hp, wp]);
 
   return (
+     <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          >
+
+          
     <MainContainer>
       <Header title={appLang.titlelogin} />
       <View style={styles.contentContainer}>
@@ -176,5 +182,6 @@ export const LoginScreen = () => {
         </View>
       </View>
     </MainContainer>
+    </KeyboardAvoidingView>
   );
 };

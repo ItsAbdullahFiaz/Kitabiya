@@ -16,10 +16,11 @@ export const LoadingSkeleton = () => {
       card: {
         height: hp(280),
         width: wp(170),
-        alignItems: 'center',
+        // alignItems: 'center',
         backgroundColor: '#A3AAB1', // Adjust color based on your theme
         borderRadius: 10,
         shadowColor: '#000',
+        padding: 5,
         shadowOffset: {
           width: 0,
           height: 4,
@@ -44,9 +45,14 @@ export const LoadingSkeleton = () => {
         marginBottom: hp(2),
       },
       title: {
-        height: hp(45),
+        height: hp(40),
         width: hp(200),
+        marginBottom: hp(2),
       },
+      image: {width: '100%', height: hp(190), marginBottom: 3},
+      imagetitle: {height: hp(20), width: '100%', marginBottom: 3},
+      imagetext: {height: hp(20), width: '60%', marginBottom: 3},
+      imageprice: {height: hp(20), width: '30%', marginBottom: 3},
     });
   }, [hp, wp, appTheme]);
 
@@ -75,12 +81,38 @@ export const LoadingSkeleton = () => {
             renderItem={({item}) => {
               return (
                 <View style={styles.card}>
-                  <SkeletonLoader
-                    width={'100%'}
-                    height={hp(200)}
-                    borderRadius={10}
-                    style={{marginBottom: hp(2)}}
-                  />
+                  <View style={styles.image}>
+                    <SkeletonLoader
+                      width={'100%'}
+                      height={'100%'}
+                      borderRadius={10}
+                      style={{marginBottom: hp(3)}}
+                    />
+                  </View>
+                  <View style={styles.imagetitle}>
+                    <SkeletonLoader
+                      width={'100%'}
+                      height={'100%'}
+                      borderRadius={10}
+                      style={{marginBottom: hp(3)}}
+                    />
+                  </View>
+                  <View style={styles.imagetext}>
+                    <SkeletonLoader
+                      width={'100%'}
+                      height={'100%'}
+                      borderRadius={10}
+                      style={{marginBottom: hp(3)}}
+                    />
+                  </View>
+                  <View style={styles.imageprice}>
+                    <SkeletonLoader
+                      width={'100%'}
+                      height={'100%'}
+                      borderRadius={10}
+                      style={{marginBottom: hp(3)}}
+                    />
+                  </View>
                 </View>
               );
             }}
