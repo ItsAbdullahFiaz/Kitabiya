@@ -7,6 +7,9 @@ import auth from '@react-native-firebase/auth';
 import { StackActions, useNavigation } from '@react-navigation/native';
 import { FONT_SIZE, STACK } from '../enums';
 import { AppDataContext } from '../context';
+import { notificationService } from '../services/NotificationService';
+import firestore from '@react-native-firebase/firestore';
+import { saveToLocal } from '../utils';
 
 export const SocialLogins = () => {
   const { appTheme, appLang } = useContext(AppDataContext);
@@ -14,57 +17,118 @@ export const SocialLogins = () => {
   const { hp, wp } = useResponsiveDimensions();
   const [loading, setLoading] = useState(false);
 
+  const handleSocialLoginSuccess = async (userCredential: any) => {
+    try {
+      const user = userCredential.user;
+      const normalizedEmail = user.email.toLowerCase().trim();
+
+      const token = await user.getIdToken();
+
+      const userQuery = await firestore()
+        .collection('users')
+        .where('email', '==', normalizedEmail)
+        .get();
+
+      let userData;
+      if (userQuery.empty) {
+        const newUserData = {
+          email: normalizedEmail,
+          userName: user.displayName || normalizedEmail.split('@')[0],
+          fcmToken: '',
+          createdAt: firestore.FieldValue.serverTimestamp()
+        };
+
+        await firestore()
+          .collection('users')
+          .doc(normalizedEmail)
+          .set(newUserData);
+
+        userData = newUserData;
+      } else {
+        userData = userQuery.docs[0].data();
+      }
+
+      await Promise.all([
+        saveToLocal(userData.userName.trim(), normalizedEmail, token),
+        notificationService.requestUserPermission()
+          .then(granted => granted ? notificationService.saveFCMToken(normalizedEmail) : Promise.resolve(''))
+          .catch(console.error)
+      ]);
+
+      navigation.dispatch(StackActions.replace(STACK.MAIN as never));
+    } catch (error) {
+      console.error('Error handling social login:', error);
+      throw error;
+    }
+  };
+
   const handleFacebookLogin = async () => {
     setLoading(true);
     try {
       const result = await LoginManager.logInWithPermissions([
         'public_profile',
+        'email',
       ]);
+
       if (result.isCancelled) {
         console.log('Login cancelled');
-      } else {
-        const data = await AccessToken.getCurrentAccessToken();
-        if (!data) {
-          throw new Error('Something went wrong obtaining access token');
-        }
-        const credential = auth.FacebookAuthProvider.credential(
-          data.accessToken,
-        );
-        await auth().signInWithCredential(credential);
-        console.log('Login success');
-        navigation.dispatch(StackActions.replace(STACK.MAIN as never));
+        return;
       }
+
+      const data = await AccessToken.getCurrentAccessToken();
+      if (!data) {
+        throw new Error('Something went wrong obtaining access token');
+      }
+
+      const response = await fetch(
+        `https://graph.facebook.com/me?fields=email,name&access_token=${data.accessToken}`
+      );
+      const userInfo = await response.json();
+      console.log('Facebook user info:', userInfo);
+
+      const credential = auth.FacebookAuthProvider.credential(
+        data.accessToken,
+      );
+      const userCredential = await auth().signInWithCredential(credential);
+
+      if (!userCredential.user.email && userInfo.email) {
+        await userCredential.user.updateEmail(userInfo.email);
+      }
+
+      await handleSocialLoginSuccess(userCredential);
     } catch (error) {
       console.log('Login fail with error: ' + error);
-    }
-    finally {
-      setLoading(false); // Hide the loading indicator after the process
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleGoogleLogin = async () => {
     setLoading(true);
     try {
-      const { idToken } = (await GoogleSignin.signIn()).data;
-      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-      const userCredential = await auth().signInWithCredential(
-        googleCredential,
+      await GoogleSignin.configure({
+        webClientId: '1070998124660-c9i2ni7s1itl0t1hv4k3h1076fks2u54.apps.googleusercontent.com',
+        offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+      });
+
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      const { accessToken } = await GoogleSignin.getTokens();
+
+      const credential = auth.GoogleAuthProvider.credential(
+        userInfo.idToken,
+        accessToken
       );
-      if (userCredential.user) {
-        navigation.dispatch(StackActions.replace(STACK.MAIN as never));
-      }
+
+      const userCredential = await auth().signInWithCredential(credential);
+      await handleSocialLoginSuccess(userCredential);
     } catch (error) {
-      console.error('Login failed with error: ', error);
+      console.error('Google Login failed with error: ', error);
     } finally {
-      setLoading(false); // Hide the loading indicator after the process
+      setLoading(false);
     }
   };
-  useEffect(() => {
-    GoogleSignin.configure({
-      webClientId:
-        '1070998124660-c9i2ni7s1itl0t1hv4k3h1076fks2u54.apps.googleusercontent.com',
-    });
-  }, []);
+
   const styles = useMemo(() => {
     return StyleSheet.create({
       lineContainer: {
