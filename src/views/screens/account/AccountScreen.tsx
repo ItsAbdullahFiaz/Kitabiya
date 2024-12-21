@@ -1,11 +1,5 @@
 import {StyleSheet, Text, View, FlatList} from 'react-native';
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, {useCallback, useContext, useMemo, useState} from 'react';
 import {
   AnyIcon,
   IconType,
@@ -66,7 +60,7 @@ export const AccountScreen = () => {
   useFocusEffect(
     useCallback(() => {
       fetchUserProfileData();
-    }, [fetchUserProfileData]),
+    }, []),
   );
 
   const switchTheme = (themeMode: string) => {
