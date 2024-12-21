@@ -715,4 +715,40 @@ const saveToLocal = async (name: string, email: string, token: string) => {
 const typeitem=['Childrens Books','Education & Training','Literature & Fiction','Other Books']
 const languageitem =['Urdu','English','Arabic','Others']
 const dropdownItems = ['acer', 'alcatel', 'apple iphone', 'asus', 'black berry', 'calme', 'club', "g'give", 'google', 'gright', 'haier', 'oppo', 'redmi', 'realme', 'infinix'];
-export { resetAndGo, isEmptyString, storeStringValue, getStoredStringValue, topTrending, validateEmail, validatePassword, validateName, setEmailError, setPasswordError, setNameError, dropdownItems, notificationData, convertDate, saveToLocal,typeitem,languageitem }
+const alphabetColorsArray = [
+    { letter: "A", color: "#ea2798" },
+    { letter: "B", color: "#f568e6" },
+    { letter: "C", color: "#fc2ec3" },
+    { letter: "D", color: "#70b511" },
+    { letter: "E", color: "#d154eb" },
+    { letter: "F", color: "#274248" },
+    { letter: "G", color: "#54c663" },
+    { letter: "H", color: "#26e3d3" },
+    { letter: "I", color: "#c6bf3e" },
+    { letter: "J", color: "#ef9126" },
+    { letter: "K", color: "#ccd14e" },
+    { letter: "L", color: "#677c68" },
+    { letter: "M", color: "#d1d640" },
+    { letter: "N", color: "#c1dc3b" },
+    { letter: "O", color: "#897636" },
+    { letter: "P", color: "#898ea9" },
+    { letter: "Q", color: "#4ed1f2" },
+    { letter: "R", color: "#cffcaf" },
+    { letter: "S", color: "#e08d41" },
+    { letter: "T", color: "#9ddcb8" },
+    { letter: "U", color: "#8d2705" },
+    { letter: "V", color: "#6dac5d" },
+    { letter: "W", color: "#6b6a5c" },
+    { letter: "X", color: "#cd72cc" },
+    { letter: "Y", color: "#75fd83" },
+    { letter: "Z", color: "#41049d" },
+  ];
+  const getColorByFirstLetter = (name: string) => {
+      if (!name || typeof name !== 'string') return '#ccc';
+      const firstLetter = name.trim().charAt(0).toUpperCase();
+      const colorObject = alphabetColorsArray.find(
+        item => item.letter === firstLetter,
+      );
+      return colorObject ? colorObject.color : '#ccc';
+    };
+export { resetAndGo, isEmptyString, storeStringValue, getStoredStringValue, topTrending, validateEmail, validatePassword, validateName, setEmailError, setPasswordError, setNameError, dropdownItems, notificationData, convertDate, saveToLocal,typeitem,languageitem,getColorByFirstLetter }
