@@ -3,6 +3,8 @@ import React, {useContext, useMemo} from 'react';
 import {FONT_SIZE, TEXT_STYLE} from '../../../../enums';
 import {useResponsiveDimensions} from '../../../../hooks';
 import {AppDataContext} from '../../../../context';
+import UserAvatar from 'react-native-user-avatar';
+import {getColorByFirstLetter} from '../../../../utils';
 
 interface headerProps {
   userInfo?: any;
@@ -51,14 +53,23 @@ export const ProfileHeader = (props: headerProps) => {
       {userInfo ? (
         <View style={styles.profileHeader}>
           <View style={styles.imgContainer}>
-            <Image
-              style={styles.img}
-              source={
-                userInfo?.photoUrl === null
-                  ? require('../../../../assets/images/user.png')
-                  : {uri: userInfo?.photoUrl}
-              }
-            />
+            {userInfo?.photoUrl === null ? (
+              <UserAvatar
+                style={styles.img}
+                size={50}
+                name={userInfo?.name}
+                bgColor={getColorByFirstLetter(userInfo?.name)}
+              />
+            ) : (
+              <Image
+                style={styles.img}
+                source={
+                  userInfo?.photoUrl === null
+                    ? require('../../../../assets/images/user.png')
+                    : {uri: userInfo?.photoUrl}
+                }
+              />
+            )}
           </View>
           <Text style={styles.name}>{userInfo?.name}</Text>
           <Text style={styles.gmail}>{userInfo?.email}</Text>

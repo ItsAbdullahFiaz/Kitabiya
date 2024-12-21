@@ -14,6 +14,8 @@ import {FONT_SIZE, OTHER_COLORS, TEXT_STYLE} from '../../../enums';
 import {AppDataContext} from '../../../context';
 import {apiService} from '../../../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {getColorByFirstLetter} from '../../../utils';
+import UserAvatar from 'react-native-user-avatar';
 
 export const Chat = ({route}: any) => {
   console.log('CHAT_ROUTE_DATA===>', route?.params);
@@ -230,11 +232,17 @@ export const Chat = ({route}: any) => {
       <View style={styles.headerContainer}>
         <View style={styles.imgContainer}>
           <View style={styles.greenDot}></View>
-          <Image
+          <UserAvatar
+            style={styles.img}
+            size={50}
+            name={route?.params?.data.userName}
+            bgColor={getColorByFirstLetter(route?.params?.data.userName)}
+          />
+          {/* <Image
             style={styles.img}
             resizeMode={'cover'}
             source={require('../../../assets/images/user.png')}
-          />
+          /> */}
         </View>
         <View style={styles.textContainer}>
           <Text style={styles.userName}>{route?.params?.data.userName}</Text>

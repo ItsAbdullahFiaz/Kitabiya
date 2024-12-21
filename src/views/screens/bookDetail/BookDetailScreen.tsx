@@ -1,6 +1,20 @@
-import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  Image,
+  ImageBackground,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useContext, useEffect, useMemo, useState} from 'react';
-import {Header, MainButton, MainContainer} from '../../../components';
+import {
+  AnyIcon,
+  Header,
+  IconType,
+  MainButton,
+  MainContainer,
+} from '../../../components';
 import SwiperFlatList from 'react-native-swiper-flatlist';
 import {useResponsiveDimensions} from '../../../hooks';
 import {AppDataContext} from '../../../context';
@@ -19,26 +33,25 @@ export const BookDetailScreen = ({route}: any) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const data = route?.params?.product;
   const shouldShowReadMore = data.description.length > 100;
-  console.log('PARAM_DATA_BOOK===>', data);
-
-  const chatCredentials = async () => {
-    try {
-      const res = await auth().currentUser;
-      const incomingUserData = await firestore()
-        .collection('users')
-        .doc(data?.user.email)
-        .get();
-      setEmailId(res?.email || '');
-      setItem({
-        email: data?.user.email,
-        userName: incomingUserData?.data()?.userName,
-      });
-    } catch (error: any) {
-      console.log(error.message);
-    }
-  };
+  const swiperRef = React.useRef(null); // Ref for SwiperFlatList
 
   useEffect(() => {
+    const chatCredentials = async () => {
+      try {
+        const res = await auth().currentUser;
+        const incomingUserData = await firestore()
+          .collection('users')
+          .doc(data?.user.email)
+          .get();
+        setEmailId(res?.email || '');
+        setItem({
+          email: data?.user.email,
+          userName: incomingUserData?.data()?.userName,
+        });
+      } catch (error: any) {
+        console.log(error.message);
+      }
+    };
     chatCredentials();
   }, []);
 
@@ -47,6 +60,20 @@ export const BookDetailScreen = ({route}: any) => {
     isExpanded || !shouldShowReadMore
       ? data.description
       : `${data.description.slice(0, 200).trim()}... `;
+
+  const handlePrev = () => {
+    if (activeIndex > 0) {
+      setActiveIndex(activeIndex - 1);
+      swiperRef.current.scrollToIndex({index: activeIndex - 1});
+    }
+  };
+
+  const handleNext = () => {
+    if (activeIndex < data?.images?.length - 1) {
+      setActiveIndex(activeIndex + 1);
+      swiperRef.current.scrollToIndex({index: activeIndex + 1});
+    }
+  };
 
   const styles = useMemo(() => {
     return StyleSheet.create({
@@ -70,8 +97,31 @@ export const BookDetailScreen = ({route}: any) => {
         height: '100%',
         objectFit: 'cover',
       },
+      arrowButton: {
+        position: 'absolute',
+        top: '45%',
+        height: hp(30),
+        width: hp(30),
+        zIndex: 2,
+        paddingBottom: hp(10),
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        borderRadius: hp(15),
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      leftArrow: {
+        left: -30,
+      },
+      rightArrow: {
+        right: -30,
+      },
+      arrowText: {
+        color: '#fff',
+        fontSize: 20,
+      },
       bottomContent: {
         marginTop: hp(200),
+        paddingBottom: hp(100),
       },
       title: {
         ...TEXT_STYLE.bold,
@@ -89,7 +139,7 @@ export const BookDetailScreen = ({route}: any) => {
       },
       descriptionContainer: {
         marginTop: hp(10),
-        padding: hp(16),
+        paddingHorizontal: hp(16),
       },
       descHeading: {
         ...TEXT_STYLE.bold,
@@ -114,8 +164,28 @@ export const BookDetailScreen = ({route}: any) => {
         alignSelf: 'center',
         paddingHorizontal: hp(16),
       },
+      paginationContainer: {
+        flexDirection: 'row',
+        marginTop: 10,
+        alignSelf: 'center',
+        position: 'absolute',
+        bottom: -8,
+      },
+      paginationStyleItem: {
+        width: hp(12),
+        height: hp(12),
+        borderRadius: 6,
+        marginHorizontal: hp(5),
+      },
+      activeDot: {
+        backgroundColor: 'white',
+      },
+      inactiveDot: {
+        backgroundColor: 'gray',
+      },
     });
   }, [hp, wp, appTheme]);
+
   return (
     <MainContainer fullWidth={true}>
       <ScrollView>
@@ -126,22 +196,66 @@ export const BookDetailScreen = ({route}: any) => {
         </View>
         <View style={styles.sliderContainer}>
           <SwiperFlatList
+            ref={swiperRef}
             data={data?.images}
             renderItem={({item}) => (
               <View style={styles.slideContainer}>
-                <Image
+                <ImageBackground
                   style={styles.image}
                   resizeMode={'cover'}
                   source={{uri: item}}
                 />
               </View>
             )}
+            showPagination
+            paginationStyle={styles.paginationContainer}
+            paginationStyleItem={styles.paginationStyleItem}
+            paginationStyleItemInactive={styles.inactiveDot}
+            paginationStyleItemActive={styles.activeDot}
             onChangeIndex={({index}) => setActiveIndex(index)}
           />
+          {data?.images?.length > 1 && (
+            <>
+              <TouchableOpacity
+                style={[
+                  styles.arrowButton,
+                  styles.leftArrow,
+                  activeIndex === 0 && {opacity: 0.5},
+                ]}
+                onPress={handlePrev}
+                disabled={activeIndex === 0}>
+                <AnyIcon
+                  type={IconType.EvilIcons}
+                  name="chevron-left"
+                  color={appTheme.primaryBackground}
+                  size={hp(30)}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.arrowButton,
+                  styles.rightArrow,
+                  activeIndex === data?.images?.length - 1 && {opacity: 0.5},
+                ]}
+                onPress={handleNext}
+                disabled={activeIndex === data?.images?.length - 1}>
+                <AnyIcon
+                  type={IconType.EvilIcons}
+                  name="chevron-right"
+                  color={appTheme.primaryBackground}
+                  size={hp(30)}
+                />
+              </TouchableOpacity>
+            </>
+          )}
         </View>
         <View style={styles.bottomContent}>
           <Text style={styles.title}>{data?.title}</Text>
           <Text style={styles.price}>{`Rs. ${data?.price}`}</Text>
+          <View style={styles.descriptionContainer}>
+            <Text style={styles.descHeading}>condition</Text>
+            <Text style={styles.text}>{data?.condition}</Text>
+          </View>
           <View style={styles.descriptionContainer}>
             <Text style={styles.descHeading}>description</Text>
             <Text style={styles.text}>
@@ -157,6 +271,10 @@ export const BookDetailScreen = ({route}: any) => {
                 </Text>
               )}
             </Text>
+          </View>
+          <View style={styles.descriptionContainer}>
+            <Text style={styles.descHeading}>address</Text>
+            <Text style={styles.text}>{data?.location}</Text>
           </View>
         </View>
       </ScrollView>

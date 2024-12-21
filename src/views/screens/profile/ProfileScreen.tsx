@@ -143,7 +143,6 @@ export const ProfileScreen = () => {
       console.log('Update Response:', response);
 
       if (response.error) {
-        // Handle nested error message structure
         const errorMessage =
           response.message?.message ||
           response.message ||
@@ -152,7 +151,7 @@ export const ProfileScreen = () => {
       }
 
       showToast('Profile updated successfully', 'successToast');
-      navigation.navigate(SCREENS.ACCOUNT as never);
+      navigation.goBack();
     } catch (error: any) {
       console.error('Error updating profile:', error);
       showToast(
@@ -354,7 +353,7 @@ export const ProfileScreen = () => {
           const day = String(date.getDate()).padStart(2, '0');
           const month = String(date.getMonth() + 1).padStart(2, '0');
           const year = date.getFullYear();
-          const formattedDate = `${day}-${month}-${year}`; // Store in DD-MM-YYYY format for display
+          const formattedDate = `${day}-${month}-${year}`;
           setDateOfBirth(formattedDate);
           setOpen(false);
         }}
