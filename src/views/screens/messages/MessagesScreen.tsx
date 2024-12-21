@@ -23,6 +23,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import UserAvatar from 'react-native-user-avatar';
+import {getColorByFirstLetter} from '../../../utils';
 
 export const MessagesScreen = () => {
   const navigation = useNavigation<any>();
@@ -233,10 +235,16 @@ export const MessagesScreen = () => {
                   }>
                   <View style={styles.firstContainer}>
                     <View style={styles.imgContainer}>
-                      <Image
+                      <UserAvatar
+                        style={styles.img}
+                        size={50}
+                        name={item.userName}
+                        bgColor={getColorByFirstLetter(item.userName)}
+                      />
+                      {/* <Image
                         style={styles.img}
                         source={require('../../../assets/images/user.png')}
-                      />
+                      /> */}
                     </View>
                     <View style={styles.textContainer}>
                       <Text style={styles.name}>{item.userName}</Text>
