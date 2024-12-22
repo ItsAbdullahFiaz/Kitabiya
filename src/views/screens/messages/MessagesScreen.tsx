@@ -1,7 +1,6 @@
 import {
   Alert,
   FlatList,
-  Image,
   StyleSheet,
   Text,
   TextInput,

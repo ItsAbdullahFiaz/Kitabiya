@@ -2,30 +2,28 @@ import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import React, {useContext, useEffect, useMemo, useState} from 'react';
 import {Header, MainButton, MainContainer} from '../../../components';
 import {useResponsiveDimensions} from '../../../hooks';
-import {AppDataContext} from '../../../context';
+import {AppDataContext, useAuth} from '../../../context';
 import {FONT_SIZE, SCREENS, TEXT_STYLE} from '../../../enums';
 import {useNavigation} from '@react-navigation/native';
-import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import {BookDescription, SwiperComponent} from './components';
 
 export const BookDetailScreen = ({route}: any) => {
   const [item, setItem] = useState({});
-  const [emailId, setEmailId] = useState('');
   const navigation = useNavigation<any>();
   const {hp, wp} = useResponsiveDimensions();
   const {appTheme, appLang} = useContext(AppDataContext);
   const data = route?.params?.product;
+  console.log('Book_Details_Data===>', data);
+  const {authState} = useAuth();
 
   useEffect(() => {
     const chatCredentials = async () => {
       try {
-        const res = await auth().currentUser;
         const incomingUserData = await firestore()
           .collection('users')
           .doc(data?.userId.email)
           .get();
-        setEmailId(res?.email || '');
         setItem({
           email: data?.userId.email,
           userName: incomingUserData?.data()?.userName,
@@ -107,14 +105,19 @@ export const BookDetailScreen = ({route}: any) => {
           </View>
         </View>
       </ScrollView>
-      <View style={styles.chatBtnContainer}>
-        <MainButton
-          onPress={() =>
-            navigation.navigate(SCREENS.CHAT as never, {data: item, emailId})
-          }
-          buttonText={appLang.chatnow}
-        />
-      </View>
+      {data?.userId?.email !== authState?.email && (
+        <View style={styles.chatBtnContainer}>
+          <MainButton
+            onPress={() =>
+              navigation.navigate(SCREENS.CHAT as never, {
+                data: item,
+                emailId: authState?.email,
+              })
+            }
+            buttonText={appLang.chatnow}
+          />
+        </View>
+      )}
     </MainContainer>
   );
 };

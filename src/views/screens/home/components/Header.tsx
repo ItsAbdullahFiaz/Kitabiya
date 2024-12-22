@@ -9,9 +9,10 @@ import {getColorByFirstLetter} from '../../../../utils';
 interface HeaderProps {
   appTheme: any;
   navigation: any;
+  authState?: any;
 }
 
-export const Header = ({appTheme, navigation}: HeaderProps) => {
+export const Header = ({appTheme, navigation, authState}: HeaderProps) => {
   const {hp} = useResponsiveDimensions();
 
   return (
@@ -41,17 +42,14 @@ export const Header = ({appTheme, navigation}: HeaderProps) => {
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.9}
-            onPress={() => navigation.navigate(SCREENS.PROFILE)}>
+            onPress={() => navigation.navigate(SCREENS.ACCOUNT)}>
             <UserAvatar
               style={styles(hp).userImage}
-              size={50}
+              size={40}
               name="Chand Faizi"
               bgColor={getColorByFirstLetter('Chand Faizi')}
+              src={authState.profilePhoto}
             />
-            {/* <Image
-                            source={require('../../../../assets/images/person.jpg')}
-                            style={styles(hp).userImage}
-                        /> */}
           </TouchableOpacity>
         </View>
       </View>

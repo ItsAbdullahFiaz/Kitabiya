@@ -16,31 +16,31 @@ import {
   MainContainer,
 } from '../../../components';
 import {useResponsiveDimensions, useToast} from '../../../hooks';
-import {AppDataContext} from '../../../context';
+import {AppDataContext, useAuth} from '../../../context';
 import {FONT_SIZE, TEXT_STYLE} from '../../../enums';
 import {BottomSheetComponent, DropDownComponent} from '../add/components';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import DatePicker from 'react-native-date-picker';
 import {dropdownItems} from '../../../utils';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {apiService} from '../../../services/api';
 
 export const ProfileScreen = () => {
+  const {authState} = useAuth();
   const navigation = useNavigation<any>();
-  const route = useRoute<any>();
-  const {userData} = route?.params;
-  console.log('USER_DATA===>', userData);
-  const [userName, setUserName] = useState(userData?.name || '');
+  const [userName, setUserName] = useState(authState.userName || '');
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [dateOfBirth, setDateOfBirth] = useState(
-    userData?.dateOfBirth || 'Select your date of birth',
+    authState.dateOfBirth || 'Select your date of birth',
   );
-  const [profileImage, setProfileImage] = useState(userData?.photoUrl || '');
+  const [profileImage, setProfileImage] = useState(
+    authState.profilePhoto || '',
+  );
   const [loading, setLoading] = useState(false);
-  const [location, setLocation] = useState(userData?.location || 'choose');
-  const [email, setEmail] = useState(userData?.email || '');
+  const [location, setLocation] = useState(authState.address || 'choose');
+  const [email, setEmail] = useState(authState.email || '');
   const [wrongNameError, setWrongNameError] = useState('');
   const [wrongEmailError, setWrongEmailError] = useState('');
   const {hp, wp} = useResponsiveDimensions();
@@ -53,16 +53,16 @@ export const ProfileScreen = () => {
   };
 
   const isFormChanged = () => {
-    console.log('Name comparison:', userName.trim(), userData?.name);
-    console.log('Location comparison:', location, userData?.location);
-    console.log('Date comparison:', dateOfBirth, userData?.dateOfBirth);
-    console.log('Image comparison:', profileImage, userData?.photoUrl);
+    console.log('Name comparison:', userName.trim(), authState.userName);
+    console.log('Location comparison:', location, authState.address);
+    console.log('Date comparison:', dateOfBirth, authState.dateOfBirth);
+    console.log('Image comparison:', profileImage, authState.profilePhoto);
 
-    const hasNameChanged = userName.trim() !== (userData?.name || '');
-    const hasLocationChanged = location !== (userData?.location || 'choose');
+    const hasNameChanged = userName.trim() !== (authState.userName || '');
+    const hasLocationChanged = location !== (authState.address || 'choose');
     const hasDateChanged =
-      dateOfBirth !== (userData?.dateOfBirth || 'Select your date of birth');
-    const hasImageChanged = profileImage !== (userData?.photoUrl || '');
+      dateOfBirth !== (authState.dateOfBirth || 'Select your date of birth');
+    const hasImageChanged = profileImage !== (authState.profilePhoto || '');
 
     const isChanged =
       hasNameChanged || hasLocationChanged || hasDateChanged || hasImageChanged;
@@ -75,7 +75,7 @@ export const ProfileScreen = () => {
     setWrongNameError('');
 
     // Validate name if changed
-    if (userName?.trim() !== userData?.name) {
+    if (userName?.trim() !== authState.userName) {
       if (!userName?.trim()) {
         setWrongNameError('Name is required');
         showToast('Please enter your name', 'errorToast');
@@ -104,7 +104,7 @@ export const ProfileScreen = () => {
     const formData = new FormData();
 
     // Add images
-    if (profileImage && profileImage !== userData?.photoUrl) {
+    if (profileImage && profileImage !== authState.profilePhoto) {
       formData.append('photo', {
         uri: profileImage,
         type: 'image/jpeg',
@@ -113,15 +113,15 @@ export const ProfileScreen = () => {
     }
 
     // Add other fields only if they've changed
-    if (userName.trim() !== userData?.name) {
+    if (userName.trim() !== authState.userName) {
       formData.append('name', userName.trim());
     }
 
-    if (location !== userData?.location) {
+    if (location !== authState.address) {
       formData.append('location', location);
     }
 
-    if (dateOfBirth !== userData?.dateOfBirth) {
+    if (dateOfBirth !== authState.dateOfBirth) {
       const formattedDate = formatDateForAPI(dateOfBirth);
       if (formattedDate) {
         formData.append('dateOfBirth', formattedDate);
