@@ -29,4 +29,6 @@ enum STACK {
   AUTH = 'Auth'
 }
 
-export { SCREENS, STACK };
+const AUTH_STORAGE_KEY = '@auth_state';
+
+export { SCREENS, STACK, AUTH_STORAGE_KEY };

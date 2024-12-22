@@ -3,12 +3,14 @@ import React, { useContext, useMemo, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { CustomInput, Header, MainButton, MainContainer, SocialLogins } from '../../../components';
 import { useResponsiveDimensions, useToast } from '../../../hooks';
-import { resetAndGo, saveToLocal, setEmailError, setPasswordError, validateEmail } from '../../../utils';
+import { resetAndGo, setEmailError, setPasswordError, validateEmail } from '../../../utils';
 import { FONT_SIZE, SCREENS, STACK, TEXT_STYLE } from '../../../enums';
 import { AppDataContext } from '../../../context';
 import { loginUser } from '../../../services';
 import firestore from '@react-native-firebase/firestore';
 import { notificationService } from '../../../services/NotificationService';
+import { useAuth } from '../../../context/AuthContext';
+import { profileService } from '../../../services/profileService';
 
 export const LoginScreen = () => {
   const navigation = useNavigation();
@@ -20,6 +22,7 @@ export const LoginScreen = () => {
   const [loading, setLoading] = useState(false);
   const [wrongEmailError, setWrongEmailError] = useState('');
   const [wrongPasswordError, setWrongPasswordError] = useState('');
+  const { login } = useAuth();
 
   const handleLogin = async () => {
     try {
@@ -34,11 +37,11 @@ export const LoginScreen = () => {
       setLoading(true);
       const normalizedEmail = email.toLowerCase().trim();
 
-      // Directly use Firebase Authentication
+      // Step 1: Firebase Authentication
       const response = await loginUser(normalizedEmail, password.trim());
 
       if (response.success) {
-        // Get user data after successful authentication
+        // Step 2: Get Firebase user data
         const userQuery = await firestore()
           .collection('users')
           .where('email', '==', normalizedEmail)
@@ -46,13 +49,42 @@ export const LoginScreen = () => {
 
         const userData = userQuery.docs[0].data();
 
-        // Save user data and token
+        // Step 3: Setup notifications
         await Promise.all([
-          saveToLocal(userData.userName.trim(), normalizedEmail, response.token || ''),
           notificationService.requestUserPermission()
             .then(granted => granted ? notificationService.saveFCMToken(normalizedEmail) : Promise.resolve(''))
             .catch(console.error)
         ]);
+
+        // Step 4: Set initial auth state with Firebase data
+        login(
+          userData.userName.trim(),
+          normalizedEmail,
+          response.token || '',
+          userData.phoneNumber || '',
+          userData.address || '',
+          userData.dateOfBirth || '',
+          userData.profilePhoto || ''
+        );
+
+        // Step 5: Fetch additional profile data from your API
+        const profileResponse = await profileService.fetchUserProfile();
+
+        if (profileResponse.success && profileResponse.data) {
+          // Update auth state with additional profile data
+          login(
+            profileResponse.data.name || userData.userName.trim(),
+            profileResponse.data.email || normalizedEmail,
+            response.token || '',
+            profileResponse.data.phoneNumber || userData.phoneNumber || '',
+            profileResponse.data.location || userData.address || '',
+            profileResponse.data.dateOfBirth || userData.dateOfBirth || '',
+            profileResponse.data.photoUrl || userData.profilePhoto || ''
+          );
+        } else {
+          // Log the error but don't block the login process
+          console.warn('Failed to fetch additional profile data:', profileResponse.error);
+        }
 
         resetAndGo(navigation, STACK.MAIN, null);
         showToast(appLang.loginSuccess, 'successToast');

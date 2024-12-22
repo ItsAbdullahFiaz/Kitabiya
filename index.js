@@ -9,10 +9,13 @@ import App from './src/App';
 import { name as appName } from './app.json';
 import { AppDataProvider } from './src/context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AuthProvider } from './src/context/AuthContext';
 
 const MainApp = () => (
     <AppDataProvider>
-        <App />
+        <AuthProvider>
+            <App />
+        </AuthProvider>
     </AppDataProvider>
 );
 

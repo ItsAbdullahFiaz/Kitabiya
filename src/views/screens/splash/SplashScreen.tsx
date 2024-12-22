@@ -4,17 +4,24 @@ import { useNavigation } from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 import { AppIcon, MainContainer } from '../../../components';
 import { resetAndGo } from '../../../utils';
-import { STACK } from '../../../enums';
+import { AUTH_STORAGE_KEY, STACK } from '../../../enums';
 import { AppDataContext } from '../../../context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const SplashScreen = () => {
     const { appTheme } = useContext(AppDataContext);
     const navigation = useNavigation()
 
     function onAuthStateChanged(user: any) {
-        console.log(user)
-        setTimeout(() => {
-            resetAndGo(navigation, user ? STACK.MAIN : STACK.ONBOARDING, null);
+        setTimeout(async () => {
+            try {
+                const savedAuthState = await AsyncStorage.getItem(AUTH_STORAGE_KEY);
+                const isAuthenticated = user && savedAuthState;
+                resetAndGo(navigation, isAuthenticated ? STACK.MAIN : STACK.ONBOARDING, null);
+            } catch (error) {
+                console.error('Error checking auth state:', error);
+                resetAndGo(navigation, STACK.ONBOARDING, null);
+            }
         }, 2000);
     }
 

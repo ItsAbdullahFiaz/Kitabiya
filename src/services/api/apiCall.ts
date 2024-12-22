@@ -1,6 +1,5 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { tokenManager } from '../../utils/tokenManager';
 import { getAuthToken } from "../auth";
-import { storeStringValue } from "../../utils";
 
 interface ApiCallProps {
     params?: any;
@@ -20,7 +19,7 @@ export const ApiCall = async ({
     setLoading(true);
 
     try {
-        const token = await AsyncStorage.getItem('TOKEN');
+        const token = tokenManager.getToken();
         if (!token) {
             throw new Error('No authentication token found');
         }
@@ -57,8 +56,8 @@ export const ApiCall = async ({
         } else {
             if (response.status === 401) {
                 const newToken = await getAuthToken(true);
-                storeStringValue('TOKEN', newToken)
                 if (newToken) {
+                    tokenManager.setToken(newToken);
                     options.headers = {
                         ...options.headers,
                         'Authorization': `Bearer ${newToken}`
