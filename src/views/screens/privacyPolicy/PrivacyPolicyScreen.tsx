@@ -29,15 +29,16 @@ export const PrivacyPolicyScreen = () => {
                 color: appTheme.primaryTextColor,
                 fontSize: hp(16),
                 lineHeight: hp(24),
+                marginTop: hp(16),
             },
         });
     }, [hp, wp]);
 
     return (
         <MainContainer>
-            <Header  title=' privacy Policy'/>
+            <Header title=' privacy Policy' />
             <ScrollView>
-                <Text style={styles.heading}>Privacy Policy</Text>
+                {/* <Text style={styles.heading}>Privacy Policy</Text> */}
                 <Text style={styles.text}>
                     We value your privacy and are committed to protecting it. This Privacy Policy explains our practices and your rights regarding your data.
                 </Text>

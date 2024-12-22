@@ -153,9 +153,10 @@ export const AccountScreen = () => {
           }
           contentRightStyle={styles.languageRow}
           title={appLang.PrivacyPolicy}
+          hideBorder={true}
         />
 
-        <ButtonRow
+        {/* <ButtonRow
           onPress={() => navigation.navigate(SCREENS.HELP_CENTER as never)}
           contentRight={
             <AnyIcon
@@ -168,7 +169,7 @@ export const AccountScreen = () => {
           contentRightStyle={styles.languageRow}
           title={appLang.HelpCenter}
           hideBorder={true}
-        />
+        /> */}
       </View>
 
       <View style={styles.logoutButtonContainer}>

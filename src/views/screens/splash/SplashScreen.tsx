@@ -17,10 +17,12 @@ export const SplashScreen = () => {
             try {
                 const savedAuthState = await AsyncStorage.getItem(AUTH_STORAGE_KEY);
                 const isAuthenticated = user && savedAuthState;
-                resetAndGo(navigation, isAuthenticated ? STACK.MAIN : STACK.ONBOARDING, null);
+                // resetAndGo(navigation, isAuthenticated ? STACK.MAIN : STACK.ONBOARDING, null);
+                resetAndGo(navigation, isAuthenticated ? STACK.MAIN : STACK.AUTH, null);
             } catch (error) {
                 console.error('Error checking auth state:', error);
-                resetAndGo(navigation, STACK.ONBOARDING, null);
+                // resetAndGo(navigation, STACK.ONBOARDING, null);
+                resetAndGo(navigation, STACK.AUTH, null);
             }
         }, 2000);
     }
