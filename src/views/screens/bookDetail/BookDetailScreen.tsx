@@ -1,21 +1,21 @@
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import React, {useContext, useEffect, useMemo, useState} from 'react';
-import {Header, MainButton, MainContainer} from '../../../components';
-import {useResponsiveDimensions} from '../../../hooks';
-import {AppDataContext, useAuth} from '../../../context';
-import {FONT_SIZE, SCREENS, TEXT_STYLE} from '../../../enums';
-import {useNavigation} from '@react-navigation/native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { Header, MainButton, MainContainer } from '../../../components';
+import { useResponsiveDimensions } from '../../../hooks';
+import { AppDataContext, useAuth } from '../../../context';
+import { FONT_SIZE, SCREENS, TEXT_STYLE } from '../../../enums';
+import { useNavigation } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
-import {BookDescription, SwiperComponent} from './components';
+import { BookDescription, SwiperComponent } from './components';
 
-export const BookDetailScreen = ({route}: any) => {
+export const BookDetailScreen = ({ route }: any) => {
   const [item, setItem] = useState({});
   const navigation = useNavigation<any>();
-  const {hp, wp} = useResponsiveDimensions();
-  const {appTheme, appLang} = useContext(AppDataContext);
+  const { hp, wp } = useResponsiveDimensions();
+  const { appTheme, appLang } = useContext(AppDataContext);
   const data = route?.params?.product;
   console.log('Book_Details_Data===>', data);
-  const {authState} = useAuth();
+  const { authState } = useAuth();
 
   useEffect(() => {
     const chatCredentials = async () => {
@@ -83,13 +83,13 @@ export const BookDetailScreen = ({route}: any) => {
   return (
     <MainContainer fullWidth={true}>
       <ScrollView>
-        <View style={{height: hp(200), backgroundColor: '#141D2E'}}>
-          <View style={{padding: 16}}>
+        <View style={{ height: hp(200), backgroundColor: '#141D2E' }}>
+          <View style={{ padding: 16 }}>
             <Header title="book details" lightColor={true} />
           </View>
         </View>
         {/* Swiper Component */}
-        <SwiperComponent data={data} />
+        <SwiperComponent data={data?.images || []} />
         <View style={styles.bottomContent}>
           <Text style={styles.title}>{data?.title}</Text>
           <Text style={styles.price}>{`Rs. ${data?.price}`}</Text>

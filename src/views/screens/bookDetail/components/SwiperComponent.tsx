@@ -4,36 +4,44 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useContext, useMemo, useRef, useState} from 'react';
+import React, { useContext, useMemo, useRef, useState } from 'react';
 import SwiperFlatList from 'react-native-swiper-flatlist';
-import {AnyIcon, IconType} from '../../../../components';
-import {useResponsiveDimensions} from '../../../../hooks';
-import {AppDataContext} from '../../../../context';
+import { AnyIcon, IconType } from '../../../../components';
+import { useResponsiveDimensions } from '../../../../hooks';
+import { AppDataContext } from '../../../../context';
 
-interface headerProps {
-  data: any;
+interface HeaderProps {
+  data: string[];
 }
 
-export const SwiperComponent = (props: headerProps) => {
-  const {data} = props;
+export const SwiperComponent = (props: HeaderProps) => {
+  const { data } = props;
   const [activeIndex, setActiveIndex] = useState(0);
-  const {hp, wp} = useResponsiveDimensions();
-  const {appTheme} = useContext(AppDataContext);
+  const { hp, wp } = useResponsiveDimensions();
+  const { appTheme } = useContext(AppDataContext);
   const swiperRef = useRef<SwiperFlatList>(null);
 
   const handlePrev = () => {
     if (activeIndex > 0) {
       const newIndex = activeIndex - 1;
       setActiveIndex(newIndex);
-      swiperRef.current?.scrollToIndex({index: newIndex, animated: true});
+      swiperRef.current?.scrollToIndex({
+        index: newIndex,
+        animated: true,
+        viewPosition: 0
+      });
     }
   };
 
   const handleNext = () => {
-    if (activeIndex < data?.images?.length - 1) {
+    if (activeIndex < data.length - 1) {
       const newIndex = activeIndex + 1;
       setActiveIndex(newIndex);
-      swiperRef.current?.scrollToIndex({index: newIndex, animated: true});
+      swiperRef.current?.scrollToIndex({
+        index: newIndex,
+        animated: true,
+        viewPosition: 0
+      });
     }
   };
 
@@ -48,6 +56,7 @@ export const SwiperComponent = (props: headerProps) => {
         position: 'absolute',
         top: hp(80),
         zIndex: 1,
+        overflow: 'visible',
       },
       slideContainer: {
         height: hp(300),
@@ -95,19 +104,20 @@ export const SwiperComponent = (props: headerProps) => {
         marginHorizontal: hp(3),
       },
     });
-  }, []);
+  }, [hp]);
 
   return (
     <View style={styles.sliderContainer}>
       <SwiperFlatList
         ref={swiperRef}
-        data={data?.images}
-        renderItem={({item}) => (
+        data={data}
+        renderItem={({ item }) => (
           <View style={styles.slideContainer}>
             <ImageBackground
               style={styles.image}
               resizeMode={'cover'}
-              source={{uri: item}}
+              source={{ uri: item }}
+              defaultSource={require('../../../../assets/images/appLogo.png')}
             />
           </View>
         )}
@@ -116,18 +126,31 @@ export const SwiperComponent = (props: headerProps) => {
         paginationStyleItem={styles.paginationStyleItem}
         paginationActiveColor="white"
         paginationDefaultColor="gray"
-        onChangeIndex={({index}) => {
-          console.log('INDEX_SWIPE===>', index);
-          setActiveIndex(index);
+        onChangeIndex={({ index }) => setActiveIndex(index)}
+        index={activeIndex}
+        snapToInterval={hp(330)}
+        decelerationRate={0.9}
+        snapToAlignment="center"
+        viewabilityConfig={{
+          itemVisiblePercentThreshold: 60
         }}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        windowSize={1}
+        removeClippedSubviews={true}
+        getItemLayout={(_, index) => ({
+          length: hp(330),
+          offset: hp(330) * index,
+          index,
+        })}
       />
-      {data?.images?.length > 1 && (
+      {data?.length > 1 && (
         <>
           <TouchableOpacity
             style={[
               styles.arrowButton,
               styles.leftArrow,
-              activeIndex === 0 && {opacity: 0.5},
+              activeIndex === 0 && { opacity: 0.5 },
             ]}
             onPress={handlePrev}
             disabled={activeIndex === 0}>
@@ -142,10 +165,10 @@ export const SwiperComponent = (props: headerProps) => {
             style={[
               styles.arrowButton,
               styles.rightArrow,
-              activeIndex === data?.images?.length - 1 && {opacity: 0.5},
+              activeIndex === data.length - 1 && { opacity: 0.5 },
             ]}
             onPress={handleNext}
-            disabled={activeIndex === data?.images?.length - 1}>
+            disabled={activeIndex === data.length - 1}>
             <AnyIcon
               type={IconType.EvilIcons}
               name="chevron-right"

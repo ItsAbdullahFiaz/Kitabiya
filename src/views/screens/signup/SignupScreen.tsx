@@ -3,12 +3,11 @@ import React, { useContext, useMemo, useState } from 'react';
 import { CustomInput, Header, MainButton, MainContainer, SocialLogins } from '../../../components';
 import { useResponsiveDimensions, useToast } from '../../../hooks';
 import { resetAndGo, setEmailError, setNameError, setPasswordError, validateEmail, validatePassword, validateName, saveToLocal } from '../../../utils';
-import { AppDataContext } from '../../../context';
+import { AppDataContext, useAuth } from '../../../context';
 import { registerUser } from '../../../services';
 import { useNavigation } from '@react-navigation/native';
 import { FONT_SIZE, STACK, TEXT_STYLE } from '../../../enums';
 import firestore from '@react-native-firebase/firestore';
-import { notificationService } from '../../../services/NotificationService';
 
 export const SignupScreen = () => {
   const navigation = useNavigation();
@@ -22,45 +21,57 @@ export const SignupScreen = () => {
   const [wrongNameError, setWrongNameError] = useState('');
   const [wrongEmailError, setWrongEmailError] = useState('');
   const [wrongPasswordError, setWrongPasswordError] = useState('');
+  const { login } = useAuth();
 
   const handleSignup = async () => {
     try {
-      const isEmailValid = validateEmail(email);
-      const isPasswordValid = validatePassword(password);
-      const isUserNameValid = validateName(userName);
+      const normalizedEmail = email.toLowerCase().trim();
+      const normalizedPassword = password.trim();
+      const normalizedUserName = userName.trim();
 
-      setEmailError(email, isEmailValid, appLang, setWrongEmailError);
-      setPasswordError(password, isPasswordValid, appLang, setWrongPasswordError);
-      setNameError(userName, isUserNameValid, appLang, setWrongNameError);
+      const isEmailValid = validateEmail(normalizedEmail);
+      const isPasswordValid = validatePassword(normalizedPassword);
+      const isUserNameValid = validateName(normalizedUserName);
+
+      setEmailError(normalizedEmail, isEmailValid, appLang, setWrongEmailError);
+      setPasswordError(normalizedPassword, isPasswordValid, appLang, setWrongPasswordError);
+      setNameError(normalizedUserName, isUserNameValid, appLang, setWrongNameError);
 
       if (!isEmailValid || !isPasswordValid || !isUserNameValid) {
         return;
       }
 
       setLoading(true);
-      const normalizedEmail = email.toLowerCase().trim();
 
-      const response = await registerUser(normalizedEmail, password);
-      if (response.success) {
-        await firestore().collection('users').doc(normalizedEmail).set({
-          userName: userName.trim(),
-          email: normalizedEmail,
-          password,
-          fcmToken: '',
-          createdAt: firestore.FieldValue.serverTimestamp()
-        });
-        
-        const permissionGranted = await notificationService.requestUserPermission();
-        if (permissionGranted) {
-          await notificationService.saveFCMToken(normalizedEmail);
-        }
-
-        await saveToLocal(userName.trim(), normalizedEmail, response?.token || '');
-        resetAndGo(navigation, STACK.MAIN, null);
-        showToast(appLang.signupSuccess, 'successToast');
-      } else {
+      const response = await registerUser(normalizedEmail, normalizedPassword);
+      if (!response.success) {
         showToast(response.errorMessage, 'errorToast');
+        return;
       }
+
+      const token = response.token || '';
+
+      await firestore().collection('users').doc(normalizedEmail).set({
+        userName: normalizedUserName,
+        email: normalizedEmail,
+        password: normalizedPassword,
+        fcmToken: '',
+        createdAt: firestore.FieldValue.serverTimestamp()
+      });
+
+      login(
+        normalizedUserName,
+        normalizedEmail,
+        token,
+        '',
+        '',
+        '',
+        ''
+      );
+
+      resetAndGo(navigation, STACK.MAIN, null);
+      showToast(appLang.signupSuccess, 'successToast');
+
     } catch (error) {
       console.error('Signup error:', error);
       showToast('An error occurred during signup', 'errorToast');
@@ -89,52 +100,52 @@ export const SignupScreen = () => {
 
   return (
     <KeyboardAvoidingView
-    style={{ flex: 1 }}
-    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-  >
-    <MainContainer>
-      <Header title={appLang.signUp} />
-      <View style={styles.contentContainer}>
-        <Text style={styles.label}>{appLang.name}</Text>
-        <CustomInput
-          value={userName}
-          setValue={setUserName}
-          placeholder={appLang.textname}
-          textWrong={wrongNameError}
-          onChange={() => setWrongNameError('')}
-          bottomError={true}
-        />
-        <Text style={[styles.label, { marginTop: hp(20) }]}>{appLang.email}</Text>
-        <CustomInput
-          value={email}
-          setValue={setEmail}
-          placeholder={appLang.textemail}
-          textWrong={wrongEmailError}
-          onChange={() => setWrongEmailError('')}
-          bottomError={true}
-        />
-        <Text style={[styles.label, { marginTop: hp(20) }]}>{appLang.password}</Text>
-        <CustomInput
-          value={password}
-          setValue={setPassword}
-          placeholder={appLang.textpassword}
-          textWrong={wrongPasswordError}
-          onChange={() => setWrongPasswordError('')}
-          bottomError={true}
-          twoLinesError={true}
-          secureTextEntry={true}
-        />
-        <View style={styles.signupContainer}>
-          <MainButton
-            onPress={handleSignup}
-            buttonText={appLang.signUp}
-            isLoading={loading}
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <MainContainer>
+        <Header title={appLang.signUp} />
+        <View style={styles.contentContainer}>
+          <Text style={styles.label}>{appLang.name}</Text>
+          <CustomInput
+            value={userName}
+            setValue={setUserName}
+            placeholder={appLang.textname}
+            textWrong={wrongNameError}
+            onChange={() => setWrongNameError('')}
+            bottomError={true}
           />
+          <Text style={[styles.label, { marginTop: hp(20) }]}>{appLang.email}</Text>
+          <CustomInput
+            value={email}
+            setValue={setEmail}
+            placeholder={appLang.textemail}
+            textWrong={wrongEmailError}
+            onChange={() => setWrongEmailError('')}
+            bottomError={true}
+          />
+          <Text style={[styles.label, { marginTop: hp(20) }]}>{appLang.password}</Text>
+          <CustomInput
+            value={password}
+            setValue={setPassword}
+            placeholder={appLang.textpassword}
+            textWrong={wrongPasswordError}
+            onChange={() => setWrongPasswordError('')}
+            bottomError={true}
+            twoLinesError={true}
+            secureTextEntry={true}
+          />
+          <View style={styles.signupContainer}>
+            <MainButton
+              onPress={handleSignup}
+              buttonText={appLang.signUp}
+              isLoading={loading}
+            />
+          </View>
+          <SocialLogins />
         </View>
-        <SocialLogins />
-      </View>
-    </MainContainer>
-  
+      </MainContainer>
+
     </KeyboardAvoidingView>
   );
 };

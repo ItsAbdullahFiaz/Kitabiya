@@ -3,14 +3,13 @@ import React, { useContext, useMemo, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { CustomInput, Header, MainButton, MainContainer, SocialLogins } from '../../../components';
 import { useResponsiveDimensions, useToast } from '../../../hooks';
-import { resetAndGo, setEmailError, setPasswordError, validateEmail } from '../../../utils';
+import { resetAndGo, setEmailError, setPasswordError, storeStringValue, validateEmail } from '../../../utils';
 import { FONT_SIZE, SCREENS, STACK, TEXT_STYLE } from '../../../enums';
 import { AppDataContext } from '../../../context';
 import { loginUser } from '../../../services';
-import firestore from '@react-native-firebase/firestore';
-import { notificationService } from '../../../services/NotificationService';
 import { useAuth } from '../../../context/AuthContext';
 import { profileService } from '../../../services/profileService';
+import { tokenManager } from '../../../utils/tokenManager';
 
 export const LoginScreen = () => {
   const navigation = useNavigation();
@@ -26,71 +25,53 @@ export const LoginScreen = () => {
 
   const handleLogin = async () => {
     try {
-      const isEmailValid = validateEmail(email);
-      setEmailError(email, isEmailValid, appLang, setWrongEmailError);
-      setPasswordError(password, true, appLang, setWrongPasswordError);
+      // Validate inputs first
+      const normalizedEmail = email.toLowerCase().trim();
+      const normalizedPassword = password.trim();
 
-      if (!isEmailValid || password.trim().length === 0) {
+      const isEmailValid = validateEmail(normalizedEmail);
+      setEmailError(normalizedEmail, isEmailValid, appLang, setWrongEmailError);
+      setPasswordError(normalizedPassword, true, appLang, setWrongPasswordError);
+
+      if (!isEmailValid || !normalizedPassword) {
         return;
       }
 
       setLoading(true);
-      const normalizedEmail = email.toLowerCase().trim();
 
-      // Step 1: Firebase Authentication
-      const response = await loginUser(normalizedEmail, password.trim());
-
-      if (response.success) {
-        // Step 2: Get Firebase user data
-        const userQuery = await firestore()
-          .collection('users')
-          .where('email', '==', normalizedEmail)
-          .get();
-
-        const userData = userQuery.docs[0].data();
-
-        // Step 3: Setup notifications
-        await Promise.all([
-          notificationService.requestUserPermission()
-            .then(granted => granted ? notificationService.saveFCMToken(normalizedEmail) : Promise.resolve(''))
-            .catch(console.error)
-        ]);
-
-        // Step 4: Set initial auth state with Firebase data
-        login(
-          userData.userName.trim(),
-          normalizedEmail,
-          response.token || '',
-          userData.phoneNumber || '',
-          userData.address || '',
-          userData.dateOfBirth || '',
-          userData.profilePhoto || ''
-        );
-
-        // Step 5: Fetch additional profile data from your API
-        const profileResponse = await profileService.fetchUserProfile();
-
-        if (profileResponse.success && profileResponse.data) {
-          // Update auth state with additional profile data
-          login(
-            profileResponse.data.name || userData.userName.trim(),
-            profileResponse.data.email || normalizedEmail,
-            response.token || '',
-            profileResponse.data.phoneNumber || userData.phoneNumber || '',
-            profileResponse.data.location || userData.address || '',
-            profileResponse.data.dateOfBirth || userData.dateOfBirth || '',
-            profileResponse.data.photoUrl || userData.profilePhoto || ''
-          );
-        } else {
-          // Log the error but don't block the login process
-          console.warn('Failed to fetch additional profile data:', profileResponse.error);
-        }
-
-        resetAndGo(navigation, STACK.MAIN, null);
-        showToast(appLang.loginSuccess, 'successToast');
-      } else {
+      // Login attempt
+      const response = await loginUser(normalizedEmail, normalizedPassword);
+      if (!response.success) {
         showToast(response.errorMessage, 'errorToast');
+        return;
       }
+
+      // Store token
+      const token = response.token || '';
+      tokenManager.setToken(token);
+
+      // Fetch profile
+      const profileResponse = await profileService.fetchUserProfile();
+      if (!profileResponse.success) {
+        console.warn('Failed to fetch additional profile data:', profileResponse.error);
+        return;
+      }
+
+      // Login user with profile data
+      const profile = profileResponse.data || {};
+      login(
+        profile.name || '',
+        normalizedEmail,
+        token,
+        profile.phoneNumber || '',
+        profile.location || '',
+        profile.dateOfBirth || '',
+        profile.photoUrl || ''
+      );
+
+      resetAndGo(navigation, STACK.MAIN, null);
+      showToast(appLang.loginSuccess, 'successToast');
+
     } catch (error) {
       console.error('Login error:', error);
       showToast('An error occurred during login', 'errorToast');

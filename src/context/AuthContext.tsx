@@ -26,6 +26,7 @@ interface AuthContextType {
         profilePhoto?: string
     ) => void;
     updateProfile: (
+        userName?: string,
         phoneNumber?: string,
         address?: string,
         dateOfBirth?: string,
@@ -104,6 +105,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     const updateProfile = (
+        userName?: string,
         phoneNumber?: string,
         address?: string,
         dateOfBirth?: string,
@@ -112,6 +114,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setAuthState(prev => {
             const newState = {
                 ...prev,
+                ...(userName !== undefined && { userName }),
                 ...(phoneNumber !== undefined && { phoneNumber }),
                 ...(address !== undefined && { address }),
                 ...(dateOfBirth !== undefined && { dateOfBirth }),

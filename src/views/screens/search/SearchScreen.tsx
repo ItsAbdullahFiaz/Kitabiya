@@ -23,7 +23,7 @@ import {
   MainContainer,
 } from '../../../components';
 import {useResponsiveDimensions} from '../../../hooks';
-import {FONT_SIZE, SCREENS, TEXT_STYLE} from '../../../enums';
+import {FONT_SIZE, TEXT_STYLE} from '../../../enums';
 import {MaybeYouLike} from './components';
 import {AppDataContext} from '../../../context';
 import {apiService} from '../../../services/api';
@@ -51,7 +51,7 @@ export const SearchScreen = () => {
   const [searchedProduct, setSearchedProduct] = useState<any>([]);
   const {appTheme, appLang} = useContext(AppDataContext);
   const {hp, wp} = useResponsiveDimensions();
-  const fetchProducts = async (search: any) => {
+  const fetchProducts = async (search: string) => {
     try {
       setLoading(true);
       const response = await apiService.searchProducts(search);
@@ -176,23 +176,8 @@ export const SearchScreen = () => {
   const debouncedSearch = useCallback(
     debounce(async (searchTerm: string) => {
       if (!searchTerm.trim()) return;
-
-      try {
-        setLoading(true);
-        const response = await apiService.searchProducts({query: searchTerm});
-
-        if (response.error) {
-          throw new Error(response.message || 'Failed to fetch products');
-        }
-
-        setSearchedProduct(response.data || []);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-        // Add your error handling here (e.g., show toast)
-      } finally {
-        setLoading(false);
-      }
-    }, 500), // 500ms delay
+      await fetchProducts(searchTerm);
+    }, 500),
     [],
   );
 
@@ -342,37 +327,32 @@ export const SearchScreen = () => {
           </View>
           <FlatList
             data={recentSearches}
-            renderItem={({item}) => {
-              console.log('SEARCH_ITEM===>', item);
-              return (
-                <TouchableOpacity
-                  style={styles.card}
-                  onPress={() =>
-                    navigation.navigate(SCREENS.BOOK_DETAIL as never, {
-                      data: item,
-                    })
-                  }>
-                  <View style={styles.leftContainer}>
-                    <View style={styles.imgContainer}>
-                      <Image
-                        source={getImageSource(item.product.images)}
-                        style={styles.img}
-                        resizeMode="cover"
-                        defaultSource={require('./../../../assets/images/books.jpg')}
-                      />
-                    </View>
-                    <View>
-                      <Text style={styles.name}>
-                        {item.product.title || 'Untitled'}
-                      </Text>
-                      <Text style={styles.author}>
-                        Rs. {item.product.price || '0'}
-                      </Text>
-                    </View>
+            renderItem={({item}) => (
+              <TouchableOpacity
+                style={styles.card}
+                onPress={() =>
+                  navigation.navigate('ProductDetails', {product: item.product})
+                }>
+                <View style={styles.leftContainer}>
+                  <View style={styles.imgContainer}>
+                    <Image
+                      source={getImageSource(item.product.images)}
+                      style={styles.img}
+                      resizeMode="cover"
+                      defaultSource={require('./../../../assets/images/books.jpg')}
+                    />
                   </View>
-                </TouchableOpacity>
-              );
-            }}
+                  <View>
+                    <Text style={styles.name}>
+                      {item.product.title || 'Untitled'}
+                    </Text>
+                    <Text style={styles.author}>
+                      Rs. {item.product.price || '0'}
+                    </Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            )}
             keyExtractor={item => item._id}
           />
         </View>

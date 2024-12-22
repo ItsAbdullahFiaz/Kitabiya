@@ -8,25 +8,25 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useContext, useMemo, useState} from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import {
   CustomInput,
   Header,
   MainButton,
   MainContainer,
 } from '../../../components';
-import {useResponsiveDimensions, useToast} from '../../../hooks';
-import {AppDataContext, useAuth} from '../../../context';
-import {FONT_SIZE, TEXT_STYLE} from '../../../enums';
-import {BottomSheetComponent, DropDownComponent} from '../add/components';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { useResponsiveDimensions, useToast } from '../../../hooks';
+import { AppDataContext, useAuth } from '../../../context';
+import { FONT_SIZE, TEXT_STYLE } from '../../../enums';
+import { BottomSheetComponent, DropDownComponent } from '../add/components';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import DatePicker from 'react-native-date-picker';
-import {dropdownItems} from '../../../utils';
-import {useNavigation} from '@react-navigation/native';
-import {apiService} from '../../../services/api';
+import { dropdownItems } from '../../../utils';
+import { useNavigation } from '@react-navigation/native';
+import { apiService } from '../../../services/api';
 
 export const ProfileScreen = () => {
-  const {authState} = useAuth();
+  const { authState, updateProfile } = useAuth();
   const navigation = useNavigation<any>();
   const [userName, setUserName] = useState(authState.userName || '');
   const [date, setDate] = useState(new Date());
@@ -43,8 +43,8 @@ export const ProfileScreen = () => {
   const [email, setEmail] = useState(authState.email || '');
   const [wrongNameError, setWrongNameError] = useState('');
   const [wrongEmailError, setWrongEmailError] = useState('');
-  const {hp, wp} = useResponsiveDimensions();
-  const {appTheme, appLang} = useContext(AppDataContext);
+  const { hp, wp } = useResponsiveDimensions();
+  const { appTheme, appLang } = useContext(AppDataContext);
   const showToast = useToast();
 
   const validateName = (name: string) => {
@@ -149,6 +149,15 @@ export const ProfileScreen = () => {
           'Failed to update profile';
         throw new Error(errorMessage);
       }
+
+      // Update local auth state with the new values
+      updateProfile(
+        userName.trim() !== authState.userName ? userName.trim() : undefined,
+        undefined, // phoneNumber not changed
+        location !== authState.address ? location : undefined,
+        dateOfBirth !== authState.dateOfBirth ? dateOfBirth : undefined,
+        profileImage !== authState.profilePhoto ? profileImage : undefined
+      );
 
       showToast('Profile updated successfully', 'successToast');
       navigation.goBack();
@@ -267,7 +276,7 @@ export const ProfileScreen = () => {
   }, [hp, wp]);
   return (
     <KeyboardAvoidingView
-      style={{flex: 1}}
+      style={{ flex: 1 }}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <MainContainer>
         <Header title="edit profile" />
@@ -276,7 +285,7 @@ export const ProfileScreen = () => {
             style={styles.img}
             source={
               profileImage
-                ? {uri: profileImage}
+                ? { uri: profileImage }
                 : require('../../../assets/images/user.png')
             }
           />
@@ -284,7 +293,7 @@ export const ProfileScreen = () => {
             style={styles.btnContainer}
             onPress={() => handleModal(true)}>
             <Image
-              style={{height: hp(20), width: hp(20)}}
+              style={{ height: hp(20), width: hp(20) }}
               source={require('../../../assets/images/camera.png')}
             />
           </TouchableOpacity>
@@ -299,7 +308,7 @@ export const ProfileScreen = () => {
             onChange={() => setWrongNameError('')}
             bottomError={true}
           />
-          <Text style={[styles.label, {marginTop: hp(20)}]}>
+          <Text style={[styles.label, { marginTop: hp(20) }]}>
             {appLang.email}
           </Text>
           <CustomInput
@@ -318,7 +327,7 @@ export const ProfileScreen = () => {
             label="Location"
             component="profile"
           />
-          <Text style={[styles.label, {marginTop: hp(20)}]}>
+          <Text style={[styles.label, { marginTop: hp(20) }]}>
             {appLang.dateofbirth}
           </Text>
           <TouchableOpacity
