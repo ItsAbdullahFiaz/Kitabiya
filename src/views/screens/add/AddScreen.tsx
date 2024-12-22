@@ -5,9 +5,9 @@ import {
   Text,
   View,
 } from 'react-native';
-import React, {useContext, useMemo, useState} from 'react';
-import {FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE} from '../../../enums';
-import {useResponsiveDimensions, useToast} from '../../../hooks';
+import React, { useContext, useMemo, useState } from 'react';
+import { FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE } from '../../../enums';
+import { useResponsiveDimensions, useToast } from '../../../hooks';
 import {
   Address,
   AdTitle,
@@ -18,7 +18,7 @@ import {
   Price,
   RemoveSheet,
 } from './components';
-import {AppDataContext} from '../../../context';
+import { AppDataContext } from '../../../context';
 import {
   AnyIcon,
   Header,
@@ -26,24 +26,24 @@ import {
   MainButton,
   MainContainer,
 } from '../../../components';
-import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
-import {apiService} from '../../../services/api';
-import {useNavigation} from '@react-navigation/native';
-import {dropdownItems, languageitem, typeitem} from '../../../utils';
-import {ImageSelector} from './components/ImageSelector';
+import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
+import { apiService } from '../../../services/api';
+import { useNavigation } from '@react-navigation/native';
+import { dropdownItems, languageitem, typeitem } from '../../../utils';
+import { ImageSelector } from './components/ImageSelector';
 import {
   useCreateProduct,
   useDeleteProduct,
   useMyProducts,
 } from '../../../hooks/useProducts';
-import {useQueryClient} from '@tanstack/react-query';
-import {QUERY_KEYS} from '../../../hooks/useProducts';
+import { useQueryClient } from '@tanstack/react-query';
+import { QUERY_KEYS } from '../../../hooks/useProducts';
 
-export const AddScreen = ({route}: any) => {
-  const {dataType} = route.params || 'add';
-  const {data} = route.params || [];
-  const {appTheme} = useContext(AppDataContext);
-  const {hp, wp} = useResponsiveDimensions();
+export const AddScreen = ({ route }: any) => {
+  const { dataType } = route.params || 'add';
+  const { data } = route.params || [];
+  const { appTheme } = useContext(AppDataContext);
+  const { hp, wp } = useResponsiveDimensions();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
   const [myIndex, setMyIndex] = useState<any>('');
@@ -58,7 +58,7 @@ export const AddScreen = ({route}: any) => {
     dataType === 'edit' ? data?.language : 'choose',
   );
   const [location, setLocation] = useState(
-    dataType === 'edit' ? data?.locationAddress : 'Enter your address',
+    dataType === 'edit' ? data?.locationAddress : '',
   );
   const [bookTitle, setBookTitle] = useState(
     dataType === 'edit' ? data?.title : '',
@@ -265,7 +265,7 @@ export const AddScreen = ({route}: any) => {
   const handleSubmit = async () => {
     try {
       if (!validateInputs()) return;
-
+      setLoading(true);
       const formData = await createFormData();
       await createProduct.mutateAsync(formData, {
         onSuccess: () => {
@@ -290,7 +290,7 @@ export const AddScreen = ({route}: any) => {
     }
   };
 
-  const handleSetLocation=(val:any)=>{
+  const handleSetLocation = (val: any) => {
     setLocation(val)
   }
 
@@ -330,13 +330,13 @@ export const AddScreen = ({route}: any) => {
         alignItems: 'center',
         backgroundColor: 'rgba(0,0,0,0.3)',
       },
-     
+
     });
   }, [hp, wp, appTheme]);
 
   return (
     <MainContainer>
-      <ScrollView contentContainerStyle={{flexGrow: 1}}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <Header
           title={dataType === 'edit' ? 'edit ad details' : 'ad Details'}
         />
@@ -345,34 +345,27 @@ export const AddScreen = ({route}: any) => {
           handleImageSelectorModal={handleImageSelectorModal}
           handleOpenAndDelete={handleOpenAndDelete}
         />
-        <View style={styles.border} />
         <Condition handleSelect={handleSelect} selected={selected} />
-        <View style={styles.border} />
         <DropDownComponent
           handleSelectOption={handleSelectType}
           type={type}
           dropdownItems={typeitem}
           label="Type"
         />
-        <View style={styles.border} />
         <DropDownComponent
           handleSelectOption={handleSelectLanguage}
           type={language}
           dropdownItems={languageitem}
           label="Language"
         />
-        <View style={styles.border} />
         <AdTitle bookTitle={bookTitle} handleSelectTitle={handleSelectTitle} />
 
-        <View style={styles.border} />
         <Description
           handleDescription={handleDescription}
           description={description}
         />
-        
-<View style={styles.border} />
-<Address handleSetLocation={handleSetLocation} location={location}/>
-        <View style={styles.border} />
+
+        <Address handleSetLocation={handleSetLocation} location={location} />
         <Price handlePrice={handlePrice} price={price} />
         <View style={styles.nextBtnContainer}>
           {dataType === 'edit' ? (

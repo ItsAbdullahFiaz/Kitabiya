@@ -7,23 +7,23 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useContext, useMemo, useState, useCallback} from 'react';
-import {AnyIcon, IconType, MainContainer} from '../../../components';
-import {FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE} from '../../../enums';
-import {useResponsiveDimensions} from '../../../hooks';
-import {AppDataContext} from '../../../context';
-import {convertDate} from '../../../utils';
-import {MyAdLoader, RemoveAd} from './components';
-import {useNavigation, useFocusEffect} from '@react-navigation/native';
-import {useMyProducts, useDeleteProduct} from '../../../hooks/useProducts';
+import React, { useContext, useMemo, useState, useCallback } from 'react';
+import { AnyIcon, IconType, MainContainer } from '../../../components';
+import { FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE } from '../../../enums';
+import { useResponsiveDimensions } from '../../../hooks';
+import { AppDataContext } from '../../../context';
+import { convertDate } from '../../../utils';
+import { MyAdLoader, RemoveAd } from './components';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useMyProducts, useDeleteProduct } from '../../../hooks/useProducts';
 
 export const MyBooksScreen = () => {
   const navigation = useNavigation<any>();
   const [selectedProductId, setSelectedProductId] = useState<string>('');
   const [selectProduct, setSelectProduct] = useState<string>('');
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const {hp, wp} = useResponsiveDimensions();
-  const {appTheme, appLang} = useContext(AppDataContext);
+  const { hp, wp } = useResponsiveDimensions();
+  const { appTheme, appLang } = useContext(AppDataContext);
   const [imageLoading, setImageLoading] = useState({});
 
   // Use React Query hooks
@@ -38,7 +38,7 @@ export const MyBooksScreen = () => {
 
   const deleteProduct = useDeleteProduct();
 
-  const handleOpenModal = (id: string,productData:any) => {
+  const handleOpenModal = (id: string, productData: any) => {
     setSelectedProductId(id);
     setSelectProduct(productData);
     setIsModalVisible(true);
@@ -63,11 +63,11 @@ export const MyBooksScreen = () => {
   );
 
   const handleImageLoadStart = (index: any) => {
-    setImageLoading(prevState => ({...prevState, [index]: true}));
+    setImageLoading(prevState => ({ ...prevState, [index]: true }));
   };
 
   const handleImageLoadEnd = (index: any) => {
-    setImageLoading(prevState => ({...prevState, [index]: false}));
+    setImageLoading(prevState => ({ ...prevState, [index]: false }));
   };
 
   const styles = useMemo(() => {
@@ -94,13 +94,12 @@ export const MyBooksScreen = () => {
       card: {
         width: '100%',
         height: hp(100),
-        // backgroundColor: 'rgba(0,0,0,0.1)',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
         padding: hp(10),
-        borderBottomColor:'rgba(0,0,0,0.1)',
-        borderWidth:0.5
+        borderBottomWidth: 0.5,
+        borderBottomColor: appTheme.borderDefault,
       },
       upperContainer: {
         flexDirection: 'row',
@@ -114,7 +113,7 @@ export const MyBooksScreen = () => {
         overflow: 'hidden',
         marginRight: hp(10),
       },
-      img: {height: '100%', width: '100%'},
+      img: { height: '100%', width: '100%' },
       adTitle: {
         ...TEXT_STYLE.medium,
         fontSize: hp(FONT_SIZE.h3),
@@ -127,8 +126,8 @@ export const MyBooksScreen = () => {
       },
       bottomContainer: {
         padding: hp(10),
-        flexDirection:"row",
-        justifyContent:"space-between"
+        flexDirection: "row",
+        justifyContent: "space-between"
       },
       viewsContainer: {
         flexDirection: 'row',
@@ -180,7 +179,7 @@ export const MyBooksScreen = () => {
 
   if (isError) {
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text>
           Error: {error instanceof Error ? error.message : 'Unknown error'}
         </Text>
@@ -199,7 +198,7 @@ export const MyBooksScreen = () => {
 
   if (!isLoading && myAdsList.length === 0) {
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text>No ads here yet!</Text>
         <Text>Start sharing your offers or items today.</Text>
         <TouchableOpacity
@@ -217,7 +216,7 @@ export const MyBooksScreen = () => {
       <View style={styles.listContainer}>
         <FlatList
           data={myAdsList}
-          renderItem={({item, index}) => (
+          renderItem={({ item, index }) => (
             <TouchableOpacity style={styles.adContainer}>
               <View style={styles.card}>
                 <View style={styles.upperContainer}>
@@ -231,22 +230,22 @@ export const MyBooksScreen = () => {
                     )}
                     <Image
                       style={styles.img}
-                      source={{uri: item.images[0]}}
+                      source={{ uri: item.images[0] }}
                       onLoadStart={() => handleImageLoadStart(index)}
                       onLoadEnd={() => handleImageLoadEnd(index)}
                     />
                   </View>
                   <View style={styles.textContainer}>
                     <Text style={styles.adTitle}>{item.title}</Text>
-                    <Text style={[styles.adTitle, {...TEXT_STYLE.regular}]}>
+                    <Text style={[styles.adTitle, { ...TEXT_STYLE.regular }]}>
                       {`Rs ${item.price}`}
                     </Text>
-                    <Text style={[styles.adTitle, {...TEXT_STYLE.regular}]}>
+                    <Text style={[styles.adTitle, { ...TEXT_STYLE.regular }]}>
                       {item.type}
                     </Text>
                   </View>
                 </View>
-                <TouchableOpacity onPress={() => handleOpenModal(item._id,item)}>
+                <TouchableOpacity onPress={() => handleOpenModal(item._id, item)}>
                   <AnyIcon
                     type={IconType.SimpleLineIcons}
                     name="options-vertical"
@@ -259,7 +258,7 @@ export const MyBooksScreen = () => {
                 <Text
                   style={[
                     styles.adTitle,
-                    {...TEXT_STYLE.regular},
+                    { ...TEXT_STYLE.regular },
                   ]}>{`Active from ${convertDate(item.createdAt)}`}</Text>
                 <View style={styles.viewsContainer}>
                   <AnyIcon
@@ -271,8 +270,8 @@ export const MyBooksScreen = () => {
                   <Text
                     style={[
                       styles.adTitle,
-                      {...TEXT_STYLE.regular, marginLeft: hp(10)},
-                    ]}>{`0 Views`}</Text>
+                      { ...TEXT_STYLE.regular, marginLeft: hp(10) },
+                    ]}>{`${item.views} ${item.views === 1 ? 'View' : 'Views'}`}</Text>
                 </View>
                 {/* <TouchableOpacity
                   style={styles.editContainer}

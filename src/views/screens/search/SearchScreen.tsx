@@ -2,13 +2,10 @@ import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View, FlatList, A
 import React, { useContext, useMemo, useState, useCallback, useEffect, useRef } from 'react'
 import { AnyIcon, BackButton, IconType, MainContainer } from '../../../components'
 import { useResponsiveDimensions } from '../../../hooks'
-import { FONT_SIZE, TEXT_STYLE } from '../../../enums'
-import { MaybeYouLike } from './components'
+import { FONT_SIZE, SCREENS, TEXT_STYLE } from '../../../enums'
 import { AppDataContext } from '../../../context'
 import { apiService } from '../../../services/api'
 import { useNavigation } from '@react-navigation/native'
-import debounce from 'lodash/debounce'
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface RecentSearch {
     _id: string;
@@ -230,12 +227,10 @@ export const SearchScreen = () => {
     // Update product press handler
     const handleProductPress = async (product: any) => {
         try {
+            navigation.navigate(SCREENS.BOOK_DETAIL, { product: product, fromSearch: true });
             await addToRecentSearches(product._id);
-            // navigation.navigate('ProductDetails', { product });
         } catch (error) {
             console.error('Error handling product press:', error);
-            // Still navigate even if adding to recent fails
-            // navigation.navigate('ProductDetails', { product });
         }
     };
 
@@ -310,7 +305,12 @@ export const SearchScreen = () => {
                         renderItem={({ item }) => (
                             <TouchableOpacity
                                 style={styles.card}
-                                onPress={() => navigation.navigate('ProductDetails', { product: item.product })}
+                                onPress={() =>
+                                    navigation.navigate(SCREENS.BOOK_DETAIL, {
+                                        product: item.product,
+                                        fromSearch: true,
+                                    })
+                                }
                             >
                                 <View style={styles.leftContainer}>
                                     <View style={styles.imgContainer}>

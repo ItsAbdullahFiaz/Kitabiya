@@ -7,6 +7,7 @@ import { FONT_SIZE, SCREENS, TEXT_STYLE } from '../../../enums';
 import { useNavigation } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import { BookDescription, SwiperComponent } from './components';
+import { apiService } from '../../../services/api';
 
 export const BookDetailScreen = ({ route }: any) => {
   const [item, setItem] = useState({});
@@ -14,6 +15,7 @@ export const BookDetailScreen = ({ route }: any) => {
   const { hp, wp } = useResponsiveDimensions();
   const { appTheme, appLang } = useContext(AppDataContext);
   const data = route?.params?.product;
+  const fromSearch = route?.params?.fromSearch || false;
   console.log('Book_Details_Data===>', data);
   const { authState } = useAuth();
 
@@ -22,10 +24,10 @@ export const BookDetailScreen = ({ route }: any) => {
       try {
         const incomingUserData = await firestore()
           .collection('users')
-          .doc(data?.userId.email)
+          .doc(fromSearch ? data?.user?.email : data?.userId?.email)
           .get();
         setItem({
-          email: data?.userId.email,
+          email: fromSearch ? data?.user?.email : data?.userId?.email,
           userName: incomingUserData?.data()?.userName,
         });
       } catch (error: any) {
@@ -33,6 +35,20 @@ export const BookDetailScreen = ({ route }: any) => {
       }
     };
     chatCredentials();
+  }, []);
+
+  useEffect(() => {
+    const trackProductView = async () => {
+      try {
+        if (data?._id) {
+          await apiService.getProductById(data._id);
+        }
+      } catch (error) {
+        console.error('Error tracking product view:', error);
+      }
+    };
+
+    trackProductView();
   }, []);
 
   const styles = useMemo(() => {
@@ -101,11 +117,11 @@ export const BookDetailScreen = ({ route }: any) => {
           <BookDescription description={data?.description} />
           <View style={styles.descriptionContainer}>
             <Text style={styles.descHeading}>address</Text>
-            <Text style={styles.text}>{data?.location}</Text>
+            <Text style={styles.text}>{data?.locationAddress}</Text>
           </View>
         </View>
       </ScrollView>
-      {data?.userId?.email !== authState?.email && (
+      {(fromSearch ? data?.user?.email : data?.userId?.email) !== authState?.email && (
         <View style={styles.chatBtnContainer}>
           <MainButton
             onPress={() =>

@@ -13,22 +13,22 @@ import { AppDataContext } from '../../../../context';
 import { FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../../enums';
 import { AnyIcon, IconType } from '../../../../components';
 
-interface headerProps{
-  handleSetLocation:any;
-  location:any;
+interface headerProps {
+  handleSetLocation: any;
+  location: any;
 }
-export const Address = ({handleSetLocation,location}:headerProps) => {
-    const { appTheme,appLang } = useContext(AppDataContext);
+export const Address = ({ handleSetLocation, location }: headerProps) => {
+  const { appTheme, appLang } = useContext(AppDataContext);
   const { hp, wp } = useResponsiveDimensions();
   const [searchText, setSearchText] = useState('');
   const [locationLoading, setLocationLoading] = useState(false);
 
   const fetchLocation = async () => {
     try {
-      setLocationLoading(true); 
-      Geolocation.getCurrentPosition(info =>{
+      setLocationLoading(true);
+      Geolocation.getCurrentPosition(info => {
         getLocationName(info.coords.latitude, info.coords.longitude);
-      } 
+      }
       );
     } catch (error: any) {
       console.log(error.message);
@@ -57,12 +57,13 @@ export const Address = ({handleSetLocation,location}:headerProps) => {
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
-        
+        marginTop: hp(15),
+
       },
       label: {
         ...TEXT_STYLE.regular,
         fontSize: hp(FONT_SIZE.h3),
-        color:appTheme.primaryTextColor,
+        color: appTheme.primaryTextColor,
         textTransform: 'capitalize',
       },
       inputContainer: {
@@ -72,15 +73,15 @@ export const Address = ({handleSetLocation,location}:headerProps) => {
         borderColor: '#ccc',
         borderRadius: 8,
         paddingHorizontal: 10,
-        
+
       },
       textInput: {
- ...TEXT_STYLE.regular,
-                color: appTheme.primaryTextColor,
-                fontSize: hp(14),
-                height: hp(90),
-                width: '100%',
-                paddingLeft: hp(5),
+        ...TEXT_STYLE.regular,
+        color: appTheme.primaryTextColor,
+        fontSize: hp(14),
+        height: hp(90),
+        width: '100%',
+        paddingLeft: hp(5),
         flex: 1,
         textAlignVertical: 'top'
       },
@@ -98,8 +99,8 @@ export const Address = ({handleSetLocation,location}:headerProps) => {
           style={styles.textInput}
           value={location}
           placeholderTextColor={appTheme.primaryTextColor}
-          onChangeText={val=>handleSetLocation(val)}
-         
+          onChangeText={val => handleSetLocation(val)}
+
         />
         <TouchableOpacity onPress={fetchLocation} disabled={locationLoading}>
           {locationLoading ? (
