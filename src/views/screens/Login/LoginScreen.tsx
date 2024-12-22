@@ -33,19 +33,19 @@ export const LoginScreen = () => {
 
       setLoading(true);
       const normalizedEmail = email.toLowerCase().trim();
-      
+
       // Directly use Firebase Authentication
       const response = await loginUser(normalizedEmail, password.trim());
-      
+
       if (response.success) {
         // Get user data after successful authentication
         const userQuery = await firestore()
           .collection('users')
           .where('email', '==', normalizedEmail)
           .get();
-        
+
         const userData = userQuery.docs[0].data();
-        
+
         // Save user data and token
         await Promise.all([
           saveToLocal(userData.userName.trim(), normalizedEmail, response.token || ''),
@@ -132,56 +132,56 @@ export const LoginScreen = () => {
   }, [hp, wp]);
 
   return (
-     <KeyboardAvoidingView
-            style={{ flex: 1 }}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          >
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
 
-          
-    <MainContainer>
-      <Header title={appLang.titlelogin} />
-      <View style={styles.contentContainer}>
-        <Text style={styles.label}>{appLang.email}</Text>
-        <CustomInput
-          value={email}
-          setValue={setEmail}
-          placeholder={appLang.textemail}
-          textWrong={wrongEmailError}
-          onChange={() => setWrongEmailError('')}
-          bottomError={true}
-        />
-        <Text style={[styles.label, { marginTop: hp(20) }]}>{appLang.password}</Text>
-        <CustomInput
-          value={password}
-          setValue={setPassword}
-          placeholder={appLang.textpassword}
-          textWrong={wrongPasswordError}
-          onChange={() => setWrongPasswordError('')}
-          bottomError={true}
-          twoLinesError={true}
-          secureTextEntry={true}
-        />
-        <Text
-          style={styles.forgotPassword}
-          onPress={() =>
-            navigation.navigate(SCREENS.FORGOT_PASSWORD as never)
-          }>
-          {appLang.forgotPassword}
-        </Text>
-        <View style={styles.loginContainer}>
-          <MainButton
-            onPress={handleLogin}
-            buttonText={appLang.login}
-            isLoading={loading}
+
+      <MainContainer>
+        <Header title={appLang.titlelogin} />
+        <View style={styles.contentContainer}>
+          <Text style={styles.label}>{appLang.email}</Text>
+          <CustomInput
+            value={email}
+            setValue={setEmail}
+            placeholder={appLang.textemail}
+            textWrong={wrongEmailError}
+            onChange={() => setWrongEmailError('')}
+            bottomError={true}
           />
+          <Text style={[styles.label, { marginTop: hp(20) }]}>{appLang.password}</Text>
+          <CustomInput
+            value={password}
+            setValue={setPassword}
+            placeholder={appLang.textpassword}
+            textWrong={wrongPasswordError}
+            onChange={() => setWrongPasswordError('')}
+            bottomError={true}
+            twoLinesError={true}
+            secureTextEntry={true}
+          />
+          <Text
+            style={styles.forgotPassword}
+            onPress={() =>
+              navigation.navigate(SCREENS.FORGOT_PASSWORD as never)
+            }>
+            {appLang.forgotPassword}
+          </Text>
+          <View style={styles.loginContainer}>
+            <MainButton
+              onPress={handleLogin}
+              buttonText={appLang.login}
+              isLoading={loading}
+            />
+          </View>
+          <SocialLogins />
+          <View style={styles.dontContainer}>
+            <Text style={styles.dont}>{appLang.Dontaccount}</Text>
+            <Text style={styles.register} onPress={() => navigation.navigate(SCREENS.SIGNUP as never)}>{appLang.Register}</Text>
+          </View>
         </View>
-        <SocialLogins />
-        <View style={styles.dontContainer}>
-          <Text style={styles.dont}>{appLang.Dontaccount}</Text>
-          <Text style={styles.register} onPress={() => navigation.navigate(SCREENS.SIGNUP as never)}>{appLang.Register}</Text>
-        </View>
-      </View>
-    </MainContainer>
+      </MainContainer>
     </KeyboardAvoidingView>
   );
 };
