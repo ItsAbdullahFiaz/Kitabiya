@@ -30,7 +30,8 @@ export const SearchScreen = () => {
     const [searchedProduct, setSearchedProduct] = useState<any>([]);
     const { appTheme, appLang } = useContext(AppDataContext);
     const { hp, wp } = useResponsiveDimensions();
-    const fetchProducts = async (search: string) => {
+    const [hasSearched, setHasSearched] = useState(false);
+    const fetchProducts = async (search: any) => {
         try {
             setLoading(true);
             const response = await apiService.searchProducts(search);
@@ -148,37 +149,36 @@ export const SearchScreen = () => {
                 color: appTheme.tertiaryTextColor,
                 marginTop: hp(2),
             },
+            noResultContainer: {
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: hp(20),
+            },
+            noResultText: {
+                ...TEXT_STYLE.medium,
+                fontSize: hp(FONT_SIZE.h4),
+                color: appTheme.tertiaryTextColor,
+                textAlign: 'center',
+            },
         })
     }, [hp, wp])
-
-    // Debounced search function
-    const debouncedSearch = useCallback(
-        debounce(async (searchTerm: string) => {
-            if (!searchTerm.trim()) return;
-            await fetchProducts(searchTerm);
-        }, 500),
-        []
-    );
 
     // Handle search input change
     const handleSearchChange = (val: string) => {
         setSearchValue(val);
-
-        // Clear results if search field is empty
         if (!val.trim()) {
             setSearchedProduct([]);
-            debouncedSearch.cancel(); // Cancel any pending search
-            return;
+            setHasSearched(false);
+            loadRecentSearches();
         }
-
-        debouncedSearch(val);
     };
 
-    // Handle search on Enter press
-    const handleSearchSubmit = () => {
+    // Modified search submit handler
+    const handleSearchSubmit = async () => {
         if (searchValue.trim()) {
-            debouncedSearch.cancel();
-            debouncedSearch(searchValue);
+            setHasSearched(true);
+            await fetchProducts(searchValue);
         }
     };
 
@@ -243,7 +243,9 @@ export const SearchScreen = () => {
     const handleClearSearch = () => {
         setSearchValue('');
         setSearchedProduct([]);
+        setHasSearched(false);
         inputRef.current?.clear();
+        loadRecentSearches();
     };
 
     return (
@@ -294,8 +296,8 @@ export const SearchScreen = () => {
                 </View>
             </View>
 
-            {/* Show Recent Searches when search is empty */}
-            {!searchValue.trim() && recentSearches.length > 0 && (
+            {/* Show Recent Searches when no search has been performed */}
+            {!hasSearched && recentSearches.length > 0 && (
                 <View>
                     <View style={styles.recent}>
                         <Text style={styles.text}>{appLang.recently}</Text>
@@ -331,36 +333,47 @@ export const SearchScreen = () => {
                 </View>
             )}
 
-            {/* Show Search Results when searching */}
-            {searchValue.trim() && searchedProduct.length > 0 && (
-                <View>
-                    <Text style={styles.text}>{appLang.results}</Text>
-                    <FlatList
-                        data={searchedProduct}
-                        renderItem={({ item }) => (
-                            <TouchableOpacity
-                                style={styles.card}
-                                onPress={() => handleProductPress(item)}
-                            >
-                                <View style={styles.leftContainer}>
-                                    <View style={styles.imgContainer}>
-                                        <Image
-                                            source={getImageSource(item.images)}
-                                            style={styles.img}
-                                            resizeMode="cover"
-                                            defaultSource={require('./../../../assets/images/books.jpg')}
-                                        />
+            {/* Show Search Results only after search is performed */}
+            {hasSearched && (
+                <View style={{ flex: 1 }}>
+                    {loading ? (
+                        <View style={styles.noResultContainer}>
+                            <ActivityIndicator size="large" color={appTheme.tertiaryTextColor} />
+                        </View>
+                    ) : searchedProduct.length > 0 ? (
+                        <FlatList
+                            data={searchedProduct}
+                            renderItem={({ item }) => (
+                                <TouchableOpacity
+                                    style={styles.card}
+                                    onPress={() => handleProductPress(item)}
+                                >
+                                    <View style={styles.leftContainer}>
+                                        <View style={styles.imgContainer}>
+                                            <Image
+                                                source={getImageSource(item.images)}
+                                                style={styles.img}
+                                                resizeMode="cover"
+                                                defaultSource={require('./../../../assets/images/books.jpg')}
+                                            />
+                                        </View>
+                                        <View>
+                                            <Text style={styles.name}>{item.title || 'Untitled'}</Text>
+                                            <Text style={styles.author}>Rs. {item.price || '0'}</Text>
+                                            <Text style={styles.condition}>{item.condition || 'N/A'}</Text>
+                                        </View>
                                     </View>
-                                    <View>
-                                        <Text style={styles.name}>{item.title || 'Untitled'}</Text>
-                                        <Text style={styles.author}>Rs. {item.price || '0'}</Text>
-                                        <Text style={styles.condition}>{item.condition || 'N/A'}</Text>
-                                    </View>
-                                </View>
-                            </TouchableOpacity>
-                        )}
-                        keyExtractor={item => item._id}
-                    />
+                                </TouchableOpacity>
+                            )}
+                            keyExtractor={item => item._id}
+                        />
+                    ) : (
+                        <View style={styles.noResultContainer}>
+                            <Text style={styles.noResultText}>
+                                {appLang.noResultsFound || 'No results found'}
+                            </Text>
+                        </View>
+                    )}
                 </View>
             )}
             {/* <MaybeYouLike /> */}
