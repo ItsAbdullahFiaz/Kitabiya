@@ -1,5 +1,4 @@
 import {
-  ActivityIndicator,
   FlatList,
   Image,
   Modal,
@@ -16,7 +15,6 @@ import {AppDataContext} from '../../../context';
 import {convertDate} from '../../../utils';
 import {MyAdLoader, RemoveAd} from './components';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
-import {SkeletonLoader} from '../../../components';
 import {useMyProducts, useDeleteProduct} from '../../../hooks/useProducts';
 
 export const MyBooksScreen = () => {
@@ -35,6 +33,7 @@ export const MyBooksScreen = () => {
     error,
     refetch,
   } = useMyProducts();
+  console.log('MYADDETAILS===>', myAdsList);
 
   const deleteProduct = useDeleteProduct();
 
@@ -154,7 +153,7 @@ export const MyBooksScreen = () => {
         fontSize: hp(FONT_SIZE.h3),
         color: appTheme.primaryTextColor,
         textTransform: 'capitalize',
-      }, 
+      },
       adBtnContainer: {
         marginTop: hp(20),
         height: hp(48),
@@ -189,9 +188,7 @@ export const MyBooksScreen = () => {
   }
 
   if (isLoading) {
-    return (
-      <MyAdLoader/>
-    );
+    return <MyAdLoader />;
   }
 
   if (!isLoading && myAdsList.length === 0) {
