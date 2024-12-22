@@ -1,25 +1,26 @@
-import {StyleSheet, Text, View, FlatList} from 'react-native';
-import React, {useCallback, useContext, useMemo, useState} from 'react';
+import { StyleSheet, Text, View, FlatList } from 'react-native';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
 import {
   AnyIcon,
   IconType,
   MainButton,
   MainContainer,
 } from '../../../components';
-import {useResponsiveDimensions, useToast} from '../../../hooks';
-import {FONT_SIZE, SCREENS, SIZES, TEXT_STYLE} from '../../../enums';
-import {signOutUser} from '../../../services';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import {ProfileHeader} from './components';
+import { useResponsiveDimensions, useToast } from '../../../hooks';
+import { FONT_SIZE, SCREENS, SIZES, TEXT_STYLE } from '../../../enums';
+import { signOutUser } from '../../../services';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { ProfileHeader } from './components';
 import {
   AppDataContext,
   AUTO_THEME_MODE,
   DARK_THEME_MODE,
   LIGHT_THEME_MODE,
+  useAuth,
 } from '../../../context';
-import {ButtonRow, CustomModal} from '../../../components/unused';
-import {storeStringValue} from '../../../utils';
-import {apiService} from '../../../services/api';
+import { ButtonRow, CustomModal } from '../../../components/unused';
+import { storeStringValue } from '../../../utils';
+import { apiService } from '../../../services/api';
 
 export const AccountScreen = () => {
   const [appVersion, setAppVersion] = useState('1.0.1');
@@ -32,13 +33,14 @@ export const AccountScreen = () => {
     activeLang,
     langTranslations,
   } = useContext(AppDataContext);
-  const {hp, wp} = useResponsiveDimensions();
+  const { hp, wp } = useResponsiveDimensions();
   const navigation = useNavigation<any>();
   const [langModalVisible, setLangModalVisible] = useState(false);
   const [themeModalVisible, setThemeModalVisible] = useState(false);
   const [userProfileData, setUserProfileData] = useState('');
   const [loading, setLoading] = useState(false);
   const showToast = useToast();
+  const { logout } = useAuth();
 
   const fetchUserProfileData = async () => {
     try {
@@ -72,7 +74,7 @@ export const AccountScreen = () => {
     setActiveLang(lang);
   };
 
-  const renderItem = ({item, index}: {item: any; index: number}) => {
+  const renderItem = ({ item, index }: { item: any; index: number }) => {
     return (
       <ButtonRow
         onPress={() => switchLanguage(item.value)}
@@ -203,7 +205,7 @@ export const AccountScreen = () => {
 
       <View style={styles.logoutButtonContainer}>
         <MainButton
-          onPress={() => signOutUser(navigation)}
+          onPress={() => [signOutUser(navigation), logout()]}
           buttonText={appLang.logout}
           dismissiveButton
         />

@@ -1,35 +1,39 @@
 import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import React, { useContext, useMemo, useState } from 'react'
 import { useResponsiveDimensions } from '../hooks'
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 import auth from '@react-native-firebase/auth';
-import { StackActions, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { FONT_SIZE, STACK } from '../enums';
-import { AppDataContext } from '../context';
-import { notificationService } from '../services/NotificationService';
+import { AppDataContext, useAuth } from '../context';
 import firestore from '@react-native-firebase/firestore';
-import { saveToLocal } from '../utils';
+import { resetAndGo, tokenManager } from '../utils';
+import { profileService } from '../services/profileService';
 
 export const SocialLogins = () => {
   const { appTheme, appLang } = useContext(AppDataContext);
   const navigation = useNavigation<any>();
   const { hp, wp } = useResponsiveDimensions();
   const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
 
   const handleSocialLoginSuccess = async (userCredential: any) => {
     try {
       const user = userCredential.user;
       const normalizedEmail = user.email.toLowerCase().trim();
 
+      // Get user token
       const token = await user.getIdToken();
+      tokenManager.setToken(token);
 
+      // Check if user exists in Firestore
       const userQuery = await firestore()
         .collection('users')
         .where('email', '==', normalizedEmail)
         .get();
 
-      let userData;
+      // Create new user profile if doesn't exist
       if (userQuery.empty) {
         const newUserData = {
           email: normalizedEmail,
@@ -42,20 +46,29 @@ export const SocialLogins = () => {
           .collection('users')
           .doc(normalizedEmail)
           .set(newUserData);
-
-        userData = newUserData;
-      } else {
-        userData = userQuery.docs[0].data();
       }
 
-      await Promise.all([
-        saveToLocal(userData.userName.trim(), normalizedEmail, token),
-        notificationService.requestUserPermission()
-          .then(granted => granted ? notificationService.saveFCMToken(normalizedEmail) : Promise.resolve(''))
-          .catch(console.error)
-      ]);
+      // Fetch profile data
+      const profileResponse = await profileService.fetchUserProfile();
+      if (!profileResponse.success) {
+        console.warn('Failed to fetch social login profile data:', profileResponse.error);
+        return;
+      }
 
-      navigation.dispatch(StackActions.replace(STACK.MAIN as never));
+      // Login user with profile data
+      const profile = profileResponse.data || {};
+      login(
+        profile.name || user.displayName || '',
+        normalizedEmail,
+        token,
+        profile.phoneNumber || '',
+        profile.location || '',
+        profile.dateOfBirth || '',
+        profile.photoUrl || user.photoURL || ''
+      );
+
+      resetAndGo(navigation, STACK.MAIN, null);
+
     } catch (error) {
       console.error('Error handling social login:', error);
       throw error;

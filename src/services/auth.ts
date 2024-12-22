@@ -1,6 +1,6 @@
 import auth from '@react-native-firebase/auth';
 import { STACK } from '../enums';
-import { resetAndGo } from '../utils';
+import { resetAndGo, tokenManager } from '../utils';
 import { API_ENDPOINTS } from '../config';
 
 const registerUser = async (email: string, password: string) => {
@@ -62,6 +62,7 @@ const loginUser = async (email: string, password: string) => {
 const signOutUser = async (navigation: any) => {
     try {
         await auth().signOut();
+        tokenManager.clearToken();
         console.log('User signed out!');
         resetAndGo(navigation, STACK.AUTH, null);
     } catch (error) {
