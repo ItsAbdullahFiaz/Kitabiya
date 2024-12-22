@@ -11,8 +11,10 @@ import {
 } from 'react-native';
 import React, {useContext, useMemo, useState} from 'react';
 import {
+  AnyIcon,
   CustomInput,
   Header,
+  IconType,
   MainButton,
   MainContainer,
 } from '../../../components';
@@ -221,7 +223,7 @@ export const ProfileScreen = () => {
         height: hp(200),
         width: hp(200),
         borderRadius: hp(100),
-        backgroundColor: '#CA5A5A',
+        backgroundColor: appTheme.primary,
         alignSelf: 'center',
         marginTop: hp(50),
       },
@@ -236,6 +238,12 @@ export const ProfileScreen = () => {
         top: hp(160),
         right: hp(20),
         zIndex: 1,
+        height:hp(36),
+        width:hp(36),
+        borderRadius:hp(18),
+        justifyContent:"center",
+        alignItems:"center",
+        backgroundColor:appTheme.primaryBackground
       },
       detailsContainer: {
         marginTop: hp(30),
@@ -290,10 +298,16 @@ export const ProfileScreen = () => {
           style={styles.btnContainer}
           onPress={() => handleModal(true)}
         >
-          <Image
+          <AnyIcon
+          type={IconType.Feather}
+          name='edit'
+          color={appTheme.primary}
+          size={hp(20)}
+          />
+          {/* <Image
             style={{ height: hp(20), width: hp(20) }}
             source={require('../../../assets/images/camera.png')}
-          />
+          /> */}
         </TouchableOpacity>
       </View>
       <View style={styles.detailsContainer}>

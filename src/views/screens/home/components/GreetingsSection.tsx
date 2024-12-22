@@ -27,6 +27,7 @@ const styles = (hp: any) => StyleSheet.create({
     greetingsHeader: {
         height: hp(60),
         paddingHorizontal: hp(16),
+        marginBottom:6
     },
     userName: {
         fontSize: FONT_SIZE.h4,
