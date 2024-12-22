@@ -1,4 +1,4 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import React, {
   useCallback,
   useContext,
@@ -6,7 +6,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import {MainContainer} from '../../../components';
+import {BackButton, MainContainer} from '../../../components';
 import {GiftedChat, IMessage} from 'react-native-gifted-chat';
 import firestore from '@react-native-firebase/firestore';
 import {useResponsiveDimensions} from '../../../hooks';
@@ -195,6 +195,7 @@ export const Chat = ({route}: any) => {
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: OTHER_COLORS.green,
+        marginLeft: hp(20),
       },
       img: {
         height: hp(48),
@@ -230,6 +231,7 @@ export const Chat = ({route}: any) => {
   return (
     <MainContainer>
       <View style={styles.headerContainer}>
+        <BackButton />
         <View style={styles.imgContainer}>
           <View style={styles.greenDot}></View>
           <UserAvatar
@@ -238,11 +240,6 @@ export const Chat = ({route}: any) => {
             name={route?.params?.data.userName}
             bgColor={getColorByFirstLetter(route?.params?.data.userName)}
           />
-          {/* <Image
-            style={styles.img}
-            resizeMode={'cover'}
-            source={require('../../../assets/images/user.png')}
-          /> */}
         </View>
         <View style={styles.textContainer}>
           <Text style={styles.userName}>{route?.params?.data.userName}</Text>

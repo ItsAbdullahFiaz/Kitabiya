@@ -1,25 +1,25 @@
 import {StyleSheet, Text, View, FlatList} from 'react-native';
-import React, {useCallback, useContext, useMemo, useState} from 'react';
+import React, {useContext, useMemo, useState} from 'react';
 import {
   AnyIcon,
   IconType,
   MainButton,
   MainContainer,
 } from '../../../components';
-import {useResponsiveDimensions, useToast} from '../../../hooks';
+import {useResponsiveDimensions} from '../../../hooks';
 import {FONT_SIZE, SCREENS, SIZES, TEXT_STYLE} from '../../../enums';
 import {signOutUser} from '../../../services';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {ProfileHeader} from './components';
 import {
   AppDataContext,
   AUTO_THEME_MODE,
   DARK_THEME_MODE,
   LIGHT_THEME_MODE,
+  useAuth,
 } from '../../../context';
 import {ButtonRow, CustomModal} from '../../../components/unused';
 import {storeStringValue} from '../../../utils';
-import {apiService} from '../../../services/api';
 
 export const AccountScreen = () => {
   const [appVersion, setAppVersion] = useState('1.0.1');
@@ -36,33 +36,6 @@ export const AccountScreen = () => {
   const navigation = useNavigation<any>();
   const [langModalVisible, setLangModalVisible] = useState(false);
   const [themeModalVisible, setThemeModalVisible] = useState(false);
-  const [userProfileData, setUserProfileData] = useState('');
-  const [loading, setLoading] = useState(false);
-  const showToast = useToast();
-
-  const fetchUserProfileData = async () => {
-    try {
-      const response = await apiService.getUserProfileData();
-      if (!response.success) {
-        throw new Error(
-          response.message || 'Failed to fetch User Profile Data',
-        );
-      }
-      setUserProfileData(response.data.user || []);
-    } catch (error: any) {
-      console.error('Error fetching notifications:', error);
-      showToast(error.message, 'errorToast');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useFocusEffect(
-    useCallback(() => {
-      fetchUserProfileData();
-    }, []),
-  );
-
   const switchTheme = (themeMode: string) => {
     setActiveThemeMode(themeMode);
     storeStringValue('@ThemeState', themeMode);
@@ -123,14 +96,10 @@ export const AccountScreen = () => {
 
   return (
     <MainContainer>
-      <ProfileHeader userInfo={userProfileData} />
+      <ProfileHeader />
       <View style={styles.buttonsContainer}>
         <ButtonRow
-          onPress={() =>
-            navigation.navigate(SCREENS.PROFILE as never, {
-              userData: userProfileData,
-            })
-          }
+          onPress={() => navigation.navigate(SCREENS.PROFILE as never)}
           contentRight={
             <AnyIcon
               type={IconType.Octicons}

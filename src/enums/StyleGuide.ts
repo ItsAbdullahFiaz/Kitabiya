@@ -10,7 +10,7 @@ enum FONT {
 }
 
 enum PRIMARY_COLORS_LIGHT {
-    primary = '#5A6CF8',
+    primary = '#2b7def',
     primaryBackground = '#FFFFFF',
     secondaryBackground = '#F5F5F5',
     primaryTextColor = '#000000',
