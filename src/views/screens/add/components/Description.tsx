@@ -24,12 +24,19 @@ export const Description = ({ description, handleDescription }: any) => {
         textTransform: 'capitalize',
         marginRight: hp(5),
       },
+       label: {
+              ...TEXT_STYLE.regular,
+              fontSize: hp(FONT_SIZE.h3),
+              color:appTheme.primaryTextColor,
+              textTransform: 'capitalize',
+            },
       conditionContainer: {
         marginTop: hp(15),
       },
       input: {
-        ...TEXT_STYLE.regular,
-        fontSize: hp(FONT_SIZE.h3),
+        // ...TEXT_STYLE.regular,
+        color: appTheme.primaryTextColor,
+        fontSize: hp(14),
         paddingHorizontal: hp(15),
         height: hp(150),
         borderWidth: 0.5,
@@ -38,19 +45,22 @@ export const Description = ({ description, handleDescription }: any) => {
         borderRadius: hp(8),
         textAlignVertical: 'top', // Ensures text starts at the top
       },
+
+
+     
     });
   }, [hp, wp]);
 
   return (
     <View style={styles.conditionContainer}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>{appLang.description}</Text>
-        <AnyIcon
+        <Text style={styles.label}>{appLang.description}</Text>
+        {/* <AnyIcon
           type={IconType.FontAwesome5}
           name="star-of-life"
           size={8}
           color={OTHER_COLORS.red}
-        />
+        /> */}
       </View>
       <TextInput
         multiline

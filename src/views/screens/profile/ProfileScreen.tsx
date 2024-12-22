@@ -3,6 +3,7 @@ import {
   KeyboardAvoidingView,
   Modal,
   Platform,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -18,7 +19,7 @@ import {
 import {useResponsiveDimensions, useToast} from '../../../hooks';
 import {AppDataContext} from '../../../context';
 import {FONT_SIZE, SCREENS, TEXT_STYLE} from '../../../enums';
-import {BottomSheetComponent, DropDownComponent} from '../add/components';
+import {Address, BottomSheetComponent, DropDownComponent} from '../add/components';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import DatePicker from 'react-native-date-picker';
 import {dropdownItems} from '../../../utils';
@@ -266,12 +267,14 @@ export const ProfileScreen = () => {
     });
   }, [hp, wp]);
   return (
-     <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      >
-
-      
+    <KeyboardAvoidingView
+  style={{ flex: 1 }}
+  behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+>
+  <ScrollView 
+    contentContainerStyle={{ flexGrow: 1 }} 
+    keyboardShouldPersistTaps="handled"
+  >
     <MainContainer>
       <Header title="edit profile" />
       <View style={styles.imgContainer}>
@@ -279,15 +282,16 @@ export const ProfileScreen = () => {
           style={styles.img}
           source={
             profileImage
-              ? {uri: profileImage}
+              ? { uri: profileImage }
               : require('../../../assets/images/user.png')
           }
         />
         <TouchableOpacity
           style={styles.btnContainer}
-          onPress={() => handleModal(true)}>
+          onPress={() => handleModal(true)}
+        >
           <Image
-            style={{height: hp(20), width: hp(20)}}
+            style={{ height: hp(20), width: hp(20) }}
             source={require('../../../assets/images/camera.png')}
           />
         </TouchableOpacity>
@@ -302,7 +306,7 @@ export const ProfileScreen = () => {
           onChange={() => setWrongNameError('')}
           bottomError={true}
         />
-        <Text style={[styles.label, {marginTop: hp(20)}]}>{appLang.email}</Text>
+        <Text style={[styles.label, { marginTop: hp(20) }]}>{appLang.email}</Text>
         <CustomInput
           value={email}
           setValue={setEmail}
@@ -312,19 +316,18 @@ export const ProfileScreen = () => {
           bottomError={true}
           editable={false}
         />
-        <DropDownComponent
-          handleSelectOption={handleSelectLocation}
-          type={location}
-          dropdownItems={dropdownItems}
-          label="Location"
-          component="profile"
-        />
-        <Text style={[styles.label, {marginTop: hp(20)}]}>
+        <View style={{marginTop:20}}>
+        <Address />
+        </View>
+       
+
+        <Text style={[styles.label, { marginTop: hp(20) }]}>
           {appLang.dateofbirth}
         </Text>
         <TouchableOpacity
           style={styles.birthContainer}
-          onPress={() => setOpen(true)}>
+          onPress={() => setOpen(true)}
+        >
           <Text style={styles.birthText}>{dateOfBirth}</Text>
         </TouchableOpacity>
       </View>
@@ -348,7 +351,7 @@ export const ProfileScreen = () => {
         modal
         open={open}
         date={date}
-        onConfirm={comingDate => {
+        onConfirm={(comingDate) => {
           const date = new Date(comingDate);
           const day = String(date.getDate()).padStart(2, '0');
           const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -362,6 +365,6 @@ export const ProfileScreen = () => {
         }}
       />
     </MainContainer>
-    </KeyboardAvoidingView>
-  );
-};
+  </ScrollView>
+</KeyboardAvoidingView>
+)}
