@@ -20,6 +20,7 @@ import {useMyProducts, useDeleteProduct} from '../../../hooks/useProducts';
 export const MyBooksScreen = () => {
   const navigation = useNavigation<any>();
   const [selectedProductId, setSelectedProductId] = useState<string>('');
+  const [selectProduct, setSelectProduct] = useState<string>('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const {hp, wp} = useResponsiveDimensions();
   const {appTheme, appLang} = useContext(AppDataContext);
@@ -37,8 +38,9 @@ export const MyBooksScreen = () => {
 
   const deleteProduct = useDeleteProduct();
 
-  const handleOpenModal = (id: string) => {
+  const handleOpenModal = (id: string,productData:any) => {
     setSelectedProductId(id);
+    setSelectProduct(productData);
     setIsModalVisible(true);
   };
 
@@ -92,11 +94,13 @@ export const MyBooksScreen = () => {
       card: {
         width: '100%',
         height: hp(100),
-        backgroundColor: 'rgba(0,0,0,0.1)',
+        // backgroundColor: 'rgba(0,0,0,0.1)',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
         padding: hp(10),
+        borderBottomColor:'rgba(0,0,0,0.1)',
+        borderWidth:0.5
       },
       upperContainer: {
         flexDirection: 'row',
@@ -123,6 +127,8 @@ export const MyBooksScreen = () => {
       },
       bottomContainer: {
         padding: hp(10),
+        flexDirection:"row",
+        justifyContent:"space-between"
       },
       viewsContainer: {
         flexDirection: 'row',
@@ -240,7 +246,7 @@ export const MyBooksScreen = () => {
                     </Text>
                   </View>
                 </View>
-                <TouchableOpacity onPress={() => handleOpenModal(item._id)}>
+                <TouchableOpacity onPress={() => handleOpenModal(item._id,item)}>
                   <AnyIcon
                     type={IconType.SimpleLineIcons}
                     name="options-vertical"
@@ -268,8 +274,7 @@ export const MyBooksScreen = () => {
                       {...TEXT_STYLE.regular, marginLeft: hp(10)},
                     ]}>{`0 Views`}</Text>
                 </View>
-                <Text style={styles.active}>Active</Text>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   style={styles.editContainer}
                   onPress={() =>
                     navigation.navigate(SCREENS.ADD_SCREEN as never, {
@@ -278,7 +283,7 @@ export const MyBooksScreen = () => {
                     })
                   }>
                   <Text style={styles.edit}>edit</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
             </TouchableOpacity>
           )}
@@ -291,6 +296,7 @@ export const MyBooksScreen = () => {
         <RemoveAd
           handleRemoveModal={handleRemoveModal}
           index={selectedProductId}
+          product={selectProduct}
         />
       </Modal>
     </MainContainer>

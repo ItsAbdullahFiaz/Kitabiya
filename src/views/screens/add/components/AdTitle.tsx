@@ -34,20 +34,20 @@ export const AdTitle = ({ bookTitle, handleSelectTitle }: any) => {
         borderColor: appTheme.borderDefault,
         paddingTop: hp(10),
         borderRadius: hp(8)
-      }
+      },label: {
+                    ...TEXT_STYLE.regular,
+                    fontSize: hp(FONT_SIZE.h3),
+                    color:appTheme.primaryTextColor,
+                    textTransform: 'capitalize',
+                  },
     })
   }, [hp, wp])
 
   return (
     <View style={styles.conditionContainer}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>{appLang.adTitle}</Text>
-        <AnyIcon
-          type={IconType.FontAwesome5}
-          name='star-of-life'
-          size={8}
-          color={OTHER_COLORS.red}
-        />
+        <Text style={styles.label}>{appLang.adTitle}</Text>
+       
       </View>
       <TextInput style={styles.input} value={bookTitle} placeholder='Enter title' placeholderTextColor={appTheme.primaryTextColor}
         onChangeText={val => handleSelectTitle(val)} />

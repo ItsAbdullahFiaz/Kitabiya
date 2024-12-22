@@ -187,13 +187,13 @@ export const DropDownComponent = (props: headerProps) => {
         </View>
       ) : (
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>{label}</Text>
-          <AnyIcon
+          <Text style={styles.label}>{label}</Text>
+          {/* <AnyIcon
             type={IconType.FontAwesome5}
             name="star-of-life"
             size={hp(8)}
             color={OTHER_COLORS.red}
-          />
+          /> */}
         </View>
       )}
 

@@ -3,6 +3,7 @@ import {
   KeyboardAvoidingView,
   Modal,
   Platform,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -10,15 +11,17 @@ import {
 } from 'react-native';
 import React, { useContext, useMemo, useState } from 'react';
 import {
+  AnyIcon,
   CustomInput,
   Header,
+  IconType,
   MainButton,
   MainContainer,
 } from '../../../components';
 import { useResponsiveDimensions, useToast } from '../../../hooks';
 import { AppDataContext, useAuth } from '../../../context';
-import { FONT_SIZE, TEXT_STYLE } from '../../../enums';
-import { BottomSheetComponent, DropDownComponent } from '../add/components';
+import { FONT_SIZE, SCREENS, TEXT_STYLE } from '../../../enums';
+import { Address, BottomSheetComponent, DropDownComponent } from '../add/components';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import DatePicker from 'react-native-date-picker';
 import { dropdownItems } from '../../../utils';
@@ -229,7 +232,7 @@ export const ProfileScreen = () => {
         height: hp(200),
         width: hp(200),
         borderRadius: hp(100),
-        backgroundColor: '#CA5A5A',
+        backgroundColor: appTheme.primary,
         alignSelf: 'center',
         marginTop: hp(50),
       },
@@ -244,6 +247,12 @@ export const ProfileScreen = () => {
         top: hp(160),
         right: hp(20),
         zIndex: 1,
+        height: hp(36),
+        width: hp(36),
+        borderRadius: hp(18),
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: appTheme.primaryBackground
       },
       detailsContainer: {
         marginTop: hp(30),
@@ -277,99 +286,109 @@ export const ProfileScreen = () => {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <MainContainer>
-        <Header title="edit profile" />
-        <View style={styles.imgContainer}>
-          <Image
-            style={styles.img}
-            source={
-              profileImage
-                ? { uri: profileImage }
-                : require('../../../assets/images/user.png')
-            }
-          />
-          <TouchableOpacity
-            style={styles.btnContainer}
-            onPress={() => handleModal(true)}>
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
+      >
+        <MainContainer>
+          <Header title="edit profile" />
+          <View style={styles.imgContainer}>
             <Image
-              style={{ height: hp(20), width: hp(20) }}
-              source={require('../../../assets/images/camera.png')}
+              style={styles.img}
+              source={
+                profileImage
+                  ? { uri: profileImage }
+                  : require('../../../assets/images/user.png')
+              }
             />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.detailsContainer}>
-          <Text style={styles.label}>{appLang.name}</Text>
-          <CustomInput
-            value={userName}
-            setValue={setUserName}
-            placeholder={appLang.textname}
-            textWrong={wrongNameError}
-            onChange={() => setWrongNameError('')}
-            bottomError={true}
+            <TouchableOpacity
+              style={styles.btnContainer}
+              onPress={() => handleModal(true)}
+            >
+              <AnyIcon
+                type={IconType.Feather}
+                name='edit'
+                color={appTheme.primary}
+                size={hp(20)}
+              />
+              {/* <Image
+            style={{ height: hp(20), width: hp(20) }}
+            source={require('../../../assets/images/camera.png')}
+          /> */}
+            </TouchableOpacity>
+          </View>
+          <View style={styles.detailsContainer}>
+            <Text style={styles.label}>{appLang.name}</Text>
+            <CustomInput
+              value={userName}
+              setValue={setUserName}
+              placeholder={appLang.textname}
+              textWrong={wrongNameError}
+              onChange={() => setWrongNameError('')}
+              bottomError={true}
+            />
+            <Text style={[styles.label, { marginTop: hp(20) }]}>{appLang.email}</Text>
+            <CustomInput
+              value={email}
+              setValue={setEmail}
+              placeholder={appLang.textemail}
+              textWrong={wrongEmailError}
+              onChange={() => setWrongEmailError('')}
+              bottomError={true}
+              editable={false}
+            />
+            <View style={{ marginTop: 20 }}>
+              <Address />
+            </View>
+
+
+            <Text style={[styles.label, { marginTop: hp(20) }]}>
+              {appLang.dateofbirth}
+            </Text>
+            <TouchableOpacity
+              style={styles.birthContainer}
+              onPress={() => setOpen(true)}
+            >
+              <Text style={styles.birthText}>{dateOfBirth}</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.signupContainer}>
+            <MainButton
+              onPress={updateuserDetails}
+              buttonText={appLang.savechanges}
+              isLoading={loading}
+              disableBtn={!isFormChanged()}
+            />
+          </View>
+          <Modal visible={isModalOpen} transparent>
+            <BottomSheetComponent
+              handleModal={handleModal}
+              handleCameraLaunch={handleCameraLaunch}
+              openImagePicker={openImagePicker}
+            />
+          </Modal>
+          <DatePicker
+            mode="date"
+            modal
+            open={open}
+            date={date}
+            onConfirm={(comingDate) => {
+              const date = new Date(comingDate);
+              const day = String(date.getDate()).padStart(2, '0');
+              const month = String(date.getMonth() + 1).padStart(2, '0');
+              const year = date.getFullYear();
+              const formattedDate = `${day}-${month}-${year}`;
+              setDateOfBirth(formattedDate);
+              setOpen(false);
+            }}
+            onCancel={() => {
+              setOpen(false);
+            }}
           />
-          <Text style={[styles.label, { marginTop: hp(20) }]}>
-            {appLang.email}
-          </Text>
-          <CustomInput
-            value={email}
-            setValue={setEmail}
-            placeholder={appLang.textemail}
-            textWrong={wrongEmailError}
-            onChange={() => setWrongEmailError('')}
-            bottomError={true}
-            editable={false}
-          />
-          <DropDownComponent
-            handleSelectOption={handleSelectLocation}
-            type={location}
-            dropdownItems={dropdownItems}
-            label="Location"
-            component="profile"
-          />
-          <Text style={[styles.label, { marginTop: hp(20) }]}>
-            {appLang.dateofbirth}
-          </Text>
-          <TouchableOpacity
-            style={styles.birthContainer}
-            onPress={() => setOpen(true)}>
-            <Text style={styles.birthText}>{dateOfBirth}</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.signupContainer}>
-          <MainButton
-            onPress={updateuserDetails}
-            buttonText={appLang.savechanges}
-            isLoading={loading}
-            disableBtn={!isFormChanged()}
-          />
-        </View>
-        <Modal visible={isModalOpen} transparent>
-          <BottomSheetComponent
-            handleModal={handleModal}
-            handleCameraLaunch={handleCameraLaunch}
-            openImagePicker={openImagePicker}
-          />
-        </Modal>
-        <DatePicker
-          mode="date"
-          modal
-          open={open}
-          date={date}
-          onConfirm={comingDate => {
-            const date = new Date(comingDate);
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const year = date.getFullYear();
-            const formattedDate = `${day}-${month}-${year}`;
-            setDateOfBirth(formattedDate);
-            setOpen(false);
-          }}
-          onCancel={() => {
-            setOpen(false);
-          }}
-        />
-      </MainContainer>
+        </MainContainer>
+      </ScrollView>
     </KeyboardAvoidingView>
-  );
-};
+  )
+}

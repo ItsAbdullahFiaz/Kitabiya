@@ -51,19 +51,26 @@ export const Condition = ({ handleSelect, selected }: any) => {
       selectedText: {
         color: appTheme.primaryBackground,
       },
+       label: {
+                    ...TEXT_STYLE.regular,
+                    fontSize: hp(FONT_SIZE.h3),
+                    color:appTheme.primaryTextColor,
+                    textTransform: 'capitalize',
+                  },
+           
     })
   }, [hp, wp])
 
   return (
     <View style={styles.conditionContainer}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>{appLang.condition}</Text>
-        <AnyIcon
+        <Text style={styles.label}>{appLang.condition}</Text>
+        {/* <AnyIcon
           type={IconType.FontAwesome5}
           name='star-of-life'
           size={8}
           color={OTHER_COLORS.red}
-        />
+        /> */}
       </View>
       {/* start */}
       <View style={styles.container}>

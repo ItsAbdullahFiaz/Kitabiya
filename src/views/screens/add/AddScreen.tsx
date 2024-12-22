@@ -1,8 +1,15 @@
-import {Modal, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import React, {useContext, useMemo, useState} from 'react';
-import {FONT_SIZE, SCREENS, TEXT_STYLE} from '../../../enums';
+import {FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE} from '../../../enums';
 import {useResponsiveDimensions, useToast} from '../../../hooks';
 import {
+  Address,
   AdTitle,
   BottomSheetComponent,
   Condition,
@@ -12,7 +19,13 @@ import {
   RemoveSheet,
 } from './components';
 import {AppDataContext} from '../../../context';
-import {Header, MainButton, MainContainer} from '../../../components';
+import {
+  AnyIcon,
+  Header,
+  IconType,
+  MainButton,
+  MainContainer,
+} from '../../../components';
 import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
 import {apiService} from '../../../services/api';
 import {useNavigation} from '@react-navigation/native';
@@ -45,7 +58,7 @@ export const AddScreen = ({route}: any) => {
     dataType === 'edit' ? data?.language : 'choose',
   );
   const [location, setLocation] = useState(
-    dataType === 'edit' ? data?.locationAddress : 'choose',
+    dataType === 'edit' ? data?.locationAddress : 'Enter your address',
   );
   const [bookTitle, setBookTitle] = useState(
     dataType === 'edit' ? data?.title : '',
@@ -134,10 +147,6 @@ export const AddScreen = ({route}: any) => {
   const handleSelectLanguage = (type: any) => {
     console.log('Language===>', type);
     setLanguage(type);
-  };
-  const handleSelectLocation = (type: any) => {
-    console.log('Location===>', type);
-    setLocation(type);
   };
   const handleSelectTitle = (val: any) => {
     console.log('Book_TITLe===>', val);
@@ -281,6 +290,10 @@ export const AddScreen = ({route}: any) => {
     }
   };
 
+  const handleSetLocation=(val:any)=>{
+    setLocation(val)
+  }
+
   const styles = useMemo(() => {
     return StyleSheet.create({
       btnContainer: {
@@ -302,7 +315,7 @@ export const AddScreen = ({route}: any) => {
       border: {
         borderWidth: 0.2,
         borderColor: appTheme.tertiaryTextColor,
-        marginTop: hp(20),
+        marginTop: hp(15),
       },
       nextBtnContainer: {
         marginTop: hp(20),
@@ -317,6 +330,7 @@ export const AddScreen = ({route}: any) => {
         alignItems: 'center',
         backgroundColor: 'rgba(0,0,0,0.3)',
       },
+     
     });
   }, [hp, wp, appTheme]);
 
@@ -331,13 +345,16 @@ export const AddScreen = ({route}: any) => {
           handleImageSelectorModal={handleImageSelectorModal}
           handleOpenAndDelete={handleOpenAndDelete}
         />
+        <View style={styles.border} />
         <Condition handleSelect={handleSelect} selected={selected} />
+        <View style={styles.border} />
         <DropDownComponent
           handleSelectOption={handleSelectType}
           type={type}
           dropdownItems={typeitem}
           label="Type"
         />
+        <View style={styles.border} />
         <DropDownComponent
           handleSelectOption={handleSelectLanguage}
           type={language}
@@ -346,16 +363,15 @@ export const AddScreen = ({route}: any) => {
         />
         <View style={styles.border} />
         <AdTitle bookTitle={bookTitle} handleSelectTitle={handleSelectTitle} />
+
+        <View style={styles.border} />
         <Description
           handleDescription={handleDescription}
           description={description}
         />
-        <DropDownComponent
-          handleSelectOption={handleSelectLocation}
-          type={location}
-          dropdownItems={dropdownItems}
-          label="Location"
-        />
+        
+<View style={styles.border} />
+<Address handleSetLocation={handleSetLocation} location={location}/>
         <View style={styles.border} />
         <Price handlePrice={handlePrice} price={price} />
         <View style={styles.nextBtnContainer}>

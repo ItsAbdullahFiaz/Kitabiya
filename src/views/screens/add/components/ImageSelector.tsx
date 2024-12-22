@@ -55,7 +55,7 @@ export const ImageSelector = ({
         width: '100%',
       },
       booksHeading: {
-        ...TEXT_STYLE.bold,
+        ...TEXT_STYLE.regular,
         fontSize: hp(FONT_SIZE.h3),
         color: appTheme.primaryTextColor,
       },
@@ -142,19 +142,20 @@ export const ImageSelector = ({
         alignItems: 'center',
         backgroundColor: 'rgba(0,0,0,0.3)',
       },
+      label: {
+                          ...TEXT_STYLE.regular,
+                          fontSize: hp(FONT_SIZE.h3),
+                          color:appTheme.primaryTextColor,
+                          textTransform: 'capitalize',
+                        },
     });
   }, [hp, wp, appTheme]);
 
   return (
     <View style={styles.categoryContainer}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>Category</Text>
-        <AnyIcon
-          type={IconType.FontAwesome5}
-          name="star-of-life"
-          size={hp(8)}
-          color={OTHER_COLORS.red}
-        />
+        <Text style={styles.label}>Category</Text>
+       
       </View>
       <View style={styles.booksContainer}>
         <View style={styles.imgContainer}>
