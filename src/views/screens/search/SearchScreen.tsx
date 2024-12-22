@@ -30,7 +30,7 @@ export const SearchScreen = () => {
     const [searchedProduct, setSearchedProduct] = useState<any>([]);
     const { appTheme, appLang } = useContext(AppDataContext);
     const { hp, wp } = useResponsiveDimensions();
-    const fetchProducts = async (search: any) => {
+    const fetchProducts = async (search: string) => {
         try {
             setLoading(true);
             const response = await apiService.searchProducts(search);
@@ -155,23 +155,8 @@ export const SearchScreen = () => {
     const debouncedSearch = useCallback(
         debounce(async (searchTerm: string) => {
             if (!searchTerm.trim()) return;
-
-            try {
-                setLoading(true);
-                const response = await apiService.searchProducts({ query: searchTerm });
-
-                if (response.error) {
-                    throw new Error(response.message || 'Failed to fetch products');
-                }
-
-                setSearchedProduct(response.data || []);
-            } catch (error) {
-                console.error('Error fetching products:', error);
-                // Add your error handling here (e.g., show toast)
-            } finally {
-                setLoading(false);
-            }
-        }, 500), // 500ms delay
+            await fetchProducts(searchTerm);
+        }, 500),
         []
     );
 
