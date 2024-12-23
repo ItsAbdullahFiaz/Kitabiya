@@ -1,4 +1,10 @@
-import { Modal, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import React, { useContext, useMemo, useState } from 'react';
 import { FONT_SIZE, SCREENS, TEXT_STYLE } from '../../../enums';
 import { useResponsiveDimensions, useToast } from '../../../hooks';
@@ -10,7 +16,12 @@ import {
   RemoveSheet,
 } from './components';
 import { AppDataContext } from '../../../context';
-import { CustomInput, Header, MainButton, MainContainer } from '../../../components';
+import {
+  CustomInput,
+  Header,
+  MainButton,
+  MainContainer,
+} from '../../../components';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 import { apiService } from '../../../services/api';
 import { useNavigation } from '@react-navigation/native';
@@ -132,10 +143,6 @@ export const AddScreen = ({ route }: any) => {
     console.log('Language===>', type);
     setLanguage(type);
   };
-  const handleSelectLocation = (type: any) => {
-    console.log('Location===>', type);
-    setLocation(type);
-  };
   const handleSelectTitle = (val: any) => {
     console.log('Book_TITLe===>', val);
     setBookTitle(val);
@@ -253,7 +260,7 @@ export const AddScreen = ({ route }: any) => {
   const handleSubmit = async () => {
     try {
       if (!validateInputs()) return;
-
+      setLoading(true);
       const formData = await createFormData();
       await createProduct.mutateAsync(formData, {
         onSuccess: () => {
@@ -303,7 +310,7 @@ export const AddScreen = ({ route }: any) => {
       border: {
         borderWidth: 0.2,
         borderColor: appTheme.tertiaryTextColor,
-        marginTop: hp(20),
+        marginTop: hp(15),
       },
       nextBtnContainer: {
         marginTop: hp(20),

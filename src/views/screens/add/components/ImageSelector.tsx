@@ -50,7 +50,7 @@ export const ImageSelector = ({
         width: '100%',
       },
       booksHeading: {
-        ...TEXT_STYLE.bold,
+        ...TEXT_STYLE.regular,
         fontSize: hp(FONT_SIZE.h3),
         color: appTheme.primaryTextColor,
       },
@@ -136,6 +136,12 @@ export const ImageSelector = ({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0,0,0,0.3)',
+      },
+      label: {
+        ...TEXT_STYLE.regular,
+        fontSize: hp(FONT_SIZE.h3),
+        color: appTheme.primaryTextColor,
+        textTransform: 'capitalize',
       },
     });
   }, [hp, wp, appTheme]);

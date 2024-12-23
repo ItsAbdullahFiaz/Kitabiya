@@ -44,6 +44,13 @@ export const Condition = ({ handleSelect, selected }: any) => {
       selectedText: {
         color: appTheme.primaryBackground,
       },
+      label: {
+        ...TEXT_STYLE.regular,
+        fontSize: hp(FONT_SIZE.h3),
+        color: appTheme.primaryTextColor,
+        textTransform: 'capitalize',
+      },
+
     })
   }, [hp, wp])
 
