@@ -16,21 +16,11 @@ export const LoadingSkeleton = () => {
       card: {
         height: hp(280),
         width: wp(170),
-        // alignItems: 'center',
-        backgroundColor: '#A3AAB1', // Adjust color based on your theme
-        borderRadius: 10,
-        shadowColor: '#000',
+        borderRadius:hp(8),
+        borderColor: appTheme.borderDefault,
+        borderWidth:0.5,
         padding: 5,
-        shadowOffset: {
-          width: 0,
-          height: 4,
-        },
-        shadowOpacity: 0.3,
-        shadowRadius: 4.65,
-        elevation: 8,
-        marginBottom: hp(5),
-        borderWidth: 0.5,
-        borderColor: appTheme.disabled,
+        marginBottom:hp(5)
       },
       textContainer: {
         width: '100%',
@@ -42,17 +32,17 @@ export const LoadingSkeleton = () => {
       userName: {
         height: hp(30),
         width: hp(150),
-        marginBottom: hp(2),
+        marginBottom: hp(3),
       },
       title: {
-        height: hp(40),
+        height: hp(30),
         width: hp(200),
         marginBottom: hp(2),
       },
       image: {width: '100%', height: hp(190), marginBottom: 3},
-      imagetitle: {height: hp(20), width: '100%', marginBottom: 3},
+      imagetitle: {height: hp(20), width: '50%', marginBottom: 3},
       imagetext: {height: hp(20), width: '60%', marginBottom: 3},
-      imageprice: {height: hp(20), width: '30%', marginBottom: 3},
+      imageprice: {height: hp(20), width: '40%', marginBottom: 3},
     });
   }, [hp, wp, appTheme]);
 
