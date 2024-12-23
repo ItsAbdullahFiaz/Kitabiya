@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
-import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
-import {FONT_SIZE, SIZES, TEXT_STYLE} from '../../../../enums';
-import {useResponsiveDimensions} from '../../../../hooks';
+import React, { useState } from 'react';
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { FONT_SIZE, SIZES, TEXT_STYLE } from '../../../../enums';
+import { useResponsiveDimensions } from '../../../../hooks';
 
 interface ProductCardProps {
   item: any;
@@ -16,15 +16,15 @@ export const ProductCard = ({
   appTheme,
   index,
 }: ProductCardProps) => {
-  const {hp} = useResponsiveDimensions();
+  const { hp } = useResponsiveDimensions();
   const [imageLoading, setImageLoading] = useState({});
 
   const handleImageLoadStart = (index: any) => {
-    setImageLoading(prevState => ({...prevState, [index]: true}));
+    setImageLoading(prevState => ({ ...prevState, [index]: true }));
   };
 
   const handleImageLoadEnd = (index: any) => {
-    setImageLoading(prevState => ({...prevState, [index]: false}));
+    setImageLoading(prevState => ({ ...prevState, [index]: false }));
   };
 
   return (
@@ -39,7 +39,7 @@ export const ProductCard = ({
         )}
         <Image
           style={styles(hp, appTheme).img}
-          source={{uri: item.images[0]}}
+          source={{ uri: item.images[0] }}
           defaultSource={require('../../../../assets/images/person.jpg')}
           onLoadStart={() => handleImageLoadStart(index)}
           onLoadEnd={() => handleImageLoadEnd(index)}
@@ -50,18 +50,18 @@ export const ProductCard = ({
           numberOfLines={1}
           style={[
             styles(hp, appTheme).name,
-            {color: appTheme.secondaryTextColor},
+            { color: appTheme.secondaryTextColor },
           ]}>
           {item.title}
         </Text>
         <Text
           style={[
             styles(hp, appTheme).author,
-            {color: appTheme.tertiaryTextColor},
+            { color: appTheme.tertiaryTextColor },
           ]}>
-          {item.user?.name || 'Unknown Author'}
+          {item?.condition}
         </Text>
-        <Text style={[styles(hp, appTheme).price, {color: appTheme.primary}]}>
+        <Text style={[styles(hp, appTheme).price, { color: appTheme.primary }]}>
           Rs {item.price}
         </Text>
       </View>
