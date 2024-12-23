@@ -6,7 +6,7 @@ import { AppDataContext, useAuth } from '../../../context';
 import { FONT_SIZE, SCREENS, TEXT_STYLE } from '../../../enums';
 import { useNavigation } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
-import { BookDescription, SwiperComponent } from './components';
+import { BookDescription, SwiperComponent } from './components'
 
 export const BookDetailScreen = ({ route }: any) => {
   const [item, setItem] = useState({});
@@ -14,7 +14,7 @@ export const BookDetailScreen = ({ route }: any) => {
   const { hp, wp } = useResponsiveDimensions();
   const { appTheme, appLang } = useContext(AppDataContext);
   const data = route?.params?.product;
-  console.log('Book_Details_Data===>', data);
+  console.log('Book_Details_Data===>', data)
   const { authState } = useAuth();
 
   useEffect(() => {

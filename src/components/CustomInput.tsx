@@ -16,11 +16,14 @@ interface CustomInputProps {
     twoLinesError?: boolean,
     pasteButton?: boolean,
     keyboardType?: KeyboardTypeOptions,
-    editable?: boolean
+    editable?: boolean,
+    multiLine?: boolean,
+    numberOfLines?: number,
+    height?: number
 }
 
 export const CustomInput = (props: CustomInputProps) => {
-    const { value, setValue, onChange, placeholder, secureTextEntry, textWrong, bottomError, twoLinesError, pasteButton, keyboardType, editable } = props
+    const { value, setValue, onChange, placeholder, secureTextEntry, textWrong, bottomError, twoLinesError, pasteButton, keyboardType, editable, multiLine, numberOfLines, height } = props
     const [isSecure, setSecure] = useState(true);
     const { appTheme } = useContext(AppDataContext);
     const { wp, hp } = useResponsiveDimensions();
@@ -42,10 +45,11 @@ export const CustomInput = (props: CustomInputProps) => {
                 ...TEXT_STYLE.regular,
                 color: appTheme.primaryTextColor,
                 fontSize: hp(14),
-                height: hp(46),
+                height: height ? hp(height) : hp(46),
                 width: '100%',
                 paddingLeft: hp(16),
                 marginTop: hp(4),
+                textAlignVertical: 'top',
             },
             wrongTextContainer: {
                 // height: bottomError ? hp(twoLinesError ? 48 : 24) : undefined,
@@ -68,6 +72,7 @@ export const CustomInput = (props: CustomInputProps) => {
         <View style={styles.container}>
             <View style={styles.inputView}>
                 <TextInput
+                    multiline={multiLine}
                     onChangeText={setValue}
                     style={[styles.input, (secureTextEntry || pasteButton) && { width: "90%" }, { paddingRight: pasteButton || secureTextEntry ? 0 : 16 }]}
                     value={value}
@@ -77,6 +82,7 @@ export const CustomInput = (props: CustomInputProps) => {
                     secureTextEntry={secureTextEntry ? isSecure : false}
                     keyboardType={keyboardType ? keyboardType : 'default'}
                     editable={editable}
+                    numberOfLines={numberOfLines}
                 />
                 {(pasteButton || secureTextEntry) && (
                     <TouchableOpacity

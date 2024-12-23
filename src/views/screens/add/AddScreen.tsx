@@ -1,38 +1,35 @@
-import {Modal, ScrollView, StyleSheet, Text, View} from 'react-native';
-import React, {useContext, useMemo, useState} from 'react';
-import {FONT_SIZE, SCREENS, TEXT_STYLE} from '../../../enums';
-import {useResponsiveDimensions, useToast} from '../../../hooks';
+import { Modal, ScrollView, StyleSheet, Text, View } from 'react-native';
+import React, { useContext, useMemo, useState } from 'react';
+import { FONT_SIZE, SCREENS, TEXT_STYLE } from '../../../enums';
+import { useResponsiveDimensions, useToast } from '../../../hooks';
 import {
-  AdTitle,
+  Address,
   BottomSheetComponent,
   Condition,
-  Description,
   DropDownComponent,
-  Price,
   RemoveSheet,
 } from './components';
-import {AppDataContext} from '../../../context';
-import {Header, MainButton, MainContainer} from '../../../components';
-import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
-import {apiService} from '../../../services/api';
-import {useNavigation} from '@react-navigation/native';
-import {dropdownItems, languageitem, typeitem} from '../../../utils';
-import {ImageSelector} from './components/ImageSelector';
+import { AppDataContext } from '../../../context';
+import { CustomInput, Header, MainButton, MainContainer } from '../../../components';
+import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
+import { apiService } from '../../../services/api';
+import { useNavigation } from '@react-navigation/native';
+import { languageitem, typeitem } from '../../../utils';
+import { ImageSelector } from './components/ImageSelector';
 import {
   useCreateProduct,
-  useDeleteProduct,
-  useMyProducts,
 } from '../../../hooks/useProducts';
-import {useQueryClient} from '@tanstack/react-query';
-import {QUERY_KEYS} from '../../../hooks/useProducts';
+import { useQueryClient } from '@tanstack/react-query';
+import { QUERY_KEYS } from '../../../hooks/useProducts';
 
-export const AddScreen = ({route}: any) => {
-  const {dataType} = route.params || 'add';
-  const {data} = route.params || [];
-  const {appTheme} = useContext(AppDataContext);
-  const {hp, wp} = useResponsiveDimensions();
+export const AddScreen = ({ route }: any) => {
+  const { dataType } = route.params || 'add';
+  const { data } = route.params || [];
+  const { appTheme } = useContext(AppDataContext);
+  const { hp, wp } = useResponsiveDimensions();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
+  const [wrongEmailError, setWrongEmailError] = useState('');
   const [myIndex, setMyIndex] = useState<any>('');
   const [imagesList, setImagesList] = useState<any>(
     dataType === 'edit' ? data?.images : [],
@@ -45,7 +42,7 @@ export const AddScreen = ({route}: any) => {
     dataType === 'edit' ? data?.language : 'choose',
   );
   const [location, setLocation] = useState(
-    dataType === 'edit' ? data?.locationAddress : 'choose',
+    dataType === 'edit' ? data?.locationAddress : 'Write area, city or country',
   );
   const [bookTitle, setBookTitle] = useState(
     dataType === 'edit' ? data?.title : '',
@@ -281,6 +278,10 @@ export const AddScreen = ({route}: any) => {
     }
   };
 
+  const handleSetLocation = (val: any) => {
+    setLocation(val);
+  }
+
   const styles = useMemo(() => {
     return StyleSheet.create({
       btnContainer: {
@@ -317,12 +318,20 @@ export const AddScreen = ({route}: any) => {
         alignItems: 'center',
         backgroundColor: 'rgba(0,0,0,0.3)',
       },
+      label: {
+        ...TEXT_STYLE.regular,
+        fontSize: hp(FONT_SIZE.h3),
+        color: appTheme.primaryTextColor,
+        textTransform: "capitalize",
+        marginBottom: hp(3),
+        marginTop: hp(15)
+      },
     });
   }, [hp, wp, appTheme]);
 
   return (
     <MainContainer>
-      <ScrollView contentContainerStyle={{flexGrow: 1}}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <Header
           title={dataType === 'edit' ? 'edit ad details' : 'ad Details'}
         />
@@ -345,19 +354,38 @@ export const AddScreen = ({route}: any) => {
           label="Language"
         />
         <View style={styles.border} />
-        <AdTitle bookTitle={bookTitle} handleSelectTitle={handleSelectTitle} />
-        <Description
-          handleDescription={handleDescription}
-          description={description}
+        <Text style={styles.label}>ad title</Text>
+        <CustomInput
+          value={bookTitle}
+          setValue={setBookTitle}
+          placeholder="Enter title"
+          textWrong={wrongEmailError}
+          onChange={() => setWrongEmailError('')}
+          bottomError={true}
         />
-        <DropDownComponent
-          handleSelectOption={handleSelectLocation}
-          type={location}
-          dropdownItems={dropdownItems}
-          label="Location"
+        <Text style={styles.label}>description</Text>
+        <CustomInput
+          value={description}
+          setValue={setDescription}
+          placeholder="Describe the item you are selling"
+          textWrong={wrongEmailError}
+          onChange={() => setWrongEmailError('')}
+          bottomError={true}
+          multiLine={true}
+          numberOfLines={4}
+          height={150}
         />
+        <Address location={location} handleSetLocation={handleSetLocation} />
         <View style={styles.border} />
-        <Price handlePrice={handlePrice} price={price} />
+        <Text style={styles.label}>price</Text>
+        <CustomInput
+          value={price}
+          setValue={setPrice}
+          placeholder="Enter price"
+          textWrong={wrongEmailError}
+          onChange={() => setWrongEmailError('')}
+          bottomError={true}
+        />
         <View style={styles.nextBtnContainer}>
           {dataType === 'edit' ? (
             <MainButton
