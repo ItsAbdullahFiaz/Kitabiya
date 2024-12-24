@@ -273,16 +273,7 @@ export const MyBooksScreen = () => {
                       { ...TEXT_STYLE.regular, marginLeft: hp(10) },
                     ]}>{`${item.views} ${item.views === 1 ? 'View' : 'Views'}`}</Text>
                 </View>
-                {/* <TouchableOpacity
-                  style={styles.editContainer}
-                  onPress={() =>
-                    navigation.navigate(SCREENS.ADD_SCREEN as never, {
-                      data: item,
-                      dataType: 'edit',
-                    })
-                  }>
-                  <Text style={styles.edit}>edit</Text>
-                </TouchableOpacity> */}
+               
               </View>
             </TouchableOpacity>
           )}
