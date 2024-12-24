@@ -14,7 +14,7 @@ import {
 } from '../views/screens';
 import { ProfileScreen } from '../views/screens/profile';
 import { HelpCenter } from '../views/screens/helpcenter';
-import { FirstQuestion, SecondQuestion, ThirdQuestion } from '../views/screens/questionaire';
+import { FirstQuestion, FourthQuestion, SecondQuestion, ThirdQuestion } from '../views/screens/questionaire';
 
 const Stack = createNativeStackNavigator();
 
@@ -37,6 +37,7 @@ export const RootNavigator = () => {
         <Stack.Screen name={SCREENS.FIRSTQUESTION} component={FirstQuestion} />
         <Stack.Screen name={SCREENS.SECONDQUESTION} component={SecondQuestion} />
         <Stack.Screen name={SCREENS.THIRDQUESTION} component={ThirdQuestion} />
+        <Stack.Screen name={SCREENS.FOURTHQUESTION} component={FourthQuestion} />
       </Stack.Navigator>
     </NavigationContainer>
 

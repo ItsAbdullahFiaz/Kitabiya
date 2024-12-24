@@ -3,7 +3,7 @@ import React, { useContext, useMemo, useState } from 'react'
 import { Header, MainButton, MainContainer } from '../../../components'
 import { useResponsiveDimensions } from '../../../hooks'
 import { AppDataContext } from '../../../context'
-import { FONT_SIZE, STACK, TEXT_STYLE } from '../../../enums'
+import { FONT_SIZE, SCREENS, STACK, TEXT_STYLE } from '../../../enums'
 import { useNavigation } from '@react-navigation/native'
 import { resetAndGo } from '../../../utils'
 
@@ -16,7 +16,8 @@ export const ThirdQuestion = () => {
     const options = ["15-25", "25-35", "35-45", "45-60"];
     const handleNext = () => {
         setLoading(true);
-        resetAndGo(navigation, STACK.MAIN, null);
+        // resetAndGo(navigation, STACK.MAIN, null);
+        navigation.navigate(SCREENS.FOURTHQUESTION as never);
         setLoading(false);
     }
     const styles = useMemo(() => {
