@@ -20,11 +20,10 @@ import {
 } from '../../../components';
 import { useResponsiveDimensions, useToast } from '../../../hooks';
 import { AppDataContext, useAuth } from '../../../context';
-import { FONT_SIZE, SCREENS, TEXT_STYLE } from '../../../enums';
-import { Address, BottomSheetComponent, DropDownComponent } from '../add/components';
+import { FONT_SIZE, TEXT_STYLE } from '../../../enums';
+import { Address, BottomSheetComponent } from '../add/components';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import DatePicker from 'react-native-date-picker';
-import { dropdownItems } from '../../../utils';
 import { useNavigation } from '@react-navigation/native';
 import { apiService } from '../../../services/api';
 
@@ -222,7 +221,6 @@ export const ProfileScreen = () => {
   };
 
   const handleSelectLocation = (type: any) => {
-    console.log('Location===>', type);
     setLocation(type);
   };
 
@@ -313,10 +311,6 @@ export const ProfileScreen = () => {
                 color={appTheme.primary}
                 size={hp(20)}
               />
-              {/* <Image
-            style={{ height: hp(20), width: hp(20) }}
-            source={require('../../../assets/images/camera.png')}
-          /> */}
             </TouchableOpacity>
           </View>
           <View style={styles.detailsContainer}>
@@ -340,7 +334,7 @@ export const ProfileScreen = () => {
               editable={false}
             />
             <View style={{ marginTop: 20 }}>
-              <Address />
+              <Address handleSetLocation={handleSelectLocation} location={location} />
             </View>
 
 

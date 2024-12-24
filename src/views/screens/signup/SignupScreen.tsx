@@ -6,7 +6,7 @@ import { resetAndGo, setEmailError, setNameError, setPasswordError, validateEmai
 import { AppDataContext, useAuth } from '../../../context';
 import { registerUser } from '../../../services';
 import { useNavigation } from '@react-navigation/native';
-import { FONT_SIZE, STACK, TEXT_STYLE } from '../../../enums';
+import { FONT_SIZE, SCREENS, STACK, TEXT_STYLE } from '../../../enums';
 import firestore from '@react-native-firebase/firestore';
 
 export const SignupScreen = () => {
@@ -69,7 +69,8 @@ export const SignupScreen = () => {
         ''
       );
 
-      resetAndGo(navigation, STACK.MAIN, null);
+      // resetAndGo(navigation, STACK.MAIN, null);
+      resetAndGo(navigation, SCREENS.FIRSTQUESTION, null);
       showToast(appLang.signupSuccess, 'successToast');
 
     } catch (error) {

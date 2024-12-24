@@ -6,36 +6,31 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useContext, useMemo} from 'react';
-import {AnyIcon, IconType} from '../../../../components';
-import {useResponsiveDimensions} from '../../../../hooks';
-import {AppDataContext} from '../../../../context';
-import {FONT_SIZE, OTHER_COLORS, TEXT_STYLE} from '../../../../enums';
-import {Instructions} from '../../../../components/unused';
+import React, { useContext, useMemo } from 'react';
+import { AnyIcon, IconType } from '../../../../components';
+import { useResponsiveDimensions } from '../../../../hooks';
+import { AppDataContext } from '../../../../context';
+import { FONT_SIZE, TEXT_STYLE } from '../../../../enums';
+import { Instructions } from '../../../../components/unused';
 
 export const ImageSelector = ({
   imagesList,
   handleImageSelectorModal,
   handleOpenAndDelete,
 }: any) => {
-  const {hp, wp} = useResponsiveDimensions();
-  const {appTheme} = useContext(AppDataContext);
+  const { hp, wp } = useResponsiveDimensions();
+  const { appTheme } = useContext(AppDataContext);
   const styles = useMemo(() => {
     return StyleSheet.create({
       categoryContainer: {
         marginTop: hp(30),
       },
-      titleContainer: {
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-      },
       title: {
-        ...TEXT_STYLE.bold,
+        ...TEXT_STYLE.regular,
         fontSize: hp(FONT_SIZE.h3),
         color: appTheme.primaryTextColor,
-        textTransform: 'capitalize',
-        marginRight: hp(5),
+        textTransform: "capitalize",
+        marginBottom: hp(3)
       },
       booksContainer: {
         marginTop: hp(15),
@@ -68,7 +63,7 @@ export const ImageSelector = ({
         marginTop: hp(10),
         width: '100%',
         height: hp(252),
-        borderWidth: 0.5,
+        borderWidth: 1,
         borderColor: appTheme.borderDefault,
         borderRadius: hp(8),
         justifyContent: 'center',
@@ -143,20 +138,17 @@ export const ImageSelector = ({
         backgroundColor: 'rgba(0,0,0,0.3)',
       },
       label: {
-                          ...TEXT_STYLE.regular,
-                          fontSize: hp(FONT_SIZE.h3),
-                          color:appTheme.primaryTextColor,
-                          textTransform: 'capitalize',
-                        },
+        ...TEXT_STYLE.regular,
+        fontSize: hp(FONT_SIZE.h3),
+        color: appTheme.primaryTextColor,
+        textTransform: 'capitalize',
+      },
     });
   }, [hp, wp, appTheme]);
 
   return (
     <View style={styles.categoryContainer}>
-      <View style={styles.titleContainer}>
-        <Text style={styles.label}>Category</Text>
-       
-      </View>
+      <Text style={styles.title}>Category</Text>
       <View style={styles.booksContainer}>
         <View style={styles.imgContainer}>
           <Image
@@ -171,7 +163,7 @@ export const ImageSelector = ({
       </View>
       {imagesList.length > 0 ? (
         <View style={styles.imagesContainer}>
-          <View style={{flexDirection: 'row'}}>
+          <View style={{ flexDirection: 'row' }}>
             <TouchableOpacity
               style={styles.addImage}
               onPress={() => handleImageSelectorModal(true)}>
@@ -186,14 +178,14 @@ export const ImageSelector = ({
               <FlatList
                 horizontal
                 data={imagesList}
-                renderItem={({item, index}) => {
+                renderItem={({ item, index }) => {
                   return (
                     <TouchableOpacity
                       style={styles.listImg}
                       onPress={() => handleOpenAndDelete(index)}>
                       <Image
-                        style={{width: '100%', height: '100%'}}
-                        source={{uri: item}}
+                        style={{ width: '100%', height: '100%' }}
+                        source={{ uri: item }}
                       />
                     </TouchableOpacity>
                   );

@@ -7,11 +7,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useContext, useMemo, useState} from 'react';
-import {AppDataContext} from '../../../../context';
-import {useResponsiveDimensions} from '../../../../hooks';
-import {FONT_SIZE, OTHER_COLORS, TEXT_STYLE} from '../../../../enums';
-import {AnyIcon, Header, IconType, MainContainer} from '../../../../components';
+import React, { useContext, useMemo, useState } from 'react';
+import { AppDataContext } from '../../../../context';
+import { useResponsiveDimensions } from '../../../../hooks';
+import { FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../../enums';
+import { AnyIcon, Header, IconType, MainContainer } from '../../../../components';
 import Geolocation from '@react-native-community/geolocation';
 import axios from 'axios';
 
@@ -24,10 +24,10 @@ interface headerProps {
 }
 
 export const DropDownComponent = (props: headerProps) => {
-  const {handleSelectOption, type, label, dropdownItems, component} = props;
+  const { handleSelectOption, type, label, dropdownItems, component } = props;
   console.log('COMPONENT===>', component);
-  const {appTheme} = useContext(AppDataContext);
-  const {hp, wp} = useResponsiveDimensions();
+  const { appTheme } = useContext(AppDataContext);
+  const { hp, wp } = useResponsiveDimensions();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleSelect = (genre: any) => {
@@ -60,11 +60,6 @@ export const DropDownComponent = (props: headerProps) => {
 
   const styles = useMemo(() => {
     return StyleSheet.create({
-      titleContainer: {
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-      },
       label: {
         ...TEXT_STYLE.regular,
         fontSize: hp(FONT_SIZE.h3),
@@ -72,11 +67,11 @@ export const DropDownComponent = (props: headerProps) => {
         textTransform: 'capitalize',
       },
       title: {
-        ...TEXT_STYLE.bold,
+        ...TEXT_STYLE.regular,
         fontSize: hp(FONT_SIZE.h3),
         color: appTheme.primaryTextColor,
-        textTransform: 'capitalize',
-        marginRight: hp(5),
+        textTransform: "capitalize",
+        marginBottom: hp(3)
       },
       typeContainer: {
         marginTop: hp(15),
@@ -86,20 +81,20 @@ export const DropDownComponent = (props: headerProps) => {
         alignItems: 'center',
       },
       dropdownButton: {
-        marginTop: component === 'profile' ? hp(5) : hp(10),
+        // marginTop: component === 'profile' ? hp(5) : hp(10),
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        borderWidth: 0.5,
+        borderWidth: 1,
         borderColor: appTheme.borderDefault,
         paddingHorizontal: 15,
-        height: hp(50),
+        height: hp(48),
         borderRadius: 5,
         width: '100%',
       },
       buttonText: {
         color: appTheme.primaryTextColor,
-        fontSize: hp(FONT_SIZE.h3),
+        fontSize: hp(FONT_SIZE.h4),
         textTransform: 'capitalize',
       },
       modalContainer: {
@@ -181,22 +176,7 @@ export const DropDownComponent = (props: headerProps) => {
 
   return (
     <View style={styles.typeContainer}>
-      {component === 'profile' ? (
-        <View style={styles.titleContainer}>
-          <Text style={styles.label}>{label}</Text>
-        </View>
-      ) : (
-        <View style={styles.titleContainer}>
-          <Text style={styles.label}>{label}</Text>
-          {/* <AnyIcon
-            type={IconType.FontAwesome5}
-            name="star-of-life"
-            size={hp(8)}
-            color={OTHER_COLORS.red}
-          /> */}
-        </View>
-      )}
-
+      {component === 'profile' ? <Text style={styles.label}>{label}</Text> : <Text style={styles.title}>{label}</Text>}
       <View style={styles.container}>
         <TouchableOpacity
           style={styles.dropdownButton}
@@ -275,7 +255,7 @@ export const DropDownComponent = (props: headerProps) => {
                   <FlatList
                     data={dropdownItems}
                     keyExtractor={(item, index) => `${item}-${index}`}
-                    renderItem={({item}) => (
+                    renderItem={({ item }) => (
                       <TouchableOpacity
                         onPress={() => handleSelect(item)}
                         style={{

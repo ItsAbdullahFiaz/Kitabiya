@@ -14,8 +14,8 @@ import { FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../../enums';
 import { AnyIcon, IconType } from '../../../../components';
 
 interface headerProps {
-  handleSetLocation: any;
-  location: any;
+  handleSetLocation?: any;
+  location?: any;
 }
 export const Address = ({ handleSetLocation, location }: headerProps) => {
   const { appTheme, appLang } = useContext(AppDataContext);

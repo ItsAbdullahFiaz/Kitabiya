@@ -1,27 +1,21 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useContext, useMemo, useState } from 'react'
+import React, { useContext, useMemo } from 'react'
 import { AppDataContext } from '../../../../context';
 import { useResponsiveDimensions } from '../../../../hooks';
-import { FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../../enums';
-import { AnyIcon, IconType } from '../../../../components';
+import { FONT_SIZE, TEXT_STYLE } from '../../../../enums';
 
 export const Condition = ({ handleSelect, selected }: any) => {
-  const { appTheme,appLang } = useContext(AppDataContext);
+  const { appTheme, appLang } = useContext(AppDataContext);
   const { hp, wp } = useResponsiveDimensions();
 
   const styles = useMemo(() => {
     return StyleSheet.create({
-      titleContainer: {
-        flexDirection: "row",
-        justifyContent: "flex-start",
-        alignItems: "center"
-      },
       title: {
-        ...TEXT_STYLE.bold,
+        ...TEXT_STYLE.regular,
         fontSize: hp(FONT_SIZE.h3),
         color: appTheme.primaryTextColor,
         textTransform: "capitalize",
-        marginRight: hp(5)
+        marginBottom: hp(3)
       },
       conditionContainer: {
         marginTop: hp(15)
@@ -32,13 +26,12 @@ export const Condition = ({ handleSelect, selected }: any) => {
         alignItems: 'center',
       },
       button: {
-        marginTop: hp(10),
-        paddingVertical: hp(10),
-        paddingHorizontal: hp(20),
-        borderRadius: hp(20),
+        paddingVertical: hp(5),
+        paddingHorizontal: hp(18),
+        borderRadius: hp(15),
         borderWidth: 0.5,
         borderColor: appTheme.primary,
-        marginRight: hp(10)
+        marginRight: hp(15)
       },
       text: {
         ...TEXT_STYLE.medium,
@@ -51,28 +44,19 @@ export const Condition = ({ handleSelect, selected }: any) => {
       selectedText: {
         color: appTheme.primaryBackground,
       },
-       label: {
-                    ...TEXT_STYLE.regular,
-                    fontSize: hp(FONT_SIZE.h3),
-                    color:appTheme.primaryTextColor,
-                    textTransform: 'capitalize',
-                  },
-           
+      label: {
+        ...TEXT_STYLE.regular,
+        fontSize: hp(FONT_SIZE.h3),
+        color: appTheme.primaryTextColor,
+        textTransform: 'capitalize',
+      },
+
     })
   }, [hp, wp])
 
   return (
     <View style={styles.conditionContainer}>
-      <View style={styles.titleContainer}>
-        <Text style={styles.label}>{appLang.condition}</Text>
-        {/* <AnyIcon
-          type={IconType.FontAwesome5}
-          name='star-of-life'
-          size={8}
-          color={OTHER_COLORS.red}
-        /> */}
-      </View>
-      {/* start */}
+      <Text style={styles.title}>{appLang.condition}</Text>
       <View style={styles.container}>
         {/* NEW Button */}
         <TouchableOpacity
@@ -88,7 +72,7 @@ export const Condition = ({ handleSelect, selected }: any) => {
               selected === 'NEW' && styles.selectedText,
             ]}
           >
-           {appLang.new}
+            {appLang.new}
           </Text>
         </TouchableOpacity>
 
