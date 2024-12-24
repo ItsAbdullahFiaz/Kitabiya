@@ -1,15 +1,15 @@
-import {ActivityIndicator, Image, StyleSheet, Text, View} from 'react-native';
-import React, {useContext, useMemo} from 'react';
-import {FONT_SIZE, TEXT_STYLE} from '../../../../enums';
-import {useResponsiveDimensions} from '../../../../hooks';
-import {AppDataContext, useAuth} from '../../../../context';
+import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native';
+import React, { useContext, useMemo } from 'react';
+import { FONT_SIZE, TEXT_STYLE } from '../../../../enums';
+import { useResponsiveDimensions } from '../../../../hooks';
+import { AppDataContext, useAuth } from '../../../../context';
 import UserAvatar from 'react-native-user-avatar';
-import {getColorByFirstLetter} from '../../../../utils';
+import { getColorByFirstLetter } from '../../../../utils';
 
 export const ProfileHeader = () => {
-  const {appTheme} = useContext(AppDataContext);
-  const {authState} = useAuth();
-  const {hp, wp} = useResponsiveDimensions();
+  const { appTheme } = useContext(AppDataContext);
+  const { authState } = useAuth();
+  const { hp, wp } = useResponsiveDimensions();
 
   const styles = useMemo(() => {
     return StyleSheet.create({
@@ -50,7 +50,7 @@ export const ProfileHeader = () => {
       {authState ? (
         <View style={styles.profileHeader}>
           <View style={styles.imgContainer}>
-            {authState.profilePhoto === null ? (
+            {authState.profilePhoto === null || authState.profilePhoto === "" ? (
               <UserAvatar
                 style={styles.img}
                 size={50}
@@ -63,7 +63,7 @@ export const ProfileHeader = () => {
                 source={
                   authState.profilePhoto === null
                     ? require('../../../../assets/images/user.png')
-                    : {uri: authState.profilePhoto}
+                    : { uri: authState.profilePhoto }
                 }
               />
             )}

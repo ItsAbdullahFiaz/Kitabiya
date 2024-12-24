@@ -1,10 +1,10 @@
 import React from 'react';
-import {View, TouchableOpacity, Image, StyleSheet} from 'react-native';
-import {AnyIcon, IconType} from '../../../../components';
-import {SCREENS} from '../../../../enums';
-import {useResponsiveDimensions} from '../../../../hooks';
+import { View, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { AnyIcon, IconType } from '../../../../components';
+import { SCREENS } from '../../../../enums';
+import { useResponsiveDimensions } from '../../../../hooks';
 import UserAvatar from 'react-native-user-avatar';
-import {getColorByFirstLetter} from '../../../../utils';
+import { getColorByFirstLetter } from '../../../../utils';
 
 interface HeaderProps {
   appTheme: any;
@@ -12,8 +12,9 @@ interface HeaderProps {
   authState?: any;
 }
 
-export const Header = ({appTheme, navigation, authState}: HeaderProps) => {
-  const {hp} = useResponsiveDimensions();
+export const Header = ({ appTheme, navigation, authState }: HeaderProps) => {
+  const { hp } = useResponsiveDimensions();
+  console.log("AUTHSTATE_HOME===>", authState);
 
   return (
     <View style={styles(hp).homeHeader}>
@@ -46,8 +47,8 @@ export const Header = ({appTheme, navigation, authState}: HeaderProps) => {
             <UserAvatar
               style={styles(hp).userImage}
               size={40}
-              name="Chand Faizi"
-              bgColor={getColorByFirstLetter('Chand Faizi')}
+              name={authState?.userName}
+              bgColor={getColorByFirstLetter(authState?.userName)}
               src={authState.profilePhoto}
             />
           </TouchableOpacity>
