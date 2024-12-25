@@ -2,7 +2,7 @@ import { FlatList, StyleSheet, Text, TextInput, View } from 'react-native'
 import React, { useContext, useMemo, useState } from 'react'
 import { AnyIcon, Header, IconType, MainButton, MainContainer } from '../../../components'
 import { useNavigation } from '@react-navigation/native'
-import { STACK } from '../../../enums'
+import { FONT_SIZE, STACK, TEXT_STYLE } from '../../../enums'
 import { resetAndGo } from '../../../utils'
 import { useResponsiveDimensions } from '../../../hooks'
 import { AppDataContext, useAuth } from '../../../context'
@@ -60,6 +60,18 @@ export const FourthQuestion = ({ route }: any) => {
     );
     const styles = useMemo(() => {
         return StyleSheet.create({
+            qNum: {
+                ...TEXT_STYLE.medium,
+                fontSize: hp(FONT_SIZE.h3),
+                color: appTheme.primary,
+                marginTop: hp(20)
+            },
+            question: {
+                ...TEXT_STYLE.bold,
+                fontSize: hp(FONT_SIZE.h1),
+                color: appTheme.primaryTextColor,
+                marginTop: hp(10)
+            },
             btnContainer: {
                 position: "absolute",
                 bottom: hp(30),
@@ -86,8 +98,7 @@ export const FourthQuestion = ({ route }: any) => {
             iconContainer: { paddingBottom: hp(8) },
             container: {
                 padding: 16,
-                marginTop: hp(10),
-                marginBottom: hp(160)
+                marginBottom: hp(238)
             },
             optionContainer: {
                 flexDirection: "row",
@@ -97,10 +108,6 @@ export const FourthQuestion = ({ route }: any) => {
                 borderBottomWidth: 1,
                 borderBottomColor: "#E0E0E0",
                 backgroundColor: "#FFFFFF",
-            },
-            selectedOptionContainer: {
-                // borderColor: appTheme.primary,
-                // backgroundColor: "#F4F1FD",
             },
             optionText: {
                 fontSize: 16,
@@ -120,7 +127,9 @@ export const FourthQuestion = ({ route }: any) => {
     }, [])
     return (
         <MainContainer>
-            <Header title='Select your city' />
+            <Header title='Questionaire' />
+            <Text style={styles.qNum}>Question 4 of 4</Text>
+            <Text style={styles.question}>Which city are you from?</Text>
             <View style={styles.searchContainer}>
                 <View style={styles.iconContainer}>
                     <AnyIcon
@@ -146,10 +155,7 @@ export const FourthQuestion = ({ route }: any) => {
                         return (
                             <TouchableOpacity
                                 key={index}
-                                style={[
-                                    styles.optionContainer,
-                                    selectedCity === item.name && styles.selectedOptionContainer,
-                                ]}
+                                style={styles.optionContainer}
                                 onPress={() => setSelectedCity(item.name)}
                             >
                                 <Text
