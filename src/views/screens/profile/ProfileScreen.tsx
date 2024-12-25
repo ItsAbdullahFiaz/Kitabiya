@@ -43,6 +43,8 @@ export const ProfileScreen = () => {
   const [loading, setLoading] = useState(false);
   const [location, setLocation] = useState(authState.address || 'choose');
   const [email, setEmail] = useState(authState.email || '');
+  const [Phone,setPhone]=useState('')
+  const [wrongPhoneError, setWrongPhoneError] = useState('');
   const [wrongNameError, setWrongNameError] = useState('');
   const [wrongEmailError, setWrongEmailError] = useState('');
   const { hp, wp } = useResponsiveDimensions();
@@ -333,7 +335,22 @@ export const ProfileScreen = () => {
               bottomError={true}
               editable={false}
             />
-            <View style={{ marginTop: 20 }}>
+
+<Text style={[styles.label, { marginTop: hp(20) }]}>{appLang.phone}</Text>
+            <CustomInput
+              value={Phone}
+              setValue={setPhone}
+              placeholder={appLang.phonenumber}
+              textWrong={wrongPhoneError}
+              onChange={() => setWrongPhoneError('')}
+              bottomError={true}
+               keyboardType="phone-pad"
+            />
+
+
+
+
+            <View style={{ marginTop:hp(10) }}>
               <Address handleSetLocation={handleSelectLocation} location={location} />
             </View>
 
