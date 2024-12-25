@@ -26,6 +26,7 @@ import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import DatePicker from 'react-native-date-picker';
 import { useNavigation } from '@react-navigation/native';
 import { apiService } from '../../../services/api';
+import { City } from '../add/components/City';
 
 export const ProfileScreen = () => {
   const { authState, updateProfile } = useAuth();
@@ -42,6 +43,7 @@ export const ProfileScreen = () => {
   );
   const [loading, setLoading] = useState(false);
   const [location, setLocation] = useState(authState.address || 'choose');
+  const [city, setCity] = useState("choose");
   const [email, setEmail] = useState(authState.email || '');
   const [wrongNameError, setWrongNameError] = useState('');
   const [wrongEmailError, setWrongEmailError] = useState('');
@@ -57,11 +59,13 @@ export const ProfileScreen = () => {
   const isFormChanged = () => {
     console.log('Name comparison:', userName.trim(), authState.userName);
     console.log('Location comparison:', location, authState.address);
+    // console.log('city comparison:', city, authState.city);
     console.log('Date comparison:', dateOfBirth, authState.dateOfBirth);
     console.log('Image comparison:', profileImage, authState.profilePhoto);
 
     const hasNameChanged = userName.trim() !== (authState.userName || '');
     const hasLocationChanged = location !== (authState.address || 'choose');
+    // const hasCityChanged = city !== (authState.city || 'choose');
     const hasDateChanged =
       dateOfBirth !== (authState.dateOfBirth || 'Select your date of birth');
     const hasImageChanged = profileImage !== (authState.profilePhoto || '');
@@ -123,6 +127,10 @@ export const ProfileScreen = () => {
       formData.append('location', location);
     }
 
+    // if (city !== authState.city) {
+    //   formData.append('city', city);
+    // }
+
     if (dateOfBirth !== authState.dateOfBirth) {
       const formattedDate = formatDateForAPI(dateOfBirth);
       if (formattedDate) {
@@ -157,6 +165,7 @@ export const ProfileScreen = () => {
         userName.trim() !== authState.userName ? userName.trim() : undefined,
         undefined, // phoneNumber not changed
         location !== authState.address ? location : undefined,
+        // city !== authState.city ? city : undefined,
         dateOfBirth !== authState.dateOfBirth ? dateOfBirth : undefined,
         profileImage !== authState.profilePhoto ? profileImage : undefined
       );
@@ -223,6 +232,11 @@ export const ProfileScreen = () => {
   const handleSelectLocation = (type: any) => {
     setLocation(type);
   };
+
+  const handleSelectCity = (type: any) => {
+    console.log('City===>', type);
+    setCity(type);
+  }
 
   const styles = useMemo(() => {
     return StyleSheet.create({
@@ -336,8 +350,7 @@ export const ProfileScreen = () => {
             <View style={{ marginTop: 20 }}>
               <Address handleSetLocation={handleSelectLocation} location={location} />
             </View>
-
-
+            <City handleSelectOption={handleSelectCity} cityState={city} />
             <Text style={[styles.label, { marginTop: hp(20) }]}>
               {appLang.dateofbirth}
             </Text>

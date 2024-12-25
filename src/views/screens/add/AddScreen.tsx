@@ -32,6 +32,7 @@ import {
 } from '../../../hooks/useProducts';
 import { useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '../../../hooks/useProducts';
+import { City } from './components/City';
 
 export const AddScreen = ({ route }: any) => {
   const { dataType } = route.params || 'add';
@@ -42,6 +43,7 @@ export const AddScreen = ({ route }: any) => {
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
   const [wrongEmailError, setWrongEmailError] = useState('');
   const [myIndex, setMyIndex] = useState<any>('');
+  const [city, setCity] = useState("choose");
   const [imagesList, setImagesList] = useState<any>(
     dataType === 'edit' ? data?.images : [],
   );
@@ -113,6 +115,10 @@ export const AddScreen = ({ route }: any) => {
       showToast('Please select language', 'errorToast');
       return false;
     }
+    if (!city || city === 'choose') {
+      showToast('Please select city', 'errorToast');
+      return false;
+    }
     if (!bookTitle.trim()) {
       showToast('Please enter book title', 'errorToast');
       return false;
@@ -143,6 +149,10 @@ export const AddScreen = ({ route }: any) => {
     console.log('Language===>', type);
     setLanguage(type);
   };
+  const handleSelectCity = (type: any) => {
+    console.log('City===>', type);
+    setCity(type);
+  }
   const handleSelectTitle = (val: any) => {
     console.log('Book_TITLe===>', val);
     setBookTitle(val);
@@ -239,6 +249,7 @@ export const AddScreen = ({ route }: any) => {
     formData.append('condition', selected);
     formData.append('type', type);
     formData.append('language', language);
+    // formData.append('city', city);
     formData.append('description', description);
     formData.append('locationAddress', location);
 
@@ -251,6 +262,7 @@ export const AddScreen = ({ route }: any) => {
     setSelected(null);
     setType('choose');
     setLanguage('choose');
+    // setCity("choose");
     setLocation('choose');
     setBookTitle('');
     setDescription('');
@@ -383,6 +395,7 @@ export const AddScreen = ({ route }: any) => {
           height={150}
         />
         <Address location={location} handleSetLocation={handleSetLocation} />
+        <City handleSelectOption={handleSelectCity} cityState={city} />
         <View style={styles.border} />
         <Text style={styles.label}>price</Text>
         <CustomInput
