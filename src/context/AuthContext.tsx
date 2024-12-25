@@ -12,6 +12,7 @@ interface AuthState {
     address: string;
     dateOfBirth: string;
     profilePhoto: string;
+    isQuestionnaireCompleted: boolean;
 }
 
 interface AuthContextType {
@@ -23,7 +24,8 @@ interface AuthContextType {
         phoneNumber?: string,
         address?: string,
         dateOfBirth?: string,
-        profilePhoto?: string
+        profilePhoto?: string,
+        isQuestionnaireCompleted?: boolean
     ) => void;
     updateProfile: (
         userName?: string,
@@ -33,6 +35,7 @@ interface AuthContextType {
         profilePhoto?: string
     ) => void;
     updateProfilePhoto: (photoUrl: string) => void;
+    updateQuestionnaire: (isCompleted: boolean) => void;
     logout: () => void;
 }
 
@@ -45,6 +48,7 @@ const initialAuthState: AuthState = {
     address: '',
     dateOfBirth: '',
     profilePhoto: '',
+    isQuestionnaireCompleted: false,
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -52,6 +56,7 @@ const AuthContext = createContext<AuthContextType>({
     login: () => { },
     updateProfile: () => { },
     updateProfilePhoto: () => { },
+    updateQuestionnaire: () => { },
     logout: () => { },
 });
 
@@ -84,7 +89,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         phoneNumber: string = '',
         address: string = '',
         dateOfBirth: string = '',
-        profilePhoto: string = ''
+        profilePhoto: string = '',
+        isQuestionnaireCompleted: boolean = false
     ) => {
         const newAuthState = {
             userName,
@@ -95,6 +101,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             address,
             dateOfBirth,
             profilePhoto,
+            isQuestionnaireCompleted
         };
 
         tokenManager.setToken(token);
@@ -109,7 +116,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         phoneNumber?: string,
         address?: string,
         dateOfBirth?: string,
-        profilePhoto?: string
+        profilePhoto?: string,
+        isQuestionnaireCompleted?: boolean
     ) => {
         setAuthState(prev => {
             const newState = {
@@ -119,6 +127,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 ...(address !== undefined && { address }),
                 ...(dateOfBirth !== undefined && { dateOfBirth }),
                 ...(profilePhoto !== undefined && { profilePhoto }),
+                ...(isQuestionnaireCompleted !== undefined && { isQuestionnaireCompleted }),
             };
 
             AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(newState))
@@ -142,6 +151,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         });
     };
 
+    const updateQuestionnaire = (isCompleted: boolean) => {
+        setAuthState(prev => {
+            const newState = {
+                ...prev,
+                isQuestionnaireCompleted: isCompleted,
+            };
+
+            AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(newState))
+                .catch(error => console.error('Error saving auth state:', error));
+
+            return newState;
+        });
+    };
+
     const logout = () => {
         tokenManager.clearToken();
         setAuthState(initialAuthState);
@@ -155,6 +178,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             login,
             updateProfile,
             updateProfilePhoto,
+            updateQuestionnaire,
             logout
         }}>
             {children}

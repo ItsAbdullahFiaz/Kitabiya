@@ -66,10 +66,16 @@ export const LoginScreen = () => {
         profile.phoneNumber || '',
         profile.location || '',
         profile.dateOfBirth || '',
-        profile.photoUrl || ''
+        profile.photoUrl || '',
+        profile.isQuestionnaireCompleted || false
       );
 
-      resetAndGo(navigation, STACK.MAIN, null);
+      if (profile.isQuestionnaireCompleted) {
+        resetAndGo(navigation, STACK.MAIN, null);
+      } else {
+        resetAndGo(navigation, SCREENS.FIRSTQUESTION, null);
+      }
+
       showToast(appLang.loginSuccess, 'successToast');
 
     } catch (error) {

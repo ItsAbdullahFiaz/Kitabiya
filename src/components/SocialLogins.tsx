@@ -5,7 +5,7 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 import auth from '@react-native-firebase/auth';
 import { useNavigation } from '@react-navigation/native';
-import { FONT_SIZE, STACK } from '../enums';
+import { FONT_SIZE, SCREENS, STACK } from '../enums';
 import { AppDataContext, useAuth } from '../context';
 import firestore from '@react-native-firebase/firestore';
 import { resetAndGo, tokenManager } from '../utils';
@@ -64,10 +64,15 @@ export const SocialLogins = () => {
         profile.phoneNumber || '',
         profile.location || '',
         profile.dateOfBirth || '',
-        profile.photoUrl || user.photoURL || ''
+        profile.photoUrl || user.photoURL || '',
+        profile.isQuestionnaireCompleted || false
       );
 
-      resetAndGo(navigation, STACK.MAIN, null);
+      if (profile.isQuestionnaireCompleted) {
+        resetAndGo(navigation, STACK.MAIN, null);
+      } else {
+        resetAndGo(navigation, SCREENS.FIRSTQUESTION, null);
+      }
 
     } catch (error) {
       console.error('Error handling social login:', error);

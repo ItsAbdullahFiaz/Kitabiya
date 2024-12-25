@@ -17,14 +17,16 @@ const registerUser = async (email: string, password: string) => {
         });
 
         const data = await response.json();
+        const hasCompletedQuestionnaire = data.data.user.hasCompletedQuestionnaire;
 
         console.log('data', data);
+        console.log('hasCompletedQuestionnaire', hasCompletedQuestionnaire)
 
         if (!response.ok) {
             throw new Error(data.message || 'Authentication failed');
         }
 
-        return { success: true, token: token };
+        return { success: true, token: token, hasCompletedQuestionnaire: hasCompletedQuestionnaire };
     } catch (error: any) {
         console.log(error)
         let errorMessage = 'An error occurred. Please try again.';

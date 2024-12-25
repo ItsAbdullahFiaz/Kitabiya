@@ -6,7 +6,7 @@ import { resetAndGo, setEmailError, setNameError, setPasswordError, validateEmai
 import { AppDataContext, useAuth } from '../../../context';
 import { registerUser } from '../../../services';
 import { useNavigation } from '@react-navigation/native';
-import { FONT_SIZE, SCREENS, STACK, TEXT_STYLE } from '../../../enums';
+import { FONT_SIZE, SCREENS, TEXT_STYLE } from '../../../enums';
 import firestore from '@react-native-firebase/firestore';
 
 export const SignupScreen = () => {
@@ -51,6 +51,8 @@ export const SignupScreen = () => {
 
       const token = response.token || '';
 
+      const hasCompletedQuestionnaire = response.hasCompletedQuestionnaire;
+
       await firestore().collection('users').doc(normalizedEmail).set({
         userName: normalizedUserName,
         email: normalizedEmail,
@@ -66,7 +68,8 @@ export const SignupScreen = () => {
         '',
         '',
         '',
-        ''
+        '',
+        hasCompletedQuestionnaire
       );
 
       // resetAndGo(navigation, STACK.MAIN, null);

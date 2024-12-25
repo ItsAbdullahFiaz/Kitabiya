@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native'
 import { STACK } from '../../../enums'
 import { resetAndGo } from '../../../utils'
 import { useResponsiveDimensions } from '../../../hooks'
-import { AppDataContext } from '../../../context'
+import { AppDataContext, useAuth } from '../../../context'
 import city from "../../../utils/city.json"
 import { TouchableOpacity } from 'react-native'
 import { apiService } from '../../../services/api'
@@ -20,6 +20,7 @@ export const FourthQuestion = ({ route }: any) => {
     const [selectedCity, setSelectedCity] = useState("");
     const [searchQuery, setSearchQuery] = useState('');
     const showToast = useToast();
+    const { updateQuestionnaire } = useAuth();
 
     const handleNext = async () => {
         try {
@@ -40,6 +41,7 @@ export const FourthQuestion = ({ route }: any) => {
                 throw new Error(response.message || 'Failed to submit questionnaire');
             }
 
+            updateQuestionnaire(true);
             showToast('Questionnaire submitted successfully', 'successToast');
             resetAndGo(navigation, STACK.MAIN, null);
         } catch (error) {
