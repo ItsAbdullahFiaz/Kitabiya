@@ -49,7 +49,24 @@ export const ProfileScreen = () => {
   const [wrongEmailError, setWrongEmailError] = useState('');
   const { hp, wp } = useResponsiveDimensions();
   const { appTheme, appLang } = useContext(AppDataContext);
+  const [fields, setFields] = useState({
+    image: !!profileImage,
+    name: !!userName,
+    email: !!email,
+    phone: !!Phone,
+    address: location !== 'choose',
+    dob: dateOfBirth !== 'Select your date of birth',
+    
+  });
+
+  const totalFields = Object.keys(fields).length;
+  const completedFields = Object.values(fields).filter(Boolean).length;
+  const progress = (completedFields / totalFields) * 100;
+
+
   const showToast = useToast();
+
+  
 
   const validateName = (name: string) => {
     const nameRegex = /^[a-zA-Z\s]{2,30}$/;
@@ -207,7 +224,11 @@ export const ProfileScreen = () => {
       includeBase64: false,
       maxHeight: 2000,
       maxWidth: 2000,
+      
     };
+   
+
+
 
     launchImageLibrary(options, response => {
       if (response.didCancel) {
@@ -224,6 +245,14 @@ export const ProfileScreen = () => {
 
   const handleSelectLocation = (type: any) => {
     setLocation(type);
+    handleFieldChange('address', type !== 'choose');
+  };
+
+  const handleFieldChange = (fieldName, value) => {
+    setFields(prevFields => ({
+      ...prevFields,
+      [fieldName]: value,
+    }));
   };
 
   const styles = useMemo(() => {
@@ -281,6 +310,22 @@ export const ProfileScreen = () => {
       signupContainer: {
         marginTop: hp(40),
       },
+      bar: {
+        width: '100%',
+        height: 20,
+        backgroundColor: '#ccc',
+        borderRadius: 10,
+        overflow: 'hidden',
+        marginBottom: 16,
+      },
+      fill: {
+        height: '100%',
+        backgroundColor: 'green',
+      },
+      text: {
+        fontSize: 16,
+        marginBottom: 16,
+      },
     });
   }, [hp, wp]);
   return (
@@ -294,6 +339,10 @@ export const ProfileScreen = () => {
       >
         <MainContainer>
           <Header title="edit profile" />
+          <View style={styles.bar}>
+            <View style={[styles.fill, { width: `${progress}%` }]} />
+          </View>
+          <Text style={styles.text}>Progress: {Math.round(progress)}%</Text>
           <View style={styles.imgContainer}>
             <Image
               style={styles.img}
