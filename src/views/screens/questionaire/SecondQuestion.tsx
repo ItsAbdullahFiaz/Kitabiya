@@ -82,7 +82,7 @@ export const SecondQuestion = ({ route }: any) => {
     return (
         <MainContainer>
             <Header title='Questionaire' />
-            <Text style={styles.qNum}>Question 2 of 3</Text>
+            <Text style={styles.qNum}>Question 2 of 4</Text>
             <Text style={styles.question}>In which books you are interested?</Text>
             <View style={styles.container}>
                 {options.map((option, index) => (

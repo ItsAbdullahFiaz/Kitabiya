@@ -79,7 +79,7 @@ export const FirstQuestion = () => {
     return (
         <MainContainer>
             <Header title='Questionaire' />
-            <Text style={styles.qNum}>Question 1 of 3</Text>
+            <Text style={styles.qNum}>Question 1 of 4</Text>
             <Text style={styles.question}>What is your profession?</Text>
             <View style={styles.container}>
                 {options.map((option, index) => (
