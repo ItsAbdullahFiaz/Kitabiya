@@ -7,7 +7,7 @@ import { FONT_SIZE, SCREENS, TEXT_STYLE } from '../../../enums'
 import { useNavigation } from '@react-navigation/native'
 
 export const FirstQuestion = () => {
-    const navigation = useNavigation();
+    const navigation = useNavigation<any>();
     const [loading, setLoading] = useState(false);
     const { hp, wp } = useResponsiveDimensions();
     const { appTheme } = useContext(AppDataContext);
@@ -15,7 +15,9 @@ export const FirstQuestion = () => {
     const options = ["Teacher", "Student", "Engineer", "Doctor"];
     const handleNext = () => {
         setLoading(true);
-        navigation.navigate(SCREENS.SECONDQUESTION as never);
+        navigation.navigate(SCREENS.SECONDQUESTION, {
+            selectedTime: selectedTime
+        });
         setLoading(false);
     }
     const styles = useMemo(() => {

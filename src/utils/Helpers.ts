@@ -50,8 +50,13 @@ const validateEmail = (email: string) => {
 }
 
 const validatePassword = (password: string) => {
-    return password.length >= 8 && /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
-}
+    // At least 8 characters long
+    // Contains at least 1 uppercase letter
+    // Contains at least 1 lowercase letter
+    // Contains at least 1 number
+    // Contains at least 1 special character
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/.test(password);
+};
 
 const setNameError = (name: string, isNameValid: boolean, appLang: any, setWrongNameError: any) => {
     setWrongNameError(name.trim().length === 0 ? appLang.nameRequired : !isNameValid ? appLang.NameWrong : '');
@@ -712,8 +717,8 @@ const saveToLocal = async (name: string, email: string, token: string) => {
         throw error;
     }
 };
-const typeitem=['Childrens Books','Education & Training','Literature & Fiction','Other Books']
-const languageitem =['Urdu','English','Arabic','Others']
+const typeitem = ['Childrens Books', 'Education & Training', 'Literature & Fiction', 'Other Books']
+const languageitem = ['Urdu', 'English', 'Arabic', 'Others']
 const dropdownItems = ['acer', 'alcatel', 'apple iphone', 'asus', 'black berry', 'calme', 'club', "g'give", 'google', 'gright', 'haier', 'oppo', 'redmi', 'realme', 'infinix'];
 const alphabetColorsArray = [
     { letter: "A", color: "#ea2798" },
@@ -742,13 +747,13 @@ const alphabetColorsArray = [
     { letter: "X", color: "#cd72cc" },
     { letter: "Y", color: "#75fd83" },
     { letter: "Z", color: "#41049d" },
-  ];
-  const getColorByFirstLetter = (name: string) => {
-      if (!name || typeof name !== 'string') return '#ccc';
-      const firstLetter = name.trim().charAt(0).toUpperCase();
-      const colorObject = alphabetColorsArray.find(
+];
+const getColorByFirstLetter = (name: string) => {
+    if (!name || typeof name !== 'string') return '#ccc';
+    const firstLetter = name.trim().charAt(0).toUpperCase();
+    const colorObject = alphabetColorsArray.find(
         item => item.letter === firstLetter,
-      );
-      return colorObject ? colorObject.color : '#ccc';
-    };
-export { resetAndGo, isEmptyString, storeStringValue, getStoredStringValue, topTrending, validateEmail, validatePassword, validateName, setEmailError, setPasswordError, setNameError, dropdownItems, notificationData, convertDate, saveToLocal,typeitem,languageitem,getColorByFirstLetter }
+    );
+    return colorObject ? colorObject.color : '#ccc';
+};
+export { resetAndGo, isEmptyString, storeStringValue, getStoredStringValue, topTrending, validateEmail, validatePassword, validateName, setEmailError, setPasswordError, setNameError, dropdownItems, notificationData, convertDate, saveToLocal, typeitem, languageitem, getColorByFirstLetter }

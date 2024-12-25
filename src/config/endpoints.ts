@@ -16,7 +16,7 @@ export const BASE_URL = CONFIG[ENV].API_URL;
 
 export const API_ENDPOINTS = {
     //User Profile Data
-    USERPROFILE:`${BASE_URL}/users/profile`,
+    USERPROFILE: `${BASE_URL}/users/profile`,
     // Auth
     REGISTER: `${BASE_URL}/users/register`,
     LOGIN: `${BASE_URL}/auth/login`,
@@ -26,7 +26,9 @@ export const API_ENDPOINTS = {
 
     // Notifications
     NOTIFICATIONS: `${BASE_URL}/notifications/send`,
-    NOTIFICATION_BROADCASTS: `${BASE_URL}/notifications/broadcasts`
+    NOTIFICATION_BROADCASTS: `${BASE_URL}/notifications/broadcasts`,
+
+    QUESTIONNAIRE: `${BASE_URL}/questionnaire`,
 };
 
 

@@ -7,16 +7,20 @@ import { FONT_SIZE, SCREENS, TEXT_STYLE } from '../../../enums'
 import { useNavigation } from '@react-navigation/native'
 import { resetAndGo } from '../../../utils'
 
-export const SecondQuestion = () => {
-    const navigation = useNavigation();
+export const SecondQuestion = ({ route }: any) => {
+    const { selectedTime } = route.params;
+    const navigation = useNavigation<any>();
     const [loading, setLoading] = useState(false);
     const { hp, wp } = useResponsiveDimensions();
     const { appTheme } = useContext(AppDataContext);
-    const [selectedTime, setSelectedTime] = useState("");
+    const [selectedInterest, setSelectedInterest] = useState("");
     const options = ["Literature", "Novels", "History", "Science"];
     const handleNext = () => {
         setLoading(true);
-        navigation.navigate(SCREENS.THIRDQUESTION as never);
+        navigation.navigate(SCREENS.THIRDQUESTION, {
+            selectedTime: selectedTime,
+            selectedInterest: selectedInterest
+        });
         setLoading(false);
     }
     const styles = useMemo(() => {
@@ -86,19 +90,19 @@ export const SecondQuestion = () => {
                         key={index}
                         style={[
                             styles.optionContainer,
-                            selectedTime === option && styles.selectedOptionContainer,
+                            selectedInterest === option && styles.selectedOptionContainer,
                         ]}
-                        onPress={() => setSelectedTime(option)}
+                        onPress={() => setSelectedInterest(option)}
                     >
                         <Text
                             style={[
                                 styles.optionText,
-                                selectedTime === option && styles.selectedOptionText,
+                                selectedInterest === option && styles.selectedOptionText,
                             ]}
                         >
                             {option}
                         </Text>
-                        {selectedTime === option && <View style={styles.checkmark} />}
+                        {selectedInterest === option && <View style={styles.checkmark} />}
                     </TouchableOpacity>
                 ))}
             </View>
@@ -107,7 +111,7 @@ export const SecondQuestion = () => {
                     onPress={handleNext}
                     buttonText={"Next"}
                     isLoading={loading}
-                    disableBtn={selectedTime === "" ? true : false}
+                    disableBtn={selectedInterest === "" ? true : false}
                 />
             </View>
         </MainContainer>

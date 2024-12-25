@@ -8,19 +8,51 @@ import { useResponsiveDimensions } from '../../../hooks'
 import { AppDataContext } from '../../../context'
 import city from "../../../utils/city.json"
 import { TouchableOpacity } from 'react-native'
+import { apiService } from '../../../services/api'
+import { useToast } from '../../../hooks/useToast'
 
-export const FourthQuestion = () => {
-    const navigation = useNavigation();
+export const FourthQuestion = ({ route }: any) => {
+    const { selectedTime, selectedInterest, selectedAge } = route.params;
+    const navigation = useNavigation<any>();
     const { hp, wp } = useResponsiveDimensions();
     const { appTheme, appLang } = useContext(AppDataContext);
     const [loading, setLoading] = useState(false);
-    const [selectedTime, setSelectedTime] = useState("");
+    const [selectedCity, setSelectedCity] = useState("");
     const [searchQuery, setSearchQuery] = useState('');
-    const handleNext = () => {
-        setLoading(true);
-        resetAndGo(navigation, STACK.MAIN, null);
-        setLoading(false);
+    const showToast = useToast();
+
+    const handleNext = async () => {
+        try {
+            setLoading(true);
+
+            // Prepare questionnaire data
+            const questionnaireData = {
+                profession: selectedTime,
+                booksInterest: selectedInterest,
+                ageRange: selectedAge,
+                city: selectedCity
+            };
+
+            // Submit questionnaire data
+            const response = await apiService.submitQuestionnaire(questionnaireData);
+
+            if (response.error) {
+                throw new Error(response.message || 'Failed to submit questionnaire');
+            }
+
+            showToast('Questionnaire submitted successfully', 'successToast');
+            resetAndGo(navigation, STACK.MAIN, null);
+        } catch (error) {
+            console.error('Error submitting questionnaire:', error);
+            showToast(
+                error instanceof Error ? error.message : 'Failed to submit questionnaire',
+                'errorToast'
+            );
+        } finally {
+            setLoading(false);
+        }
     }
+
     const filteredCity = city.filter(item =>
         item.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -114,19 +146,19 @@ export const FourthQuestion = () => {
                                 key={index}
                                 style={[
                                     styles.optionContainer,
-                                    selectedTime === item.name && styles.selectedOptionContainer,
+                                    selectedCity === item.name && styles.selectedOptionContainer,
                                 ]}
-                                onPress={() => setSelectedTime(item.name)}
+                                onPress={() => setSelectedCity(item.name)}
                             >
                                 <Text
                                     style={[
                                         styles.optionText,
-                                        selectedTime === item.name && styles.selectedOptionText,
+                                        selectedCity === item.name && styles.selectedOptionText,
                                     ]}
                                 >
                                     {item.name}
                                 </Text>
-                                {selectedTime === item.name && <View style={styles.checkmark} />}
+                                {selectedCity === item.name && <View style={styles.checkmark} />}
                             </TouchableOpacity>
                         )
 
@@ -138,7 +170,7 @@ export const FourthQuestion = () => {
                     onPress={handleNext}
                     buttonText={"Next"}
                     isLoading={loading}
-                    disableBtn={selectedTime === "" ? true : false}
+                    disableBtn={selectedCity === "" ? true : false}
                 />
             </View>
         </MainContainer>

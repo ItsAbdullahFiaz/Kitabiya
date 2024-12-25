@@ -87,13 +87,13 @@ export const apiService = {
             verb: 'GET'
         }),
 
-        reportProduct:(productId:string,data:any)=>
-            ApiCall({
-                URL:`${API_ENDPOINTS.PRODUCTS}/${productId}/report`,
-                verb:"POST",
-                params:data,
-                isFormData:false
-            }),
+    reportProduct: (productId: string, data: any) =>
+        ApiCall({
+            URL: `${API_ENDPOINTS.PRODUCTS}/${productId}/report`,
+            verb: "POST",
+            params: data,
+            isFormData: false
+        }),
 
     getMyProducts: () =>
         ApiCall({
@@ -165,11 +165,11 @@ export const apiService = {
         }),
 
     //Get User Profile Data
-    getUserProfileData:()=>
+    getUserProfileData: () =>
         ApiCall({
-            URL:`${API_ENDPOINTS.USERPROFILE}`,
-            verb:'GET'
-        }),    
+            URL: `${API_ENDPOINTS.USERPROFILE}`,
+            verb: 'GET'
+        }),
 
     //Update User Profile Data
     updateUserProfileData: (productData: FormData) =>
@@ -184,6 +184,18 @@ export const apiService = {
         ApiCall({
             URL: API_ENDPOINTS.NOTIFICATION_BROADCASTS,
             verb: 'GET'
+        }),
+
+    submitQuestionnaire: (data: {
+        profession: string;
+        booksInterest: string;
+        ageRange: string;
+        city: string;
+    }) =>
+        ApiCall({
+            URL: `${API_ENDPOINTS.QUESTIONNAIRE}`,
+            verb: 'POST',
+            params: data
         }),
 };
 
