@@ -43,9 +43,12 @@ export const NavigationHandler = () => {
       .get();
     if (notification?.data) {
       const { type, id, userId } = notification.data;
+      // const existingData = await AsyncStorage.getItem('MESSAGE_LIST');
+      // const parsedData = existingData ? JSON.parse(existingData) : [];
+      // const newData = [...parsedData, { email: id, userName: incomingUserData?.data()?.userName }];
+      // await AsyncStorage.setItem('MESSAGE_LIST', JSON.stringify(newData));
       // console.log(`Email is : ${id} and userName is : ${incomingUserData?.data()?.userName}`);
       // console.log("INCOMING_USER_NAME===>", JSON.stringify(incomingUserData));
-
       if (type === 'chat') {
         navigation.navigate(SCREENS.CHAT, {
           data: {

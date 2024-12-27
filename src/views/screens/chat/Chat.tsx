@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import React, {
   useCallback,
   useContext,
@@ -6,21 +6,21 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import {BackButton, MainContainer} from '../../../components';
-import {GiftedChat, IMessage} from 'react-native-gifted-chat';
+import { BackButton, MainContainer } from '../../../components';
+import { GiftedChat, IMessage } from 'react-native-gifted-chat';
 import firestore from '@react-native-firebase/firestore';
-import {useResponsiveDimensions} from '../../../hooks';
-import {FONT_SIZE, OTHER_COLORS, TEXT_STYLE} from '../../../enums';
-import {AppDataContext} from '../../../context';
-import {apiService} from '../../../services/api';
+import { useResponsiveDimensions } from '../../../hooks';
+import { FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../enums';
+import { AppDataContext } from '../../../context';
+import { apiService } from '../../../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getColorByFirstLetter} from '../../../utils';
+import { getColorByFirstLetter } from '../../../utils';
 import UserAvatar from 'react-native-user-avatar';
 
-export const Chat = ({route}: any) => {
-  console.log('CHAT_ROUTE_DATA===>', route?.params);
-  const {appTheme} = useContext(AppDataContext);
-  const {hp, wp} = useResponsiveDimensions();
+export const Chat = ({ route }: any) => {
+  console.log('CHAT_ROUTE_DATA===>', route?.params?.data);
+  const { appTheme } = useContext(AppDataContext);
+  const { hp, wp } = useResponsiveDimensions();
   const [messages, setMessages] = useState<any>([]);
   const [senderDetails, setSenderDetails] = useState<any>('');
   const [receiverToken, setReceiverToken] = useState<string>('');
@@ -80,7 +80,7 @@ export const Chat = ({route}: any) => {
       .collection('chats')
       .doc(
         route.params.emailId + '-' + route.params.data.email ||
-          senderDetails.data.senderId,
+        senderDetails.data.senderId,
       )
       .collection('messages')
       .orderBy('createdAt', 'desc')

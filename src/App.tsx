@@ -52,7 +52,12 @@ export default function App() {
         .collection('users')
         .doc(remoteMessage?.data?.senderId)
         .get();
-      console.log('RANA_ADEEL===>', incomingUserData?.data()?.userName);
+      // console.log('RANA_ADEEL===>', incomingUserData?.data()?.userName);
+      console.log('RANA_ADEEL_FullData===>', incomingUserData?.data());
+      const existingData = await AsyncStorage.getItem('MESSAGE_LIST');
+      const parsedData = existingData ? JSON.parse(existingData) : [];
+      const newData = [...parsedData, { email: incomingUserData?.data()?.email, userName: incomingUserData?.data()?.userName }];
+      await AsyncStorage.setItem('MESSAGE_LIST', JSON.stringify(newData));
       const data = {
         email: remoteMessage?.data?.senderId,
         userName: incomingUserData?.data()?.userName,
