@@ -19,11 +19,12 @@ interface CustomInputProps {
     editable?: boolean,
     multiLine?: boolean,
     numberOfLines?: number,
-    height?: number
+    height?: number,
+    maxLength?: number,
 }
 
 export const CustomInput = (props: CustomInputProps) => {
-    const { value, setValue, onChange, placeholder, secureTextEntry, textWrong, bottomError, twoLinesError, pasteButton, keyboardType, editable, multiLine, numberOfLines, height } = props
+    const { value, setValue, maxLength, onChange, placeholder, secureTextEntry, textWrong, bottomError, twoLinesError, pasteButton, keyboardType, editable, multiLine, numberOfLines, height } = props
     const [isSecure, setSecure] = useState(true);
     const { appTheme } = useContext(AppDataContext);
     const { wp, hp } = useResponsiveDimensions();
@@ -83,6 +84,7 @@ export const CustomInput = (props: CustomInputProps) => {
                     keyboardType={keyboardType ? keyboardType : 'default'}
                     editable={editable}
                     numberOfLines={numberOfLines}
+                    maxLength={maxLength}
                 />
                 {(pasteButton || secureTextEntry) && (
                     <TouchableOpacity

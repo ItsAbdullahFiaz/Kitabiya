@@ -1,9 +1,9 @@
-import React from 'react';
-import {View, Text, FlatList, StyleSheet, RefreshControl} from 'react-native';
-import {SCREENS} from '../../../../enums';
-import {useResponsiveDimensions} from '../../../../hooks';
-import {ProductCard} from './ProductCard';
-import {GreetingsSection} from './GreetingsSection';
+import React, { useMemo } from 'react';
+import { View, Text, FlatList, StyleSheet, RefreshControl, Dimensions } from 'react-native';
+import { SCREENS } from '../../../../enums';
+import { useResponsiveDimensions } from '../../../../hooks';
+import { ProductCard } from './ProductCard';
+import { GreetingsSection } from './GreetingsSection';
 
 interface Product {
   _id: string;
@@ -39,18 +39,44 @@ export const ProductList = ({
   onRefresh,
   isRefreshing,
 }: ProductListProps) => {
-  const {hp} = useResponsiveDimensions();
+  const { hp, wp } = useResponsiveDimensions();
+  const screenWidth = Dimensions.get('window').width;
+  const cardWidth = screenWidth / 2 - 16;
 
-  const renderItems = ({item, index}: {item: Product}) => {
+  const styles = useMemo(() => {
+    return StyleSheet.create({
+      container: {
+        padding: hp(8),
+        paddingBottom: hp(50),
+      },
+      cardWrapper: {
+        margin: hp(8),
+      },
+      emptyContainer: {
+        padding: hp(20),
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      emptyText: {
+        fontSize: hp(14),
+        color: '#666',
+      },
+    });
+  }, [])
+
+
+  const renderItems = ({ item, index }: { item: Product }) => {
     return (
-      <ProductCard
-        item={item}
-        onPress={() =>
-          navigation.navigate(SCREENS.BOOK_DETAIL, {product: item})
-        }
-        appTheme={appTheme}
-        index={index}
-      />
+      <View style={[styles.cardWrapper, { width: cardWidth }]}>
+        <ProductCard
+          item={item}
+          onPress={() =>
+            navigation.navigate(SCREENS.BOOK_DETAIL, { product: item })
+          }
+          appTheme={appTheme}
+          index={index}
+        />
+      </View>
     );
   };
 
@@ -83,18 +109,3 @@ export const ProductList = ({
     />
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    paddingBottom: 50,
-  },
-  emptyContainer: {
-    padding: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  emptyText: {
-    fontSize: 14,
-    color: '#666',
-  },
-});

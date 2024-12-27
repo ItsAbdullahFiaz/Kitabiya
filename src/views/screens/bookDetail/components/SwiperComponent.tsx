@@ -115,7 +115,7 @@ export const SwiperComponent = (props: HeaderProps) => {
           <View style={styles.slideContainer}>
             <ImageBackground
               style={styles.image}
-              resizeMode={'cover'}
+              resizeMode={'contain'}
               source={{ uri: item }}
               defaultSource={require('../../../../assets/images/appLogo.png')}
             />

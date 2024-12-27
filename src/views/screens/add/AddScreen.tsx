@@ -37,6 +37,7 @@ import { City } from './components/City';
 export const AddScreen = ({ route }: any) => {
   const { dataType } = route.params || 'add';
   const { data } = route.params || [];
+  console.log("UPDATE_DATA==>", data);
   const { appTheme } = useContext(AppDataContext);
   const { hp, wp } = useResponsiveDimensions();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -55,7 +56,7 @@ export const AddScreen = ({ route }: any) => {
     dataType === 'edit' ? data?.language : 'choose',
   );
   const [location, setLocation] = useState(
-    dataType === 'edit' ? data?.locationAddress : 'Write area, city or country',
+    dataType === 'edit' ? data?.locationAddress : '',
   );
   const [bookTitle, setBookTitle] = useState(
     dataType === 'edit' ? data?.title : '',
@@ -405,6 +406,8 @@ export const AddScreen = ({ route }: any) => {
           textWrong={wrongEmailError}
           onChange={() => setWrongEmailError('')}
           bottomError={true}
+          maxLength={7}
+          keyboardType={'number-pad'}
         />
         <View style={styles.nextBtnContainer}>
           {dataType === 'edit' ? (
