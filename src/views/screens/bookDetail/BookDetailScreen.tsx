@@ -40,7 +40,7 @@ export const BookDetailScreen = ({ route }: any) => {
   useEffect(() => {
     const trackProductView = async () => {
       try {
-        if (data?._id) {
+        if (data?._id && ((fromSearch ? data?.user?.email : data?.userId?.email) !== authState?.email)) {
           await apiService.getProductById(data._id);
         }
       } catch (error) {

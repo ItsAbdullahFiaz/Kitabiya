@@ -1,10 +1,12 @@
-import {FlatList, StyleSheet, Text, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {Header, MainContainer} from '../../../components';
-import {NotificationComponent} from './component';
-import {apiService} from '../../../services/api';
-import {useToast} from '../../../hooks';
-import {SkeletonLoader} from '../../../components';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { Header, MainContainer } from '../../../components';
+import { NotificationComponent } from './component';
+import { apiService } from '../../../services/api';
+import { useResponsiveDimensions, useToast } from '../../../hooks';
+import { SkeletonLoader } from '../../../components';
+import { AppDataContext } from '../../../context';
+import { FONT_SIZE, TEXT_STYLE } from '../../../enums';
 
 interface NotificationItem {
   _id: string;
@@ -18,6 +20,8 @@ interface NotificationItem {
 }
 
 export const Notification = () => {
+  const { appTheme } = useContext(AppDataContext);
+  const { hp, wp } = useResponsiveDimensions();
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [loading, setLoading] = useState(true);
   const showToast = useToast();
@@ -43,9 +47,21 @@ export const Notification = () => {
     fetchNotifications();
   }, []);
 
+  const styles = useMemo(() => {
+    return StyleSheet.create({
+      listContainer: {},
+      skeletonPlaceholder: {},
+      noNotifation: {
+        ...TEXT_STYLE.medium,
+        fontSize: hp(FONT_SIZE.h2),
+        color: appTheme.primaryTextColor
+      }
+    });
+  }, [hp, wp, appTheme])
+
   if (loading) {
-    return Array.from({length: 5}).map((_, index) => (
-      <View style={{marginVertical: 5}} key={index}>
+    return Array.from({ length: 5 }).map((_, index) => (
+      <View style={{ marginVertical: 5 }} key={index}>
         <SkeletonLoader
           key={index}
           width="100%"
@@ -59,8 +75,8 @@ export const Notification = () => {
 
   if (!loading && notifications.length === 0) {
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Text>No Notifications yet!</Text>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={styles.noNotifation}>No Notifications yet!</Text>
       </View>
     );
   }
@@ -71,8 +87,8 @@ export const Notification = () => {
       <View style={styles.listContainer}>
         <FlatList
           data={notifications}
-          renderItem={({item}) => {
-            const {_id, title, body, createdAt, data} = item;
+          renderItem={({ item }) => {
+            const { _id, title, body, createdAt, data } = item;
             return (
               <NotificationComponent
                 id={_id}
@@ -97,8 +113,3 @@ export const Notification = () => {
     </MainContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  listContainer: {},
-  skeletonPlaceholder: {},
-});

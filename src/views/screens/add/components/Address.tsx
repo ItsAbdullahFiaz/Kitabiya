@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
-import axios from 'axios'; // Added axios import
+import axios from 'axios';
 import { useResponsiveDimensions } from '../../../../hooks';
 import { AppDataContext } from '../../../../context';
 import { FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../../enums';
@@ -37,12 +37,11 @@ export const Address = ({ handleSetLocation, location }: headerProps) => {
 
   const getLocationName = async (latitude: number, longitude: number) => {
     try {
-      const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
+      const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=en`;
       const response = await axios.get(url);
       const address = response.data.name;
-      console.log('Location Name:', address);
+      console.log('Location Name:', response.data);
       handleSetLocation(address);
-      // setSearchText(address);
       setLocationLoading(false);
     } catch (error) {
       console.error('Error getting location name:', error);

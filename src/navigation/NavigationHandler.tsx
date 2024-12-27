@@ -1,7 +1,7 @@
-import React, {useEffect} from 'react';
-import {useNavigation} from '@react-navigation/native';
-import notifee, {EventType} from '@notifee/react-native';
-import {SCREENS} from '../enums';
+import React, { useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import notifee, { EventType } from '@notifee/react-native';
+import { SCREENS } from '../enums';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
 
@@ -16,7 +16,7 @@ export const NavigationHandler = () => {
       );
       if (initialNotificationData) {
         const data = JSON.parse(initialNotificationData);
-        handleNotificationPress({data});
+        handleNotificationPress({ data });
         // Clear the stored notification data
         await AsyncStorage.removeItem('initialNotification');
       }
@@ -25,7 +25,7 @@ export const NavigationHandler = () => {
     checkInitialNotification();
 
     // Handle foreground notification presses
-    const unsubscribe = notifee.onForegroundEvent(({type, detail}) => {
+    const unsubscribe = notifee.onForegroundEvent(({ type, detail }) => {
       if (type === EventType.PRESS) {
         handleNotificationPress(detail.notification);
       }
@@ -42,7 +42,9 @@ export const NavigationHandler = () => {
       .doc(notification?.data?.id)
       .get();
     if (notification?.data) {
-      const {type, id, userId} = notification.data;
+      const { type, id, userId } = notification.data;
+      // console.log(`Email is : ${id} and userName is : ${incomingUserData?.data()?.userName}`);
+      // console.log("INCOMING_USER_NAME===>", JSON.stringify(incomingUserData));
 
       if (type === 'chat') {
         navigation.navigate(SCREENS.CHAT, {

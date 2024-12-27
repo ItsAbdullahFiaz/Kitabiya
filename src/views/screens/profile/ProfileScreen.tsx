@@ -45,7 +45,7 @@ export const ProfileScreen = () => {
   const [location, setLocation] = useState(authState.address || 'choose');
   const [city, setCity] = useState("choose");
   const [email, setEmail] = useState(authState.email || '');
-  const [Phone,setPhone]=useState('')
+  const [Phone, setPhone] = useState('')
   const [wrongPhoneError, setWrongPhoneError] = useState('');
   const [wrongNameError, setWrongNameError] = useState('');
   const [wrongEmailError, setWrongEmailError] = useState('');
@@ -58,7 +58,7 @@ export const ProfileScreen = () => {
     phone: !!Phone,
     address: location !== 'choose',
     dob: dateOfBirth !== 'Select your date of birth',
-    
+
   });
 
   const totalFields = Object.keys(fields).length;
@@ -68,7 +68,7 @@ export const ProfileScreen = () => {
 
   const showToast = useToast();
 
-  
+
 
   const validateName = (name: string) => {
     const nameRegex = /^[a-zA-Z\s]{2,30}$/;
@@ -233,9 +233,9 @@ export const ProfileScreen = () => {
       includeBase64: false,
       maxHeight: 2000,
       maxWidth: 2000,
-      
+
     };
-   
+
 
 
 
@@ -268,6 +268,14 @@ export const ProfileScreen = () => {
     console.log('City===>', type);
     setCity(type);
   }
+  const formatDate = (dateString: any) => {
+    const date = new Date(dateString); // Parse the date string
+    return new Intl.DateTimeFormat('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(date); // Format to '04-05-1998'
+  };
 
   const styles = useMemo(() => {
     return StyleSheet.create({
@@ -399,7 +407,7 @@ export const ProfileScreen = () => {
               editable={false}
             />
 
-<Text style={[styles.label, { marginTop: hp(20) }]}>{appLang.phone}</Text>
+            <Text style={[styles.label, { marginTop: hp(20) }]}>{appLang.phone}</Text>
             <CustomInput
               value={Phone}
               setValue={setPhone}
@@ -407,13 +415,13 @@ export const ProfileScreen = () => {
               textWrong={wrongPhoneError}
               onChange={() => setWrongPhoneError('')}
               bottomError={true}
-               keyboardType="phone-pad"
+              keyboardType="phone-pad"
             />
 
 
 
 
-            <View style={{ marginTop:hp(10) }}>
+            <View style={{ marginTop: hp(10) }}>
               <Address handleSetLocation={handleSelectLocation} location={location} />
             </View>
             <City handleSelectOption={handleSelectCity} cityState={city} />
@@ -424,7 +432,7 @@ export const ProfileScreen = () => {
               style={styles.birthContainer}
               onPress={() => setOpen(true)}
             >
-              <Text style={styles.birthText}>{dateOfBirth}</Text>
+              <Text style={styles.birthText}>{formatDate(dateOfBirth)}</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.signupContainer}>
