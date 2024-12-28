@@ -1,15 +1,26 @@
-import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native';
-import React, { useContext, useMemo } from 'react';
+import {
+  ActivityIndicator,
+  Image,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, { useContext, useMemo, useState } from 'react';
 import { FONT_SIZE, TEXT_STYLE } from '../../../../enums';
 import { useResponsiveDimensions } from '../../../../hooks';
 import { AppDataContext, useAuth } from '../../../../context';
 import UserAvatar from 'react-native-user-avatar';
 import { getColorByFirstLetter } from '../../../../utils';
+import Icon from 'react-native-vector-icons/Ionicons'; // Import Icon component
 
 export const ProfileHeader = () => {
   const { appTheme } = useContext(AppDataContext);
   const { authState } = useAuth();
   const { hp, wp } = useResponsiveDimensions();
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const styles = useMemo(() => {
     return StyleSheet.create({
@@ -43,13 +54,46 @@ export const ProfileHeader = () => {
         fontSize: hp(FONT_SIZE.h4),
         color: appTheme.tertiaryTextColor,
       },
+      modalContainer: {
+        flex: 1,
+        backgroundColor:'black',
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      modalImage: {
+        width: '100%',
+        height: '60%',
+        resizeMode: 'contain',
+      },
+      backButton: {
+        position: 'absolute',
+        top: hp(12),
+        left: wp(10),
+        padding: hp(2),
+        zIndex: 1,
+      },
+      backButtonText: {
+        color: 'white',
+        fontSize: hp(FONT_SIZE.h3),
+      },
+      imagemodal:{ justifyContent: 'center',
+         alignItems: 'center',
+         width:"100%",
+         height:"70%",
+         
+         
+         }
     });
-  }, [hp, wp]);
+  }, [hp, wp, appTheme]);
+
   return (
     <>
       {authState ? (
         <View style={styles.profileHeader}>
-          <View style={styles.imgContainer}>
+          <TouchableOpacity
+            style={styles.imgContainer}
+            onPress={() => setIsModalVisible(true)}
+          >
             {authState.profilePhoto === null || authState.profilePhoto === "" ? (
               <UserAvatar
                 style={styles.img}
@@ -60,16 +104,46 @@ export const ProfileHeader = () => {
             ) : (
               <Image
                 style={styles.img}
-                source={
-                  authState.profilePhoto === null
-                    ? require('../../../../assets/images/user.png')
-                    : { uri: authState.profilePhoto }
-                }
+                source={{ uri: authState.profilePhoto }}
               />
             )}
-          </View>
+          </TouchableOpacity>
           <Text style={styles.name}>{authState.userName}</Text>
           <Text style={styles.gmail}>{authState.email}</Text>
+
+          <Modal
+            visible={isModalVisible}
+            transparent={true}
+            animationType="fade"
+            onRequestClose={() => setIsModalVisible(false)}
+          >
+            <View
+              style={styles.modalContainer}
+            >
+              <TouchableOpacity
+                style={styles.backButton}
+                onPress={() => setIsModalVisible(false)} 
+              >
+                <Icon name="arrow-back" size={30} color="white" /> 
+              </TouchableOpacity>
+
+              <View style={styles.imagemodal}>
+                {authState.profilePhoto === null || authState.profilePhoto === "" ? (
+                  <UserAvatar
+                    style={styles.modalImage}
+                    size={200}
+                    name={authState.userName}
+                    bgColor={getColorByFirstLetter(authState.userName)}
+                  />
+                ) : (
+                  <Image
+                    style={styles.modalImage}
+                    source={{ uri: authState.profilePhoto }}
+                  />
+                )}
+              </View>
+            </View>
+          </Modal>
         </View>
       ) : (
         <ActivityIndicator />
@@ -77,5 +151,3 @@ export const ProfileHeader = () => {
     </>
   );
 };
-
-const styles = StyleSheet.create({});
