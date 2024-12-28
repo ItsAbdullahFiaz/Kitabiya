@@ -140,111 +140,6 @@ export const MessagesScreen = () => {
     );
   };
 
-
-  // const handleDeleteUser = (userEmail: string, userName: string) => {
-  //   Alert.alert(
-  //     'Confirm Deletion',
-  //     `Are you sure you want to delete '${userName}'?`,
-  //     [
-  //       {
-  //         text: 'Cancel',
-  //         onPress: () => console.log('Deletion cancelled'),
-  //         style: 'cancel',
-  //       },
-  //       {
-  //         text: 'Delete',
-  //         onPress: async () => {
-  //           try {
-  //             // Remove user from local storage
-  //             const savedUser = await AsyncStorage.getItem('MESSAGE_LIST');
-  //             const currentUser = savedUser ? JSON.parse(savedUser) : [];
-  //             const updatedUsers = currentUser.filter(
-  //               (currentUser: any) => currentUser.email !== userEmail
-  //             );
-  //             await AsyncStorage.setItem(
-  //               'MESSAGE_LIST',
-  //               JSON.stringify(updatedUsers)
-  //             );
-  //             setUsers(updatedUsers);
-
-  //             // Delete the chat messages from Firebase
-  //             const chatId1 = `${emailId}-${userEmail}`;
-  //             const chatId2 = `${userEmail}-${emailId}`;
-
-  //             const deleteChat = async (chatId: string) => {
-  //               const messagesRef = firestore()
-  //                 .collection('chats')
-  //                 .doc(chatId)
-  //                 .collection('messages');
-
-  //               const querySnapshot = await messagesRef.get();
-  //               const batch = firestore().batch();
-
-  //               querySnapshot.forEach(doc => {
-  //                 batch.delete(doc.ref);
-  //               });
-
-  //               await batch.commit();
-
-  //               // Optionally delete the chat document itself
-  //               await firestore().collection('chats').doc(chatId).delete();
-  //             };
-
-  //             // Perform deletions for both chat documents
-  //             await Promise.all([deleteChat(chatId1), deleteChat(chatId2)]);
-
-  //             console.log(
-  //               `User '${userName}' and associated chat deleted successfully`
-  //             );
-  //           } catch (error: any) {
-  //             console.log('Error deleting user or chat:', error.message);
-  //           }
-  //         },
-  //         style: 'destructive',
-  //       },
-  //     ],
-  //     { cancelable: true }
-  //   );
-  // };
-
-
-  // const handleDeleteUser = (userEmail: any, userName: any) => {
-  //   Alert.alert(
-  //     'Confirm Deletion',
-  //     `Are you sure you want to delete '${userName}'?`,
-  //     [
-  //       {
-  //         text: 'Cancel',
-  //         onPress: () => console.log('Deletion cancelled'),
-  //         style: 'cancel',
-  //       },
-  //       {
-  //         text: 'Delete',
-  //         onPress: async () => {
-  //           try {
-  //             const savedUser = await AsyncStorage.getItem('MESSAGE_LIST');
-  //             const currentUser = savedUser ? JSON.parse(savedUser) : [];
-  //             const updatedUsers = currentUser.filter(
-  //               (currentUser: any) => currentUser.email !== userEmail,
-  //             );
-  //             await AsyncStorage.setItem(
-  //               'MESSAGE_LIST',
-  //               JSON.stringify(updatedUsers),
-  //             );
-  //             setUsers(updatedUsers);
-
-  //             console.log(`User with email ${userName} deleted successfully`);
-  //           } catch (error: any) {
-  //             console.log('Error deleting user:', error.message);
-  //           }
-  //         },
-  //         style: 'destructive',
-  //       },
-  //     ],
-  //     {cancelable: true},
-  //   );
-  // };
-
   const styles = useMemo(() => {
     return StyleSheet.create({
       title: {
@@ -367,10 +262,6 @@ export const MessagesScreen = () => {
                         name={item.userName}
                         bgColor={getColorByFirstLetter(item.userName)}
                       />
-                      {/* <Image
-                        style={styles.img}
-                        source={require('../../../assets/images/user.png')}
-                      /> */}
                     </View>
                     <View style={styles.textContainer}>
                       <Text style={styles.name}>{item.userName}</Text>
