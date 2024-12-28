@@ -107,37 +107,30 @@ export const MessagesScreen = () => {
               );
               setUsers(updatedUsers);
 
-              // Delete the chat messages from Firebase
-              const chatId1 = `${emailId}-${userEmail}`;
-              const chatId2 = `${userEmail}-${emailId}`;
+              // Delete only the chat under the current user's document path
+              const chatId = `${emailId}-${userEmail}`;
+              const messagesRef = firestore()
+                .collection('chats')
+                .doc(chatId)
+                .collection('messages');
 
-              const deleteChat = async (chatId: string) => {
-                const messagesRef = firestore()
-                  .collection('chats')
-                  .doc(chatId)
-                  .collection('messages');
+              const querySnapshot = await messagesRef.get();
+              const batch = firestore().batch();
 
-                const querySnapshot = await messagesRef.get();
-                const batch = firestore().batch();
+              querySnapshot.forEach(doc => {
+                batch.delete(doc.ref);
+              });
 
-                querySnapshot.forEach(doc => {
-                  batch.delete(doc.ref);
-                });
+              await batch.commit();
 
-                await batch.commit();
-
-                // Optionally delete the chat document itself
-                await firestore().collection('chats').doc(chatId).delete();
-              };
-
-              // Perform deletions for both chat documents
-              await Promise.all([deleteChat(chatId1), deleteChat(chatId2)]);
+              // Optionally delete the chat document itself for the current user
+              await firestore().collection('chats').doc(chatId).delete();
 
               console.log(
-                `User '${userName}' and associated chat deleted successfully`
+                `Chat with '${userName}' deleted successfully on your side.`
               );
             } catch (error: any) {
-              console.log('Error deleting user or chat:', error.message);
+              console.log('Error deleting chat on your side:', error.message);
             }
           },
           style: 'destructive',
@@ -146,6 +139,73 @@ export const MessagesScreen = () => {
       { cancelable: true }
     );
   };
+
+
+  // const handleDeleteUser = (userEmail: string, userName: string) => {
+  //   Alert.alert(
+  //     'Confirm Deletion',
+  //     `Are you sure you want to delete '${userName}'?`,
+  //     [
+  //       {
+  //         text: 'Cancel',
+  //         onPress: () => console.log('Deletion cancelled'),
+  //         style: 'cancel',
+  //       },
+  //       {
+  //         text: 'Delete',
+  //         onPress: async () => {
+  //           try {
+  //             // Remove user from local storage
+  //             const savedUser = await AsyncStorage.getItem('MESSAGE_LIST');
+  //             const currentUser = savedUser ? JSON.parse(savedUser) : [];
+  //             const updatedUsers = currentUser.filter(
+  //               (currentUser: any) => currentUser.email !== userEmail
+  //             );
+  //             await AsyncStorage.setItem(
+  //               'MESSAGE_LIST',
+  //               JSON.stringify(updatedUsers)
+  //             );
+  //             setUsers(updatedUsers);
+
+  //             // Delete the chat messages from Firebase
+  //             const chatId1 = `${emailId}-${userEmail}`;
+  //             const chatId2 = `${userEmail}-${emailId}`;
+
+  //             const deleteChat = async (chatId: string) => {
+  //               const messagesRef = firestore()
+  //                 .collection('chats')
+  //                 .doc(chatId)
+  //                 .collection('messages');
+
+  //               const querySnapshot = await messagesRef.get();
+  //               const batch = firestore().batch();
+
+  //               querySnapshot.forEach(doc => {
+  //                 batch.delete(doc.ref);
+  //               });
+
+  //               await batch.commit();
+
+  //               // Optionally delete the chat document itself
+  //               await firestore().collection('chats').doc(chatId).delete();
+  //             };
+
+  //             // Perform deletions for both chat documents
+  //             await Promise.all([deleteChat(chatId1), deleteChat(chatId2)]);
+
+  //             console.log(
+  //               `User '${userName}' and associated chat deleted successfully`
+  //             );
+  //           } catch (error: any) {
+  //             console.log('Error deleting user or chat:', error.message);
+  //           }
+  //         },
+  //         style: 'destructive',
+  //       },
+  //     ],
+  //     { cancelable: true }
+  //   );
+  // };
 
 
   // const handleDeleteUser = (userEmail: any, userName: any) => {
