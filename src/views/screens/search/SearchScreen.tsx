@@ -158,6 +158,7 @@ export const SearchScreen = () => {
                 color: appTheme.tertiaryTextColor,
                 textAlign: 'center',
             },
+            iconContainer: { paddingBottom: hp(8) },
         })
     }, [hp, wp])
 
@@ -255,12 +256,14 @@ export const SearchScreen = () => {
                         {loading ? (
                             <ActivityIndicator size="small" color={appTheme.tertiaryTextColor} />
                         ) : (
-                            <AnyIcon
-                                type={IconType.EvilIcons}
-                                name="search"
-                                color={appTheme.tertiaryTextColor}
-                                size={16}
-                            />
+                            <View style={styles.iconContainer}>
+                                <AnyIcon
+                                    type={IconType.EvilIcons}
+                                    name="search"
+                                    color={appTheme.tertiaryTextColor}
+                                    size={hp(30)}
+                                />
+                            </View>
                         )}
                     </TouchableOpacity>
                     <TextInput
