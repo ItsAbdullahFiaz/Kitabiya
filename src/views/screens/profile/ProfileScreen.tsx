@@ -285,7 +285,7 @@ export const ProfileScreen = () => {
         borderRadius: hp(100),
         backgroundColor: appTheme.primary,
         alignSelf: 'center',
-        marginTop: hp(50),
+        marginTop: hp(30),
       },
       img: {
         width: '100%',
@@ -334,19 +334,20 @@ export const ProfileScreen = () => {
       },
       bar: {
         width: '100%',
-        height: 20,
+        height: hp(10),
         backgroundColor: '#ccc',
-        borderRadius: 10,
+        borderRadius: hp(10),
+        marginTop: hp(20),
+        marginBottom: hp(8),
         overflow: 'hidden',
-        marginBottom: 16,
       },
       fill: {
         height: '100%',
         backgroundColor: 'green',
       },
       text: {
-        fontSize: 16,
-        marginBottom: 16,
+        fontSize: hp(16),
+        marginBottom: hp(16),
       },
     });
   }, [hp, wp]);
