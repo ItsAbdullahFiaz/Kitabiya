@@ -217,6 +217,12 @@ export const MessagesScreen = () => {
         fontSize: FONT_SIZE.h4,
         color: appTheme.primaryBackground,
       },
+      noMessageContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+      noMessageText: {
+        ...TEXT_STYLE,
+        fontSize: hp(FONT_SIZE.h2),
+        color: appTheme.primaryTextColor
+      }
     });
   }, [hp, wp]);
 
@@ -273,8 +279,8 @@ export const MessagesScreen = () => {
           />
         </View>
       ) : (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Text>No messages yet</Text>
+        <View style={styles.noMessageContainer}>
+          <Text style={styles.noMessageText}>No messages yet</Text>
         </View>
       )}
     </MainContainer>
