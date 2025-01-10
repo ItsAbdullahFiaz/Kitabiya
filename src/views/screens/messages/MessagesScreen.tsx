@@ -14,23 +14,23 @@ import React, {
   useCallback,
   useEffect,
 } from 'react';
-import {AnyIcon, IconType, MainContainer} from '../../../components';
-import {useResponsiveDimensions} from '../../../hooks';
-import {FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE} from '../../../enums';
-import {AppDataContext} from '../../../context';
+import { AnyIcon, IconType, MainContainer } from '../../../components';
+import { useResponsiveDimensions } from '../../../hooks';
+import { FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE } from '../../../enums';
+import { AppDataContext } from '../../../context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import UserAvatar from 'react-native-user-avatar';
-import {getColorByFirstLetter} from '../../../utils';
+import { getColorByFirstLetter } from '../../../utils';
 
 export const MessagesScreen = () => {
   const navigation = useNavigation<any>();
   const [users, setUsers] = useState([]);
   const [emailId, setEmailId] = useState('');
-  const {appTheme, appLang} = useContext(AppDataContext);
-  const {hp, wp} = useResponsiveDimensions();
+  const { appTheme, appLang } = useContext(AppDataContext);
+  const { hp, wp } = useResponsiveDimensions();
 
   const getUser = async () => {
     try {
@@ -81,7 +81,7 @@ export const MessagesScreen = () => {
     liveUsers();
   }, []);
 
-  const handleDeleteUser = (userEmail: any, userName: any) => {
+  const handleDeleteUser = (userEmail: string, userName: string) => {
     Alert.alert(
       'Confirm Deletion',
       `Are you sure you want to delete '${userName}'?`,
@@ -95,26 +95,48 @@ export const MessagesScreen = () => {
           text: 'Delete',
           onPress: async () => {
             try {
+              // Remove user from local storage
               const savedUser = await AsyncStorage.getItem('MESSAGE_LIST');
               const currentUser = savedUser ? JSON.parse(savedUser) : [];
               const updatedUsers = currentUser.filter(
-                (currentUser: any) => currentUser.email !== userEmail,
+                (currentUser: any) => currentUser.email !== userEmail
               );
               await AsyncStorage.setItem(
                 'MESSAGE_LIST',
-                JSON.stringify(updatedUsers),
+                JSON.stringify(updatedUsers)
               );
               setUsers(updatedUsers);
 
-              console.log(`User with email ${userName} deleted successfully`);
+              // Delete only the chat under the current user's document path
+              const chatId = `${emailId}-${userEmail}`;
+              const messagesRef = firestore()
+                .collection('chats')
+                .doc(chatId)
+                .collection('messages');
+
+              const querySnapshot = await messagesRef.get();
+              const batch = firestore().batch();
+
+              querySnapshot.forEach(doc => {
+                batch.delete(doc.ref);
+              });
+
+              await batch.commit();
+
+              // Optionally delete the chat document itself for the current user
+              await firestore().collection('chats').doc(chatId).delete();
+
+              console.log(
+                `Chat with '${userName}' deleted successfully on your side.`
+              );
             } catch (error: any) {
-              console.log('Error deleting user:', error.message);
+              console.log('Error deleting chat on your side:', error.message);
             }
           },
           style: 'destructive',
         },
       ],
-      {cancelable: true},
+      { cancelable: true }
     );
   };
 
@@ -195,6 +217,12 @@ export const MessagesScreen = () => {
         fontSize: FONT_SIZE.h4,
         color: appTheme.primaryBackground,
       },
+      noMessageContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+      noMessageText: {
+        ...TEXT_STYLE,
+        fontSize: hp(FONT_SIZE.h2),
+        color: appTheme.primaryTextColor
+      }
     });
   }, [hp, wp]);
 
@@ -218,7 +246,7 @@ export const MessagesScreen = () => {
         <View style={styles.listContainer}>
           <FlatList
             data={users}
-            renderItem={({item, index}: any) => {
+            renderItem={({ item, index }: any) => {
               console.log('USER_ITEM===>', item);
               return (
                 <TouchableOpacity
@@ -240,10 +268,6 @@ export const MessagesScreen = () => {
                         name={item.userName}
                         bgColor={getColorByFirstLetter(item.userName)}
                       />
-                      {/* <Image
-                        style={styles.img}
-                        source={require('../../../assets/images/user.png')}
-                      /> */}
                     </View>
                     <View style={styles.textContainer}>
                       <Text style={styles.name}>{item.userName}</Text>
@@ -255,8 +279,8 @@ export const MessagesScreen = () => {
           />
         </View>
       ) : (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <Text>No messages yet</Text>
+        <View style={styles.noMessageContainer}>
+          <Text style={styles.noMessageText}>No messages yet</Text>
         </View>
       )}
     </MainContainer>

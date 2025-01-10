@@ -326,7 +326,7 @@ export const AddScreen = ({ route }: any) => {
         marginTop: hp(15),
       },
       nextBtnContainer: {
-        marginTop: hp(20),
+        marginVertical: hp(15),
       },
       loadingContainer: {
         position: 'absolute',
