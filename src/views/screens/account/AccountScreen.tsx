@@ -22,7 +22,7 @@ import { ButtonRow, CustomModal } from '../../../components/unused';
 import { storeStringValue } from '../../../utils';
 
 export const AccountScreen = () => {
-  const [appVersion, setAppVersion] = useState('1.0.1');
+  const [appVersion, setAppVersion] = useState('1.0.2');
   const {
     appLang,
     appTheme,
