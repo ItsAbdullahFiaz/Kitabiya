@@ -63,7 +63,7 @@ export const SearchScreen = () => {
             },
             searchContainer: {
                 height: hp(40),
-                width: hp(329),
+                width: hp(339),
                 borderRadius: hp(12),
                 backgroundColor: appTheme.secondaryBackground,
                 flexDirection: "row",

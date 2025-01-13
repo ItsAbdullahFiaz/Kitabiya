@@ -33,14 +33,14 @@ export const ProductCard = ({
         {imageLoading[index] && (
           <Image
             source={require('../../../../assets/images/appLogo.png')}
-            style={styles.img}
+            style={styles(hp,appTheme).img}
             resizeMode={'center'}
           />
         )}
         <Image
           style={styles(hp, appTheme).img}
           source={{ uri: item.images[0] }}
-          defaultSource={require('../../../../assets/images/person.jpg')}
+          // defaultSource={require('../../../../assets/images/person.jpg')}
           onLoadStart={() => handleImageLoadStart(index)}
           onLoadEnd={() => handleImageLoadEnd(index)}
         />

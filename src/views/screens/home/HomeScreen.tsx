@@ -7,8 +7,10 @@ import { useNavigation } from '@react-navigation/native';
 import { notificationService } from '../../../services/NotificationService';
 import { Header, LoadingSkeleton, ProductList } from './components';
 import { useProducts } from '../../../hooks/useProducts';
+import useUserPresence from '../../../hooks/useUserPresence';
 
 export const HomeScreen = () => {
+  // useUserPresence();
   const navigation = useNavigation<any>();
   const { appTheme } = useContext(AppDataContext);
   const { hp, wp } = useResponsiveDimensions();

@@ -20,7 +20,7 @@ interface NotificationItem {
 }
 
 export const Notification = () => {
-  const {appTheme} = useContext(AppDataContext);
+  const {appTheme,appLang} = useContext(AppDataContext);
   const {hp, wp} = useResponsiveDimensions();
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -121,6 +121,13 @@ export const Notification = () => {
         borderWidth: 0.5,
       },
       icon: {width: hp(20), height: hp(20), padding: 2},
+      headertitle: {
+              ...TEXT_STYLE.medium,
+              fontSize: hp(FONT_SIZE.h1),
+              color: appTheme.primaryTextColor,
+              textAlign: 'center',
+              textTransform: 'capitalize',
+            },
     });
   }, [hp, wp, appTheme]);
 
@@ -158,9 +165,12 @@ export const Notification = () => {
 
   if (!loading && notifications.length === 0) {
     return (
+      <MainContainer>
+            <Text style={styles.headertitle}>{appLang.notification}</Text>
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <Text style={styles.noNotifation}>No Notifications yet!</Text>
       </View>
+      </MainContainer>
     );
   }
 

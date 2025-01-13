@@ -1,4 +1,10 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet,
+  Text,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard, } from 'react-native';
 import React, {
   useCallback,
   useContext,
@@ -25,16 +31,35 @@ export const Chat = ({ route }: any) => {
   const [senderDetails, setSenderDetails] = useState<any>('');
   const [receiverToken, setReceiverToken] = useState<string>('');
 
-  const saveUserData = async () => {
+  const saveUserData = async (isMessageSent = false) => {
     try {
-      const existingData = await AsyncStorage.getItem('MESSAGE_LIST');
-      const parsedData = existingData ? JSON.parse(existingData) : [];
-      const newData = [...parsedData, route?.params?.data];
-      await AsyncStorage.setItem('MESSAGE_LIST', JSON.stringify(newData));
-    } catch (error: any) {
-      console.log(error.message);
+      if (isMessageSent) {
+        const existingData = await AsyncStorage.getItem('MESSAGE_LIST');
+        const parsedData = existingData ? JSON.parse(existingData) : [];
+        const isUserAlreadyAdded = parsedData.some(
+          (user) => user.email === route?.params?.data?.email
+        );
+  
+        if (!isUserAlreadyAdded) {
+          const newData = [...parsedData, route?.params?.data];
+          await AsyncStorage.setItem('MESSAGE_LIST', JSON.stringify(newData));
+        }
+      }
+    } catch (error) {
+      console.error('Error saving user data:', error.message);
     }
   };
+  
+  // const saveUserData = async () => {
+  //   try {
+  //     const existingData = await AsyncStorage.getItem('MESSAGE_LIST');
+  //     const parsedData = existingData ? JSON.parse(existingData) : [];
+  //     const newData = [...parsedData, route?.params?.data];
+  //     await AsyncStorage.setItem('MESSAGE_LIST', JSON.stringify(newData));
+  //   } catch (error: any) {
+  //     console.log(error.message);
+  //   }
+  // };
 
   const getSenderDetail = async () => {
     try {
@@ -140,6 +165,7 @@ export const Chat = ({ route }: any) => {
     }
   };
 
+
   const onSend = useCallback(
     async (messages: IMessage[] = []) => {
       const msg = messages[0];
@@ -149,11 +175,11 @@ export const Chat = ({ route }: any) => {
         sendTo: route.params.data.email,
         createdAt: new Date(),
       };
-
+  
       setMessages((previousMessages: IMessage[]) =>
-        GiftedChat.append(previousMessages, [myMsg]),
+        GiftedChat.append(previousMessages, [myMsg])
       );
-
+  
       try {
         await Promise.all([
           firestore()
@@ -161,13 +187,16 @@ export const Chat = ({ route }: any) => {
             .doc(`${route.params.emailId}-${route.params.data.email}`)
             .collection('messages')
             .add(myMsg),
-
           firestore()
             .collection('chats')
             .doc(`${route.params.data.email}-${route.params.emailId}`)
             .collection('messages')
             .add(myMsg),
         ]);
+        
+        // Save user only after message is sent
+        await saveUserData(true);
+  
         if (receiverToken) {
           await sendNotification(msg.text);
         }
@@ -175,8 +204,46 @@ export const Chat = ({ route }: any) => {
         console.error('Error in onSend:', error);
       }
     },
-    [route.params.emailId, route.params.data.email, receiverToken],
+    [route.params.emailId, route.params.data.email, receiverToken]
   );
+  
+  // const onSend = useCallback(
+  //   async (messages: IMessage[] = []) => {
+  //     const msg = messages[0];
+  //     const myMsg = {
+  //       ...msg,
+  //       sendBy: route.params.emailId,
+  //       sendTo: route.params.data.email,
+  //       createdAt: new Date(),
+  //     };
+
+  //     setMessages((previousMessages: IMessage[]) =>
+  //       GiftedChat.append(previousMessages, [myMsg]),
+  //     );
+
+  //     try {
+  //       await Promise.all([
+  //         firestore()
+  //           .collection('chats')
+  //           .doc(`${route.params.emailId}-${route.params.data.email}`)
+  //           .collection('messages')
+  //           .add(myMsg),
+
+  //         firestore()
+  //           .collection('chats')
+  //           .doc(`${route.params.data.email}-${route.params.emailId}`)
+  //           .collection('messages')
+  //           .add(myMsg),
+  //       ]);
+  //       if (receiverToken) {
+  //         await sendNotification(msg.text);
+  //       }
+  //     } catch (error) {
+  //       console.error('Error in onSend:', error);
+  //     }
+  //   },
+  //   [route.params.emailId, route.params.data.email, receiverToken],
+  // );
 
   const styles = useMemo(() => {
     return StyleSheet.create({
@@ -230,6 +297,11 @@ export const Chat = ({ route }: any) => {
 
   return (
     <MainContainer>
+       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        >
       <View style={styles.headerContainer}>
         <BackButton />
         <View style={styles.imgContainer}>
@@ -256,6 +328,8 @@ export const Chat = ({ route }: any) => {
           color: appTheme.secondaryTextColor,
         }}
       />
+      </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
     </MainContainer>
   );
 };

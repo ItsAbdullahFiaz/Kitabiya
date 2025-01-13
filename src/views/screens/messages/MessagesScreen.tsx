@@ -29,23 +29,39 @@ export const MessagesScreen = () => {
   const navigation = useNavigation<any>();
   const [users, setUsers] = useState([]);
   const [emailId, setEmailId] = useState('');
+      const [searchQuery, setSearchQuery] = useState('');
   const { appTheme, appLang } = useContext(AppDataContext);
   const { hp, wp } = useResponsiveDimensions();
+
 
   const getUser = async () => {
     try {
       const savedUser = await AsyncStorage.getItem('MESSAGE_LIST');
       const currentUser = savedUser ? JSON.parse(savedUser) : [];
-      console.log('MSG_USERS===>', currentUser);
       const uniqueUsers = currentUser.filter(
-        (user: any, index: any, self: any) =>
-          index === self.findIndex((u: any) => u.email === user.email),
+        (user, index, self) =>
+          index === self.findIndex((u) => u.email === user.email)
       );
       setUsers(uniqueUsers);
     } catch (error) {
-      console.log(error);
+      console.error('Error fetching users:', error);
     }
   };
+  
+  // const getUser = async () => {
+  //   try {
+  //     const savedUser = await AsyncStorage.getItem('MESSAGE_LIST');
+  //     const currentUser = savedUser ? JSON.parse(savedUser) : [];
+  //     const uniqueUsers = currentUser.filter(
+  //       (user: any, index: any, self: any) =>
+  //         index === self.findIndex((u: any) => u.email === user.email),
+  //     );
+  //     console.log('UNIQUE_USERS===>', uniqueUsers);
+  //     setUsers(uniqueUsers);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   useFocusEffect(
     useCallback(() => {
@@ -140,6 +156,10 @@ export const MessagesScreen = () => {
     );
   };
 
+  const filteredUsers = users.filter((item:any) =>
+    item.userName.toLowerCase().includes(searchQuery.toLowerCase())
+);
+
   const styles = useMemo(() => {
     return StyleSheet.create({
       title: {
@@ -161,6 +181,7 @@ export const MessagesScreen = () => {
         paddingLeft: hp(10),
       },
       input: {
+        width:"100%",
         height: '100%',
         marginTop: hp(5),
         paddingTop: hp(5),
@@ -222,7 +243,8 @@ export const MessagesScreen = () => {
         ...TEXT_STYLE,
         fontSize: hp(FONT_SIZE.h2),
         color: appTheme.primaryTextColor
-      }
+      },
+      iconContainer: { paddingBottom: hp(8) },
     });
   }, [hp, wp]);
 
@@ -230,22 +252,26 @@ export const MessagesScreen = () => {
     <MainContainer>
       <Text style={styles.title}>{appLang.message}</Text>
       <View style={styles.searchContainer}>
-        <AnyIcon
-          type={IconType.EvilIcons}
-          name="search"
-          color={appTheme.tertiaryTextColor}
-          size={16}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder={appLang.Searchhere}
-          placeholderTextColor={appTheme.tertiaryTextColor}
-        />
-      </View>
-      {users.length > 0 ? (
+                      <View style={styles.iconContainer}>
+                          <AnyIcon
+                              type={IconType.EvilIcons}
+                              name="search"
+                              color={appTheme.tertiaryTextColor}
+                              size={hp(30)}
+                          />
+                      </View>
+                      <TextInput
+                          style={styles.input}
+                          placeholder={appLang.Searchhere}
+                          placeholderTextColor={appTheme.tertiaryTextColor}
+                          onChangeText={text => setSearchQuery(text)}
+                          value={searchQuery}
+                      />
+                  </View>
+      {filteredUsers.length > 0 ? (
         <View style={styles.listContainer}>
           <FlatList
-            data={users}
+            data={filteredUsers}
             renderItem={({ item, index }: any) => {
               console.log('USER_ITEM===>', item);
               return (

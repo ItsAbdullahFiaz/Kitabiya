@@ -198,6 +198,8 @@ export const MyBooksScreen = () => {
 
   if (!isLoading && myAdsList.length === 0) {
     return (
+      <MainContainer>
+      <Text style={styles.title}>{appLang.myads}</Text>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text>No ads here yet!</Text>
         <Text>Start sharing your offers or items today.</Text>
@@ -207,6 +209,7 @@ export const MyBooksScreen = () => {
           <Text style={styles.adBtnText}>Post Your First Ad</Text>
         </TouchableOpacity>
       </View>
+      </MainContainer>
     );
   }
 

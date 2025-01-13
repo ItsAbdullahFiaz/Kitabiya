@@ -269,12 +269,21 @@ export const ProfileScreen = () => {
     setCity(type);
   }
   const formatDate = (dateString: any) => {
-    const date = new Date(dateString); // Parse the date string
-    return new Intl.DateTimeFormat('en-GB', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    }).format(date); // Format to '04-05-1998'
+  const isFormatted = /^\d{2}-\d{2}-\d{4}$/.test(dateString);
+  if (isFormatted) {
+    return dateString;
+  } else {
+    const date = new Date(dateString);
+    if (isNaN(date)) {
+      throw new Error("Invalid date format");
+    }
+
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+
+    return `${day}-${month}-${year}`;
+  }
   };
 
   const styles = useMemo(() => {
@@ -433,7 +442,7 @@ export const ProfileScreen = () => {
               style={styles.birthContainer}
               onPress={() => setOpen(true)}
             >
-              <Text style={styles.birthText}>{formatDate(dateOfBirth)}</Text>
+              <Text style={styles.birthText}>{dateOfBirth !=='Select your date of birth' && formatDate(dateOfBirth)}</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.signupContainer}>

@@ -72,9 +72,9 @@ export const SwiperComponent = (props: HeaderProps) => {
         position: 'absolute',
         top: '45%',
         height: hp(30),
-        width: hp(30),
+        width: wp(30),
         zIndex: 2,
-        paddingBottom: hp(10),
+        // paddingBottom: hp(10),
         backgroundColor: 'rgba(0,0,0,0.5)',
         borderRadius: hp(15),
         justifyContent: 'center',
@@ -85,10 +85,6 @@ export const SwiperComponent = (props: HeaderProps) => {
       },
       rightArrow: {
         right: -30,
-      },
-      arrowText: {
-        color: '#fff',
-        fontSize: 20,
       },
       paginationContainer: {
         flexDirection: 'row',
@@ -155,10 +151,10 @@ export const SwiperComponent = (props: HeaderProps) => {
             onPress={handlePrev}
             disabled={activeIndex === 0}>
             <AnyIcon
-              type={IconType.EvilIcons}
-              name="chevron-left"
+              type={IconType.Ionicons}
+              name="chevron-back-sharp"
               color={appTheme.primaryBackground}
-              size={hp(30)}
+              size={hp(20)}
             />
           </TouchableOpacity>
           <TouchableOpacity
@@ -170,10 +166,10 @@ export const SwiperComponent = (props: HeaderProps) => {
             onPress={handleNext}
             disabled={activeIndex === data.length - 1}>
             <AnyIcon
-              type={IconType.EvilIcons}
-              name="chevron-right"
+              type={IconType.Ionicons}
+              name="chevron-forward-sharp"
               color={appTheme.primaryBackground}
-              size={hp(30)}
+              size={hp(20)}
             />
           </TouchableOpacity>
         </>

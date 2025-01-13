@@ -33,6 +33,9 @@ export const Address = ({ handleSetLocation, location }: headerProps) => {
     } catch (error: any) {
       console.log(error.message);
     }
+    finally {
+      setLocationLoading(false);
+    }
   };
 
   const getLocationName = async (latitude: number, longitude: number) => {
