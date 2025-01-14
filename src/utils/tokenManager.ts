@@ -1,11 +1,7 @@
 let currentToken: string | null = null;
 
 export const tokenManager = {
-    setToken: (token: string) => {
-        currentToken = token;
-    },
+    setToken: (token: string) => currentToken = token,
     getToken: () => currentToken,
-    clearToken: () => {
-        currentToken = null;
-    }
+    clearToken: () => currentToken = null
 }; 

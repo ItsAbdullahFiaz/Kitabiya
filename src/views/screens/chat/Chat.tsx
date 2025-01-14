@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, {
   useCallback,
   useContext,
@@ -10,14 +10,17 @@ import { BackButton, MainContainer } from '../../../components';
 import { GiftedChat, IMessage } from 'react-native-gifted-chat';
 import firestore from '@react-native-firebase/firestore';
 import { useResponsiveDimensions } from '../../../hooks';
-import { FONT_SIZE, OTHER_COLORS, TEXT_STYLE } from '../../../enums';
+import { FONT_SIZE, OTHER_COLORS, SCREENS, TEXT_STYLE } from '../../../enums';
 import { AppDataContext } from '../../../context';
 import { apiService } from '../../../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getColorByFirstLetter } from '../../../utils';
 import UserAvatar from 'react-native-user-avatar';
+import { useNavigation } from '@react-navigation/native';
 
 export const Chat = ({ route }: any) => {
+  const navigation = useNavigation<any>();
+  const userDetails = route?.params?.data;
   console.log('CHAT_ROUTE_DATA===>', route?.params?.data);
   const { appTheme } = useContext(AppDataContext);
   const { hp, wp } = useResponsiveDimensions();
@@ -232,19 +235,21 @@ export const Chat = ({ route }: any) => {
     <MainContainer>
       <View style={styles.headerContainer}>
         <BackButton />
-        <View style={styles.imgContainer}>
-          <View style={styles.greenDot}></View>
-          <UserAvatar
-            style={styles.img}
-            size={50}
-            name={route?.params?.data.userName}
-            bgColor={getColorByFirstLetter(route?.params?.data.userName)}
-          />
-        </View>
-        <View style={styles.textContainer}>
-          <Text style={styles.userName}>{route?.params?.data.userName}</Text>
-          <Text style={styles.status}>online</Text>
-        </View>
+        <TouchableOpacity style={{ flexDirection: "row" }} onPress={() => navigation.navigate(SCREENS.USERDETAILS as never, { userDetails })}>
+          <View style={styles.imgContainer}>
+            <View style={styles.greenDot}></View>
+            <UserAvatar
+              style={styles.img}
+              size={50}
+              name={route?.params?.data.userName}
+              bgColor={getColorByFirstLetter(route?.params?.data.userName)}
+            />
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.userName}>{route?.params?.data.userName}</Text>
+            <Text style={styles.status}>online</Text>
+          </View>
+        </TouchableOpacity>
       </View>
       <GiftedChat
         messages={messages}
