@@ -48,12 +48,12 @@ export default function App() {
     // Handle foreground messages from Firebase
     const unsubscribeForeground = messaging().onMessage(async remoteMessage => {
       console.log('Foreground message:', remoteMessage);
+      const senderId = typeof remoteMessage?.data?.senderId === 'string' ? remoteMessage.data.senderId : undefined;
       const incomingUserData = await firestore()
         .collection('users')
-        .doc(remoteMessage?.data?.senderId)
+        .doc(senderId)
         .get();
-      // console.log('RANA_ADEEL===>', incomingUserData?.data()?.userName);
-      console.log('RANA_ADEEL_FullData===>', incomingUserData?.data());
+
       const existingData = await AsyncStorage.getItem('MESSAGE_LIST');
       const parsedData = existingData ? JSON.parse(existingData) : [];
       const newData = [...parsedData, { email: incomingUserData?.data()?.email, userName: incomingUserData?.data()?.userName }];
